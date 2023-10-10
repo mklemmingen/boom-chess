@@ -36,7 +36,7 @@ the war dogs (runners)
 the commando (queen)
 - she is your secret weapon. Name her yourself when you start the game.
 - Make her be "Private Princess", "Big Betty", "Power Ranger" or more. She will crush enemies, but is more easily killed if surrounded on 2 or more sides.
-- 
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 A daring big 10x10 board
