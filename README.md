@@ -76,35 +76,41 @@ at each turn, a D20 is thrown to determine damage on each other
 
 quick ids for pieces:
 
-General(King) - int: 10          / health: int: 50   / damage: 5-20   
-    The most critical piece on the board. It can move one square in any direction (horizontally, vertically, or diagonally).
-    if killed team loses
-    neither resistant or easily killed.
+General(King) - int: 10          / health: int: 50   / damage: 5-20  
+
+   The most critical piece on the board. It can move one square in any direction (horizontally, vertically, or diagonally).
+   if killed team loses
+   neither resistant or easily killed.
 
 Commando(Queen) - int: 20        / health: int: 50  / damage: 1-30  / advantages: +10 to attacking tanks 
-    The most powerful piece. It can move horizontally, vertically, diagonally, and in any direction for any number of squares.
-    she is your secret weapon. Name her yourself when you start the game.
-    Make her be "Private Princess", "Big Betty", "Power Ranger" or more. She will crush enemies, but is more easily killed if surrounded on 2 or more sides.
+
+   The most powerful piece. It can move horizontally, vertically, diagonally, and in any direction for any number of squares.
+   she is your secret weapon. Name her yourself when you start the game.
+   Make her be "Private Princess", "Big Betty", "Power Ranger" or more. She will crush enemies, but is more easily killed if surrounded on 2 or more sides.
 
 Tank(Rook) - int: 30             / health: int: 60  / damage: 10-20 / advantages: +5 to attacking infantry
-    These are often represented as towers. They can move horizontally or vertically for any number of squares.
-    high health. hard on other armour.
-    easily killed by helicopters. acts like towers
+
+   These are often represented as towers. They can move horizontally or vertically for any number of squares.
+   high health. hard on other armour.
+   easily killed by helicopters. acts like towers
 
 War Dogs(Bishop) - int: 40      / health: int: 40   / damage: 5-20  / advantages: +5 to attacking infantry 
-    They move diagonally for any number of squares.
-    is the end of faith for all infantry. easy target for helicopters
-    the war dogs fear them cause they go broom. 
+
+   They move diagonally for any number of squares.
+   is the end of faith for all infantry. easy target for helicopters
+   the war dogs fear them cause they go broom. 
  
 Helicopter(Knight) - int: 50    / health: int : 50  / damage: 10-20 / advantages: +5 to attacking tanks
-    Knights move in an L-shape: two squares in one direction (either horizontally or vertically) and then one square in a perpendicular direction. Knights can jump over other pieces.
-    High movement. doesnt care about obstacles.
-    high effectiveness against armour. 
+
+   Knights move in an L-shape: two squares in one direction (either horizontally or vertically) and then one square in a perpendicular direction. Knights can jump over other pieces.
+   High movement. doesnt care about obstacles.
+   high effectiveness against armour. 
 
 Infantry(Pawn) - int: 60        / health: int: 40  / damage: 01-20 / advantages: +5 to attacking helicopters 
-    Pawns move forward one square but capture diagonally. On their first move, they have the option to move forward two squares. When a pawn reaches the opponent's back rank, it can be promoted to any other piece (typically a queen).
-    the simple pawn
-    Has a bonus on attacking helicopters. an easy target for war dogs.
+
+   Pawns move forward one square but capture diagonally. On their first move, they have the option to move forward two squares. When a pawn reaches the opponent's back rank, it can be promoted to any other piece (typically a queen).
+   the simple pawn
+   Has a bonus on attacking helicopters. an easy target for war dogs.
     
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
