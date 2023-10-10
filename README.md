@@ -87,6 +87,10 @@ Do you dare to blow up?
 6.1 Options about the colours of the game-board, about colour-blindness
 
 7.1 Let the credits and info about the game run down
+   - display libGDX
+   - display where code snippets have been taken from
+   - display people that have worked on this project
+   - display programs that have been used in creating the art and sounds
 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
