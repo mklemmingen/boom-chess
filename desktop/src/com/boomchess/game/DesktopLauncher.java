@@ -8,8 +8,10 @@ import com.boomchess.game.BoomChess;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.setTitle("Boom Chess");
+		config.setWindowedMode(1000, 580);
 		config.setForegroundFPS(60);
-		config.setTitle("The Boom Chess Game");
+		config.useVsync(true);
 		new Lwjgl3Application(new BoomChess(), config);
 	}
 }
