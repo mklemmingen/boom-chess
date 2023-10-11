@@ -153,3 +153,7 @@ Sources for Pictures:
 
 the background has been created by Marty Lauterbach (mklemmingen) using LibreSprite
 All Characters have been created by Marty Lauterbach (mklemmingen) using LibreSprite
+
+Sources for tilesets:
+
+https://schwarnhild.itch.io/basic-tileset-and-asset-pack-32x32-pixels  (Royalty free as of 11.10.23)
