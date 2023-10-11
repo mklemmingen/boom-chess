@@ -131,13 +131,16 @@ Infantry(Pawn) - int: 60        / health: int: 40  / damage: 01-20 / advantages:
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 main-menu title:
-epic-battle by Lesiakower
-https://pixabay.com/music/video-games-epic-battle-153400/
+Victory Sound by Lesiakower
+https://pixabay.com/music/video-games-victory-screen-150573/
 
 "Boom Sound" from "https://pixabay.com/sound-effects/vine-boom-162668/" at date: 11.10.23
 
 Background-Music ingame:
-   "Retro Wave" from "https://pixabay.com/sound-effects/retro-wave-melodie-128-bpm-8970/" at date: 11.10.23
+
+"Retro Wave" from "https://pixabay.com/sound-effects/retro-wave-melodie-128-bpm-8970/" at date: 11.10.23
+
+"epic-battle" by Lesiakower https://pixabay.com/music/video-games-epic-battle-153400/
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 general backend setup:
