@@ -61,7 +61,6 @@ public class BoomChess extends ApplicationAdapter {
 		ScreenUtils.clear(1, 0, 0, 1);
 		batch.begin();
 		batch.draw(background, 0, 0);
-		batch.draw(logo, 0, 0);
 		batch.end();
 	}
 	
