@@ -14,7 +14,6 @@ public class BoomChess extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	// loading of essential background images
-	private Texture logo;
 	private Texture background;
 	// start of asset loading red team
 	private Texture general_red_left;
@@ -34,11 +33,18 @@ public class BoomChess extends ApplicationAdapter {
 	private Sound boom;
 	private Music retro_wave;
 	private Music menu_music;
+	// loading of the menu images
+	private Texture menu;
+	private Texture options;
+	private Texture credits;
+	private Texture exit;
+	private Texture help;
+	// boolean variables for checking if the game is in the menu or not
+	private final boolean in_menu = true;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		logo = new Texture("Logo_BoomChess.jpg");
 		background = new Texture("background.png");
 
 		// load the boom sound effect and background music
@@ -58,7 +64,13 @@ public class BoomChess extends ApplicationAdapter {
 
 		// start the playback of the background music immediately
 		menu_music.setLooping(true);
-		menu_music.play();
+		if (in_menu) {
+			menu_music.play();
+		}
+		else {
+			retro_wave.setLooping(true);
+			retro_wave.play();
+		}
 	}
 
 	@Override
@@ -72,6 +84,5 @@ public class BoomChess extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		logo.dispose();
 	}
 }
