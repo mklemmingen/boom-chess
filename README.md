@@ -111,7 +111,13 @@ Infantry(Pawn) - int: 60        / health: int: 40  / damage: 01-20 / advantages:
    Pawns move forward one square but capture diagonally. On their first move, they have the option to move forward two squares. When a pawn reaches the opponent's back rank, it can be promoted to any other piece (typically a queen).
    the simple pawn
    Has a bonus on attacking helicopters. an easy target for war dogs.
-    
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+"Boom Sound" from "https://pixabay.com/sound-effects/vine-boom-162668/" at date: 11.10.23
+
+Background-Music:
+   "Retro Wave" from "https://pixabay.com/sound-effects/retro-wave-melodie-128-bpm-8970/" at date: 11.10.23
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 general backend setup:
