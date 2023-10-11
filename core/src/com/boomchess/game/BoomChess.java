@@ -38,15 +38,16 @@ public class BoomChess extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		logo = new Texture("Logo_BoomChess.jpg");
+		background = new Texture("background.png");
 
 		// load the drop sound effect and the rain background "music"
 		boom = Gdx.audio.newSound(Gdx.files.internal("boom.ogg"));
-		retro_wave = Gdx.audio.newMusic(Gdx.files.internal("retro-wave.ogg"));
+		retro_wave = Gdx.audio.newMusic(Gdx.files.internal("retro-wave.wav"));
 
 		// creation of the camera fitting to the set resolution in DesktopLauncher
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1000, 580);
+		camera.setToOrtho(false, 1536, 896);
 
 		batch = new SpriteBatch();
 
@@ -59,6 +60,7 @@ public class BoomChess extends ApplicationAdapter {
 	public void render () {
 		ScreenUtils.clear(1, 0, 0, 1);
 		batch.begin();
+		batch.draw(background, 0, 0);
 		batch.draw(logo, 0, 0);
 		batch.end();
 	}
