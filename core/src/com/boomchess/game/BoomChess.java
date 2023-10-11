@@ -56,7 +56,7 @@ public class BoomChess extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		background = new Texture("background.png");
 
-		// for the tilted map
+		// for the tiled map used as the chess board
 
 		tiledMap = new TmxMapLoader().load("map/map.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
