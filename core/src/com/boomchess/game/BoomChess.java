@@ -11,12 +11,14 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
 
 public class BoomChess extends ApplicationAdapter {
 
@@ -49,8 +51,6 @@ public class BoomChess extends ApplicationAdapter {
 	private Texture credits;
 	private Texture exit;
 	private Texture help;
-	// boolean variables for checking if the game is in the menu or not
-	private final boolean in_menu = true;
 	// usage sor main menu skin and stages
 	private Skin skin;
 	private Stage menuStage;
@@ -65,6 +65,8 @@ public class BoomChess extends ApplicationAdapter {
 	private TextButton creditsButton;
 	private TextButton exitButton;
 	private TextButton helpButton;
+	// boolean variables for checking if the game is in the menu or not
+	private final boolean in_menu = true;
 
 	// for the tiled map
 	TiledMap tiledMap;
@@ -116,13 +118,17 @@ public class BoomChess extends ApplicationAdapter {
 		menuStage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(menuStage);
 
-		// Begin of Layout - Root Table arranges content automatically and organically
+		// Begin of Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
 		Table root = new Table();
 		root.setFillParent(true);
 		menuStage.addActor(root);
 
+		Image title = new Image(new Texture("BoomLogo.png"));
+		root.add(title).top().padBottom(20);
+		root.row();
+
 		TextButton helpButton = new TextButton("Help!", skin);
-		root.add(helpButton).top().padBottom(20);
+		root.add(helpButton).padBottom(20);
 		root.row();
 
 		TextButton play2Button = new TextButton("Play a 2 Player Game", skin);
