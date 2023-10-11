@@ -12,9 +12,14 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
-
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class BoomChess extends ApplicationAdapter {
+
 	// used for essential resolution and drawing matters
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -46,6 +51,20 @@ public class BoomChess extends ApplicationAdapter {
 	private Texture help;
 	// boolean variables for checking if the game is in the menu or not
 	private final boolean in_menu = true;
+	// usage sor main menu skin and stages
+	private Skin skin;
+	private Stage menuStage;
+	private Stage optionsStage;
+	private Stage creditsStage;
+	private Stage exitStage;
+	private Stage helpStage;
+	// usage for the buttons
+	private TextButton play2Button;
+	private TextButton playBotButton;
+	private TextButton optionsButton;
+	private TextButton creditsButton;
+	private TextButton exitButton;
+	private TextButton helpButton;
 
 	// for the tiled map
 	TiledMap tiledMap;
@@ -56,10 +75,14 @@ public class BoomChess extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		background = new Texture("background.png");
 
-		// for the tiled map used as the chess board
+		// creation of the batch for drawing the images
+		batch = new SpriteBatch();
 
-		tiledMap = new TmxMapLoader().load("map/map.tmx");
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+		// creation of the camera fitting to the set resolution in DesktopLauncher
+
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 1536, 896);
+
 
 		// load the boom sound effect and background music
 		boom = Gdx.audio.newSound(Gdx.files.internal("sounds/boom.ogg"));
@@ -68,24 +91,63 @@ public class BoomChess extends ApplicationAdapter {
 
 		// load the menu music
 
-		menu_music = Gdx.audio.newMusic(Gdx.files.internal("music/epic-battle.mp3"));
+		menu_music = Gdx.audio.newMusic(Gdx.files.internal("music/victory-screen.mp3"));
 
-		// creation of the camera fitting to the set resolution in DesktopLauncher
-
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1536, 896);
-
-		batch = new SpriteBatch();
 
 		// start menu music, and then the play of the background music if menu has been passed
 		menu_music.setLooping(true);
 		if (in_menu) {
+			menu_music.setLooping(true);
 			menu_music.play();
 		}
 		else {
+			menu_music.stop();
 			background_music.setLooping(true);
 			background_music.play();
 		}
+
+		// for the tiled map used as the chess board
+
+		tiledMap = new TmxMapLoader().load("map/map.tmx");
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
+		skin = new Skin(Gdx.files.internal("menu.commodore64/uiskin.json"));
+
+		menuStage = new Stage(new ScreenViewport());
+		Gdx.input.setInputProcessor(menuStage);
+
+		// Begin of Layout - Root Table arranges content automatically and organically
+		Table root = new Table();
+		root.setFillParent(true);
+		menuStage.addActor(root);
+
+		TextButton helpButton = new TextButton("Help!", skin);
+		root.add(helpButton).top().padBottom(20);
+		root.row();
+
+		TextButton play2Button = new TextButton("Play a 2 Player Game", skin);
+		root.add(play2Button).padBottom(20);
+		root.row();
+
+		TextButton playBotButton = new TextButton("Play a Game Against the Computer", skin);
+		root.add(playBotButton).padBottom(20);
+		root.row();
+
+		TextButton optionsButton = new TextButton("Options", skin);
+		root.add(optionsButton).padBottom(20);
+		root.row();
+
+		TextButton creditsButton = new TextButton("Credits", skin);
+		root.add(creditsButton).padBottom(20);
+		root.row();
+
+		TextButton exitButton = new TextButton("Exit", skin);
+		root.add(exitButton).padBottom(20);
+		root.row();
+
+		// End of first menu-layer Layout
+
+
 	}
 
 	@Override
@@ -96,6 +158,8 @@ public class BoomChess extends ApplicationAdapter {
 		batch.end();
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
+		menuStage.act();
+		menuStage.draw();
 	}
 	
 	@Override
