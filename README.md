@@ -118,7 +118,11 @@ general backend setup:
 
 Tile[][] board = new Tile[10][10];
 
+
 Tile will hold information as to if the tile has a :  - rock on it - a piece on it, which and which team 
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Sources for Pictures:
 
+Logo_BoomChess.jpg -> Dall-E 3 (11.10.23, Prompt "Colourful Logo for Game "Boom Chess")
