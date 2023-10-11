@@ -1,6 +1,7 @@
 package com.boomchess.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -9,10 +10,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class BoomChess extends ApplicationAdapter {
-	SpriteBatch batch;
+	// used for essential resolution and drawing matters
+	private SpriteBatch batch;
+	private OrthographicCamera camera;
 	// loading of essential background images
-	Texture logo;
-	Texture background;
+	private Texture logo;
+	private Texture background;
 	// start of asset loading red team
 	private Texture general_red_left;
 	private Texture infantry_red_left;
@@ -37,8 +40,8 @@ public class BoomChess extends ApplicationAdapter {
 		logo = new Texture("Logo_BoomChess.jpg");
 
 		// load the drop sound effect and the rain background "music"
-		boom = Gdx.audio.newSound(Gdx.files.internal("assets/boom.ogg"));
-		retro_wave = Gdx.audio.newMusic(Gdx.files.internal("assets/retro-wave.ogg"));
+		boom = Gdx.audio.newSound(Gdx.files.internal("boom.ogg"));
+		retro_wave = Gdx.audio.newMusic(Gdx.files.internal("retro-wave.ogg"));
 
 		// start the playback of the background music immediately
 		retro_wave.setLooping(true);
