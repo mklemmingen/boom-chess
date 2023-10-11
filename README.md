@@ -3,6 +3,22 @@ Idiocracied chess, with health, guns, obstacles, boom and stuff
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Instructions for running in intelllij:
+1. Click on Gradle on the right hand side bar
+2. Gradle -> desktop -> Tasks -> others -> run
+
+Game Assets in the folder /assets
+
+core game-building:
+
+/core/src/com.boomchess.game/BoomChess.java
+
+configuration for render:
+
+/desktop/src/com.boomchess.game/DesktopLauncher.java
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 A daring big 10x10 board
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
