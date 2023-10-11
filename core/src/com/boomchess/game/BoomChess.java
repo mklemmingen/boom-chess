@@ -43,6 +43,13 @@ public class BoomChess extends ApplicationAdapter {
 		boom = Gdx.audio.newSound(Gdx.files.internal("boom.ogg"));
 		retro_wave = Gdx.audio.newMusic(Gdx.files.internal("retro-wave.ogg"));
 
+		// creation of the camera fitting to the set resolution in DesktopLauncher
+
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 1000, 580);
+
+		batch = new SpriteBatch();
+
 		// start the playback of the background music immediately
 		retro_wave.setLooping(true);
 		retro_wave.play();
