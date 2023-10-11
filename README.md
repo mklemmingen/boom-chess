@@ -164,5 +164,9 @@ Tutorial and Wiki Sources:
 
 For Scene2D
 https://www.youtube.com/watch?v=YbeDMmajH9s
+
 For General libGDX and starter Project
 https://libgdx.com/wiki/
+
+For Usage of Tiled for tmx map and tileset conversion:
+https://www.youtube.com/watch?v=N6xqCwblyiw
