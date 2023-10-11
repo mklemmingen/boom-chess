@@ -33,6 +33,7 @@ public class BoomChess extends ApplicationAdapter {
 	// start of asset loading Sound and Music
 	private Sound boom;
 	private Music retro_wave;
+	private Music menu_music;
 
 	@Override
 	public void create () {
@@ -40,9 +41,13 @@ public class BoomChess extends ApplicationAdapter {
 		logo = new Texture("Logo_BoomChess.jpg");
 		background = new Texture("background.png");
 
-		// load the drop sound effect and the rain background "music"
+		// load the boom sound effect and background music
 		boom = Gdx.audio.newSound(Gdx.files.internal("boom.ogg"));
 		retro_wave = Gdx.audio.newMusic(Gdx.files.internal("retro-wave.wav"));
+
+		// load the menu music
+
+		menu_music = Gdx.audio.newMusic(Gdx.files.internal("epic-battle.mp3"));
 
 		// creation of the camera fitting to the set resolution in DesktopLauncher
 
@@ -52,8 +57,8 @@ public class BoomChess extends ApplicationAdapter {
 		batch = new SpriteBatch();
 
 		// start the playback of the background music immediately
-		retro_wave.setLooping(true);
-		retro_wave.play();
+		menu_music.setLooping(true);
+		menu_music.play();
 	}
 
 	@Override
