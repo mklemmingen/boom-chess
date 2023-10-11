@@ -130,9 +130,13 @@ Infantry(Pawn) - int: 60        / health: int: 40  / damage: 01-20 / advantages:
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+main-menu title:
+epic-battle by Lesiakower
+https://pixabay.com/music/video-games-epic-battle-153400/
+
 "Boom Sound" from "https://pixabay.com/sound-effects/vine-boom-162668/" at date: 11.10.23
 
-Background-Music:
+Background-Music ingame:
    "Retro Wave" from "https://pixabay.com/sound-effects/retro-wave-melodie-128-bpm-8970/" at date: 11.10.23
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -147,4 +151,5 @@ Tile will hold information as to if the tile has a :  - rock on it - a piece on 
 
 Sources for Pictures:
 
-Logo_BoomChess.jpg -> Dall-E 3 (11.10.23, Prompt "Colourful Logo for Game "Boom Chess")
+the background has been created by Marty Lauterbach (mklemmingen) using LibreSprite
+All Characters have been created by Marty Lauterbach (mklemmingen) using LibreSprite
