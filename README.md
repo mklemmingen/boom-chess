@@ -13,7 +13,7 @@ core game-building:
 
 /core/src/com.boomchess.game/BoomChess.java
 
-configuration for render:
+configuration for rendering:
 
 /desktop/src/com.boomchess.game/DesktopLauncher.java
 
