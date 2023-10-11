@@ -157,3 +157,12 @@ All Characters have been created by Marty Lauterbach (mklemmingen) using LibreSp
 Sources for tilesets:
 
 https://schwarnhild.itch.io/basic-tileset-and-asset-pack-32x32-pixels  (Royalty free as of 11.10.23)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Tutorial and Wiki Sources:
+
+For Scene2D
+https://www.youtube.com/watch?v=YbeDMmajH9s
+For General libGDX and starter Project
+https://libgdx.com/wiki/
