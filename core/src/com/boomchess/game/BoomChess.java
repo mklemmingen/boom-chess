@@ -113,12 +113,19 @@ public class BoomChess extends ApplicationAdapter {
 		tiledMap = new TmxMapLoader().load("map/map.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
+		/*
+		* creation of the stages for the menu - this allows the Scene2D.ui to be used for quick swapping of screens
+		* and the usage of the buttons/ui-elements/so called actors and childactors to be used
+		* stages will be the the way we display all menus and the game itself
+		*/
+
+		// skin (look) of the buttons via a prearranged json file
 		skin = new Skin(Gdx.files.internal("menu.commodore64/uiskin.json"));
 
 		menuStage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(menuStage);
 
-		// Begin of Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
+		// Begin of Main Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
 		Table root = new Table();
 		root.setFillParent(true);
 		menuStage.addActor(root);
