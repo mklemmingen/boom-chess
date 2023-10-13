@@ -14,6 +14,8 @@ public class General {
 
     public static int calculateDamage(String soldierDefend) {
         // TODO find fitting randomisation in java
+        // only deals 1-5 damage
+
         return 0;
     }
 

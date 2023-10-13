@@ -9,13 +9,16 @@ public class Infantry {
      * The method hurtGeneral lowers the current health amount any returns the new health amount.
      * The method defaultGeneral resets the health to the initial amount.,
      */
-    public static int healthRed1 = 50;
-    public static int healthRed2 = 50;
-    public static int healthGreen1 = 50;
-    public static int healthGreen2 = 50;
+    public static int healthRed1 = 40;
+    public static int healthRed2 = 40;
+    public static int healthGreen1 = 40;
+    public static int healthGreen2 = 40;
 
     public static int calculateDamage(String soldierDefend) {
         // TODO find fitting randomisation in java
+        // deals 01-20 damage
+        // advantages +5 to attacking helicopters
+
         return 0;
     }
 
@@ -60,9 +63,9 @@ public class Infantry {
     }
 
     public static void defaultHealth() {
-        Infantry.healthRed1 = 50;
-        Infantry.healthGreen1 = 50;
-        Infantry.healthRed2 = 50;
-        Infantry.healthGreen2 = 50;
+        Infantry.healthRed1 = 40;
+        Infantry.healthGreen1 = 40;
+        Infantry.healthRed2 = 40;
+        Infantry.healthGreen2 = 40;
     }
 }

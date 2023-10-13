@@ -16,6 +16,9 @@ public class Helicopter {
 
     public static int calculateDamage(String soldierDefend) {
         // TODO find fitting randomisation in java
+        // deals 10-20 damage
+        // advantages: deals +5 to tanks
+
         return 0;
     }
 

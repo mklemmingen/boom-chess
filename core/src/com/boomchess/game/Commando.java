@@ -14,6 +14,9 @@ public class Commando {
 
     public static int calculateDamage(String soldierDefend) {
         // TODO find fitting randomisation in java
+        // deals 1-30 damage
+        // deals +10 to attacking tanks
+
         return 0;
     }
 

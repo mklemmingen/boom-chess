@@ -9,13 +9,17 @@ public class Tank {
      * The method hurtGeneral lowers the current health amount any returns the new health amount.
      * The method defaultGeneral resets the health to the initial amount.
      */
-    public static int healthRed1 = 50;
-    public static int healthRed2 = 50;
-    public static int healthGreen1 = 50;
-    public static int healthGreen2 = 50;
+    public static int healthRed1 = 60;
+    public static int healthRed2 = 60;
+    public static int healthGreen1 = 60;
+    public static int healthGreen2 = 60;
 
     public static int calculateDamage(String soldierDefend) {
         // TODO find fitting randomisation in java
+        // deals 10-20 damage
+        // advantages: deals +5 to infantry
+        // disadvantages: deals -5 to wardogs
+
         return 0;
     }
 
@@ -59,9 +63,9 @@ public class Tank {
         }
     }
     public static void defaultHealth() {
-        Tank.healthRed1 = 50;
-        Tank.healthGreen1 = 50;
-        Tank.healthRed2 = 50;
-        Tank.healthGreen2 = 50;
+        Tank.healthRed1 = 60;
+        Tank.healthGreen1 = 60;
+        Tank.healthRed2 = 60;
+        Tank.healthGreen2 = 60;
     }
 }
