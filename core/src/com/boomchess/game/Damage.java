@@ -79,7 +79,7 @@ public class Damage {
                 System.exit(0);
         }
     }
-    public void defaultHealth() {
+    public static void defaultHealth() {
         General.defaultHealth();
         Helicopter.defaultHealth();
         Infantry.defaultHealth();

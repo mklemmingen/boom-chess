@@ -27,6 +27,10 @@ public class General {
             if (General.healthRed <= 0) {
                 // TODO End Game
                 //  Add Killer of the General with parameter attackingSoldier
+                // new overlay stage should be added to the game screen
+                // in this new stage the winner should be displayed and the option to return to main menu
+                // if this button is clicked, also run:
+                //  Damage.defaultHealth();
             }
         }
         else {
@@ -34,6 +38,10 @@ public class General {
             if (General.healthGreen <= 0) {
                 // TODO End Game
                 //  Add Killer of the General with parameter attackingSoldier
+                // new overlay stage should be added to the game screen
+                // in this new stage the winner should be displayed and the option to return to main menu
+                // if this button is clicked, also run:
+                //  Damage.defaultHealth();
             }
         }
     }
