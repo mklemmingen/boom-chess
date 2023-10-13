@@ -70,8 +70,8 @@ public class BoomChess extends ApplicationAdapter {
 
 		/*
 		* creation of the stages for the menu - this allows the Scene2D.ui to be used for quick swapping of screens
-		* and the usage of the buttons/ui-elements/so called actors and childactors to be used
-		* stages will be the the way we display all menus and the game itself
+		* and the usage of the buttons/ui-elements/so-called actors and child actors to be used
+		* stages will be the way we display all menus and the game itself
 		*/
 
 		// skin (look) of the buttons via a prearranged json file
@@ -257,6 +257,9 @@ public class BoomChess extends ApplicationAdapter {
 		creditsStage.addActor(root);
 
 		// TODO add long list of names of people who worked on the game, what they did, sources and tools used
+
+		// https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/ui/TextArea.html
+		// so called TextArea Widget used for displaying text in a scrollable box
 
 		// back button to return to the main menu
 		TextButton backButton = new TextButton("Back", skin);
