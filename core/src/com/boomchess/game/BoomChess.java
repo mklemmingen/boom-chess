@@ -185,7 +185,10 @@ public class BoomChess extends ApplicationAdapter {
 		exitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				// for exiting the game
 				Gdx.app.exit();
+				// for ending all background activity on Windows systems specifically
+				System.exit(0);
 			}
 		});
 		root.row();
