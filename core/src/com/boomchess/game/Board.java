@@ -8,7 +8,7 @@ public class Board {
      * The method updateBoard updates the board after a move has been made.
      */
     public static Soldier[][] initialise() {
-        Soldier[][] board = new Soldier[8][8];
+        Soldier[][] board = new Soldier[9][8];
         // initialize the board with the correct pieces
 
         // the tank is the tower,
@@ -22,15 +22,15 @@ public class Board {
         // and the green team on the left
 
         //   green               red
-        //    0  1  2  3  4  5  6  7
-        //  0 t  i              i  t
-        //  1 h  i              i  h
-        //  2 w  i              i  w
-        //  3 g  i              i  g
-        //  4 c  i              i  c
-        //  5 w  i              i  w
-        //  6 h  i              i  h
-        //  7 t  i              i  t
+        //    0  1  2  3  4  5  6  7  8
+        //  0 t  i                 i  t
+        //  1 h  i                 i  h
+        //  2 w  i                 i  w
+        //  3 g  i                 i  g
+        //  4 c  i                 i  c
+        //  5 w  i                 i  w
+        //  6 h  i                 i  h
+        //  7 t  i                 i  t
 
         // start of the creation of the board
         // green team
@@ -57,20 +57,20 @@ public class Board {
 
         // red team
         // tanks
-        board[7][0] = new Soldier(true,"tank", "red", 1);
-        board[7][7] = new Soldier(true,"tank", "red", 2);
+        board[8][0] = new Soldier(true,"tank", "red", 1);
+        board[8][7] = new Soldier(true,"tank", "red", 2);
         // helicopters
-        board[7][1] = new Soldier(true,"helicopter", "red", 1);
-        board[7][6] = new Soldier(true,"helicopter", "red", 2);
+        board[8][1] = new Soldier(true,"helicopter", "red", 1);
+        board[8][6] = new Soldier(true,"helicopter", "red", 2);
         // wardog
-        board[7][2] = new Soldier(true,"wardog", "red", 1);
-        board[7][5] = new Soldier(true,"wardog", "red", 2);
+        board[8][2] = new Soldier(true,"wardog", "red", 1);
+        board[8][5] = new Soldier(true,"wardog", "red", 2);
         // general
-        board[7][3] = new Soldier(true,"general", "red", 1);
+        board[8][3] = new Soldier(true,"general", "red", 1);
         // commando
-        board[7][4] = new Soldier(true,"commando", "red", 1);
+        board[8][4] = new Soldier(true,"commando", "red", 1);
         // infantry
-        int x = 6;
+        int x = 7;
         for (int j = 0; j < 8; j++) {
             int ID = j + 1;
             board[x][j] = new Soldier(true,"infantry", "red", ID);
@@ -78,8 +78,8 @@ public class Board {
 
 
         // Initialize the no-mans-land (empty space)
-        for (int row = 2; row < 6; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 2; row < 7; row++) {
+            for (int col = 0; col <= 7; col++) {
                 board[row][col] = new Soldier(false, "empty", "none", 0);
             }
         }

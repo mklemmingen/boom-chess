@@ -300,7 +300,7 @@ public class BoomChess extends ApplicationAdapter {
 		// Begin of GameLayout - Root Table arranges content automatically and adaptively as ui-structure
 		Table root = new Table();
 
-		root.setSize(512, 512);
+		root.setSize(720, 640);
 		root.center(); // Center the gameBoard in the parent container (stage)
 		// refine the position of the root Table, since the orthoCamera is centered on a screen that may change size
 		root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
@@ -354,21 +354,19 @@ public class BoomChess extends ApplicationAdapter {
 		// for the size of the tiles
 		int tileSize = 80;
 		int numRows = 8;
-		int numColumns = 8;
+		int numColumns = 9;
 
-
-
-		for (int j = 0; j < numColumns; j++) {
+		for (int i = 0; i < numRows; i++) {
 			// add a new stage Table row after each row of the gameBoard
 			root.row();
-			for (int i = 0; i < numRows; i++) {
+			for (int j = 0; j < numColumns; j++) {
 				// create a new box like widget at each position of the board and add it to the root table
 				// it is 80x80 pixels, holds the image of the piece at that position and is movable to other positions
 				// switch statement to check which type of piece it is
-				switch (gameBoard[i][j].getSoldierType()) {
+				switch (gameBoard[j][i].getSoldierType()) {
 					case "general":
 						// if the piece is on the red team
-						if (gameBoard[i][j].getTeamColor().equals("red")) {
+						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
 							root.add(drawPiece("general_red_left.png")).size(tileSize);
 						}
@@ -380,7 +378,7 @@ public class BoomChess extends ApplicationAdapter {
 						break;
 					case "infantry":
 						// if the piece is on the red team
-						if (gameBoard[i][j].getTeamColor().equals("red")) {
+						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
 							root.add(drawPiece("infantry_red_left.png")).size(tileSize);
 						}
@@ -392,7 +390,7 @@ public class BoomChess extends ApplicationAdapter {
 						break;
 					case "helicopter":
 						// if the piece is on the red team
-						if (gameBoard[i][j].getTeamColor().equals("red")) {
+						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
 							root.add(drawPiece("helicopter_red_left.png")).size(tileSize);
 						}
@@ -404,7 +402,7 @@ public class BoomChess extends ApplicationAdapter {
 						break;
 					case "tank":
 						// if the piece is on the red team
-						if (gameBoard[i][j].getTeamColor().equals("red")) {
+						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
 							root.add(drawPiece("tank_red_left.png")).size(tileSize);
 						}
@@ -416,7 +414,7 @@ public class BoomChess extends ApplicationAdapter {
 						break;
 					case "commando":
 						// if the piece is on the red team
-						if (gameBoard[i][j].getTeamColor().equals("red")) {
+						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
 							root.add(drawPiece("commando_red_left.png")).size(tileSize);
 						}
@@ -428,7 +426,7 @@ public class BoomChess extends ApplicationAdapter {
 						break;
 					case "wardog":
 						// if the piece is on the red team
-						if (gameBoard[i][j].getTeamColor().equals("red")) {
+						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
 							root.add(drawPiece("war_dog_red_left.png")).size(tileSize);
 						}
