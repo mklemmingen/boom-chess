@@ -35,52 +35,52 @@ public class Board {
         // start of the creation of the board
         // green team
         // tanks
-        board[0][0] = new Soldier(true,"tank", "green", 1);
-        board[0][7] = new Soldier(true,"tank", "green", 2);
+        board[0][0] = new Soldier(true,"tank", "green", 1, Tank.getHealth());
+        board[0][7] = new Soldier(true,"tank", "green", 2, Tank.getHealth());
         // helicopters
-        board[0][1] = new Soldier(true,"helicopter", "green", 1);
-        board[0][6] = new Soldier(true,"helicopter", "green", 2);
+        board[0][1] = new Soldier(true,"helicopter", "green", 1, Helicopter.getHealth());
+        board[0][6] = new Soldier(true,"helicopter", "green", 2, Helicopter.getHealth());
         // wardog
-        board[0][2] = new Soldier(true,"wardog", "green", 1);
-        board[0][5] = new Soldier(true,"wardog", "green", 2);
+        board[0][2] = new Soldier(true,"wardog", "green", 1, Wardog.getHealth());
+        board[0][5] = new Soldier(true,"wardog", "green", 2, Wardog.getHealth());
         // general
-        board[0][3] = new Soldier(true,"general", "green", 1);
+        board[0][3] = new Soldier(true,"general", "green", 1, General.getHealth());
         // commando
-        board[0][4] = new Soldier(true,"commando", "green", 1);
+        board[0][4] = new Soldier(true,"commando", "green", 1, Commando.getHealth());
         // infantry
         int i = 1;
         for (int j = 0; j < 8; j++) {
             int ID = j + 1;
-            board[i][j] = new Soldier(true,"infantry", "green", ID);
+            board[i][j] = new Soldier(true,"infantry", "green", ID, Infantry.getHealth());
         }
 
 
         // red team
         // tanks
-        board[8][0] = new Soldier(true,"tank", "red", 1);
-        board[8][7] = new Soldier(true,"tank", "red", 2);
+        board[8][0] = new Soldier(true,"tank", "red", 1, Tank.getHealth());
+        board[8][7] = new Soldier(true,"tank", "red", 2, Tank.getHealth());
         // helicopters
-        board[8][1] = new Soldier(true,"helicopter", "red", 1);
-        board[8][6] = new Soldier(true,"helicopter", "red", 2);
+        board[8][1] = new Soldier(true,"helicopter", "red", 1, Helicopter.getHealth());
+        board[8][6] = new Soldier(true,"helicopter", "red", 2, Helicopter.getHealth());
         // wardog
-        board[8][2] = new Soldier(true,"wardog", "red", 1);
-        board[8][5] = new Soldier(true,"wardog", "red", 2);
+        board[8][2] = new Soldier(true,"wardog", "red", 1, Wardog.getHealth());
+        board[8][5] = new Soldier(true,"wardog", "red", 2, Wardog.getHealth());
         // general
-        board[8][3] = new Soldier(true,"general", "red", 1);
+        board[8][3] = new Soldier(true,"general", "red", 1, General.getHealth());
         // commando
-        board[8][4] = new Soldier(true,"commando", "red", 1);
+        board[8][4] = new Soldier(true,"commando", "red", 1, Commando.getHealth());
         // infantry
         int x = 7;
         for (int j = 0; j < 8; j++) {
             int ID = j + 1;
-            board[x][j] = new Soldier(true,"infantry", "red", ID);
+            board[x][j] = new Soldier(true,"infantry", "red", ID, Infantry.getHealth());
         }
 
 
         // Initialize the no-mans-land (empty space)
         for (int row = 2; row < 7; row++) {
             for (int col = 0; col <= 7; col++) {
-                board[row][col] = new Soldier(false, "empty", "none", 0);
+                board[row][col] = new Soldier(false, "empty", "none", 0, 0);
             }
         }
 
@@ -103,10 +103,12 @@ public class Board {
             gameBoard[newpositionX][newpositionY].setTeamColor(gameBoard[positionX][positionY].getTeamColor());
             gameBoard[newpositionX][newpositionY].setSoldierType(gameBoard[positionX][positionY].getSoldierType());
             gameBoard[newpositionX][newpositionY].setPieceID(gameBoard[positionX][positionY].getPieceID());
+            gameBoard[newpositionX][newpositionY].setHealth(gameBoard[positionX][positionY].getHealth());
             gameBoard[positionX][positionY].setTaken(false);
             gameBoard[positionX][positionY].setTeamColor("none");
             gameBoard[positionX][positionY].setSoldierType("empty");
             gameBoard[positionX][positionY].setPieceID(0);
+            gameBoard[positionX][positionY].setHealth(0);
         }
         return validMove;
     }

@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 public class Damage {
 
     /*
-    The way this class works is that it main function calculateDamage takes in the type of soldier attacking,
+    The way this class works is that it main function makeBigBoom takes in the type of soldier attacking,
     the type of soldier defending, the color of the soldier defending and its ID.
     Then this method calls the hurt method of the defending soldier and deals damage to it.
     The hurt method of the defending soldier then subtracts the damage dealt from the health of the defending soldier.
@@ -16,9 +16,101 @@ public class Damage {
     The properties of each kind of BoomChess Piece can be individually changed in their respective files.
      */
 
-    public void makeBigBoom(String soldierAttack, String soldierDefend, String hurtColor, int soldierDefTeamID) {
+    public void checkSurroundings(Soldier[][] gameBoard, int positionX, int positionY){
+
+        // this method checks the surroundings of the piece that is attacking. if there is an enemy piece in any,
+        // it calls the makeBigBoom method to deal damage to it.
+        // the method takes the gameBoard and the position of the attacking piece.
+
+        // from the position value into the gameBoard Array, we gain the information of the attacking piece.
+        // this information is used to determine the soldierType of the attacking piece and its teamColor.
+        // we put these information into different variables called:
+        // String soldierAttack, String attackColor -> for attacker.
+
+        String soldierAttack = gameBoard[positionX][positionY].getSoldierType();
+        String attackColor = gameBoard[positionX][positionY].getTeamColor();
+
+        // the following if statements check the surroundings of the attacking piece
+        // the board has the size 8x8. to calculate the surrounding tiles position,
+        // we mathematically add or subtract 1 or 10 to the current position.
+        //              a  b   c
+        //              d  x   e
+        //              f  g   h
+
+        // turn positionX and positionY into a single String, then turn into integer position
+
+        int position = Integer.parseInt(String.valueOf(positionX + positionY));
+
+        // the following if statements check the surroundings of the attacking piece
+
+        int a = position - 11;
+        if (a < 0) {
+            a = -1;
+        }
+        int b = position - 10;
+        if (b < 0) {
+            b = -1;
+        }
+        int c = position - 9;
+        if (c < 0) {
+            c = -1;
+        }
+        int d = position - 1;
+        if (d < 0) {
+            d = -1;
+        }
+        int e = position + 1;
+        if (e > 79) {
+            e = -1;
+        }
+        int f = position + 9;
+        if (f > 79) {
+            f = -1;
+        }
+        int g = position + 10;
+        if (g > 79) {
+            g = -1;
+        }
+        int h = position + 11;
+        if (h > 79) {
+            h = -1;
+        }
+
+        // we go through each of these position values by using a for loop and check if
+        // they are occupied by an enemy soldier.
+        // if yes, we collect the enemy soldiers information and call upon the Damage.makeBigBoom method
+        // to calculate and deal the damage to the enemy soldier.
+
+        int[] surrPositions = {a, b, c, d, e, f, g, h};
+
+        // for loop through surrPositions to turn each Position Value into String, split it into two variables,
+        // turn variables into int and then use both int variables into the gameBoard Array to check getTaken for True,
+        // then getTeamColor and if enemy team, get String soldierDefend, String hurtColor, int soldierDefTeamID,
+        // and call makeBigBoom with these variables.
+
+        for (int i = 0; i < surrPositions.length; i++) {
+            if (surrPositions[i] != -1) {
+                String positionString = String.valueOf(surrPositions[i]);
+                String positionXString = positionString.substring(0, 1);
+                String positionYString = positionString.substring(1, 2);
+                int positionXInt = Integer.parseInt(positionXString);
+                int positionYInt = Integer.parseInt(positionYString);
+                if (gameBoard[positionXInt][positionYInt].getTaken()) {
+                    String hurtColor = gameBoard[positionXInt][positionYInt].getTeamColor();
+                    if (!hurtColor.equals(attackColor)) {
+                        dealBigBoom(positionX, positionY, positionXInt, positionYInt, gameBoard);
+                    }
+                }
+            }
+        }
+    }
+
+
+    public void dealBigBoom(int positionAttX, int positionAttY, int positionDefX, int positionDefY, Soldier[][] gameBoard) {
         int damage = 0;
         // switch statement on the type of piece taking damage
+        String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
+        String soldierDefend = gameBoard[positionDefX][positionDefY].getSoldierType();
         switch (soldierAttack) {
             case "general":
                 damage = General.calculateDamage(soldierDefend);
@@ -47,28 +139,37 @@ public class Damage {
                 // for ending all background activity on Windows systems specifically
                 System.exit(0);
         }
-        hurtPiece(damage, hurtColor, soldierAttack, soldierDefend, soldierDefTeamID);
+        damagePiece(damage, positionAttX, positionAttY, positionDefX, positionDefY, gameBoard);
     }
 
-    public void hurtPiece(int takenDamage, String hurtColor,
-                          String soldierAttack, String soldierDefend, int soldierDefTeamID) {
-
+    public void damagePiece(int damage, int positionAttX, int positionAttY,
+                            int positionDefX, int positionDefY, Soldier[][] gameBoard){
         // switch statement on the type of piece taking damage
+        String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
+        String soldierDefend = gameBoard[positionDefX][positionDefY].getSoldierType();
+        int currentHealth = gameBoard[positionDefX][positionDefY].getHealth();
         switch (soldierDefend) {
             case "general":
-                General.hurt(takenDamage, hurtColor, soldierAttack, soldierDefTeamID);
+                currentHealth -= General.defendAndBleed(damage, soldierAttack);
+                if (currentHealth <= 0) {
+                    String attackerColor = gameBoard[positionAttX][positionAttY].getTeamColor();
+                    BoomChess.createGameEndStage(attackerColor);
+                }
                 break;
             case "infantry":
-                Infantry.hurt(takenDamage, hurtColor, soldierAttack, soldierDefTeamID);
+                currentHealth -= Infantry.defendAndBleed(damage, soldierAttack);
                 break;
             case "tank":
-                Tank.hurt(takenDamage, hurtColor, soldierAttack, soldierDefTeamID);
+                currentHealth -= Tank.defendAndBleed(damage, soldierAttack);
                 break;
             case "wardog":
-                Wardog.hurt(takenDamage, hurtColor, soldierAttack, soldierDefTeamID);
+                currentHealth -= Wardog.defendAndBleed(damage, soldierAttack);
                 break;
             case "helicopter":
-                Helicopter.hurt(takenDamage, hurtColor, soldierAttack, soldierDefTeamID);
+                currentHealth -= Helicopter.defendAndBleed(damage, soldierAttack);
+                break;
+            case "commando":
+                currentHealth -= Commando.defendAndBleed(damage, soldierAttack);
                 break;
             default:
                 System.out.println("Error: Invalid soldier type. Bug in Damage.hurtPiece\n" +
@@ -78,16 +179,21 @@ public class Damage {
                 // for ending all background activity on Windows systems specifically
                 System.exit(0);
         }
-    }
-    public static void defaultHealth() {
-        General.defaultHealth();
-        Helicopter.defaultHealth();
-        Infantry.defaultHealth();
-        Tank.defaultHealth();
-        Wardog.defaultHealth();
+        if (currentHealth <= 0) {
+            killPiece(positionDefX, positionDefY, gameBoard);
+        }
     }
 
-    public static void removeSoldier(String red, String helicopter, int i) {
+    private void killPiece(int positionX, int positionY, Soldier[][] gameBoard) {
+        // this method is called when a soldier is killed
+        // it empties the tile the soldier was standing on
+        // and sets the taken boolean to false
 
+        // we use this int-array x and y position to set the tile to empty.
+
+        gameBoard[positionX][positionY].setTaken(false);
+        gameBoard[positionX][positionY].setSoldierType("empty");
+        gameBoard[positionX][positionY].setTeamColor("none");
+        gameBoard[positionX][positionY].setPieceID(0);
     }
 }

@@ -47,6 +47,7 @@ public class BoomChess extends ApplicationAdapter {
 	// for determining game stage affairs down the line
 	public static String winnerTeamColour;
 
+
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
@@ -485,7 +486,7 @@ public class BoomChess extends ApplicationAdapter {
 	// TODO when dragged somehwere run a try loop that calls upon board.update with the coordinates
 	//  so long till it returns true
 
-	public static Stage createGameEndStage (String winnerTeamColour){
+	public static void createGameEndStage (String winnerTeamColour){
 		Stage gameEndStage = new Stage();
 
 		// change input to gameEndStage so old Back to Main Menu isn't trigger-able as well as Drag and Drop
@@ -514,6 +515,5 @@ public class BoomChess extends ApplicationAdapter {
 		});
 		endRoot.row();
 
-		return gameEndStage;
 	}
 }

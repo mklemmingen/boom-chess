@@ -12,12 +12,14 @@ public class Soldier {
     private String soldierType;
     private String teamColor;
     private int pieceID;
+    private int health;
 
-    public Soldier(boolean taken, String type, String Color, int ID) {;
+    public Soldier(boolean taken, String type, String Color, int ID, int health) {;
         this.isTaken = taken;
         this.soldierType = type;
         this.teamColor = Color;
         this.pieceID = ID;
+        this.health = health;
     }
 
     public boolean getTaken() {
@@ -52,4 +54,13 @@ public class Soldier {
     public void setPieceID(int ID) {
         this.pieceID = ID;
     }
+
+    public int getHealth() {
+        return this.health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
 }

@@ -1,7 +1,5 @@
 package com.boomchess.game;
 
-import java.util.Objects;
-
 public class Tank {
     /*
      * Tank.java is the object for the chess piece General in the game Boom Chess.
@@ -9,10 +7,10 @@ public class Tank {
      * The method hurtGeneral lowers the current health amount any returns the new health amount.
      * The method defaultGeneral resets the health to the initial amount.
      */
-    public static int healthRed1 = 60;
-    public static int healthRed2 = 60;
-    public static int healthGreen1 = 60;
-    public static int healthGreen2 = 60;
+
+    public static int getHealth(){
+        return 60;
+    }
 
     public static int calculateDamage(String soldierDefend) {
         // TODO find fitting randomisation in java
@@ -23,49 +21,22 @@ public class Tank {
         return 0;
     }
 
-    public static void hurt(int takenDamage, String hurtColor, String attackingSoldier, int soldierTeamID) {
+    public static int[] tellMoves(int positionX, int positionY){
+        // this method returns an array of all possible move-location for this soldier (positionXY, position XY)
+        int[] possibleMoves = new int[8];
 
-        // calculate resistance to attack based on attackingSoldier
-        if (attackingSoldier.equals("wardog")){
-            takenDamage = takenDamage - 5;
-        }
+        // TODO
+        // a tank can move vertically and horizontally till it hits a wall or another soldier
+        // we need to check if the tile is occupied by anything before putting it in the array
 
-        if (Objects.equals(hurtColor, "red")) {
-            if (soldierTeamID == 1) {
-                Tank.healthRed1 -= takenDamage;
-                if (Tank.healthRed1 <= 0) {
-                    Damage.removeSoldier("red", "tank", 1);
-                }
-            }
-            else {
-                Tank.healthRed2 -= takenDamage;
-                if (Tank.healthRed2 <= 0) {
-                    Damage.removeSoldier("red", "tank", 2);
-                }
-            }
-        }
-        else if (Objects.equals(hurtColor, "green")){
-            if (soldierTeamID == 1) {
-                Tank.healthGreen1 -= takenDamage;
-                if (Tank.healthGreen1 <= 0) {
-                    Damage.removeSoldier("green", "tank", 1);
-                }
-            }
-            else {
-                Tank.healthGreen2 -= takenDamage;
-                if (Tank.healthGreen2 <= 0) {
-                    Damage.removeSoldier("green", "tank", 2);
-                }
-            }
-        }
-        else {
-            System.out.println("Error: error in parameters of hurt method in Tank.java");
-        }
+        return possibleMoves;
     }
-    public static void defaultHealth() {
-        Tank.healthRed1 = 60;
-        Tank.healthGreen1 = 60;
-        Tank.healthRed2 = 60;
-        Tank.healthGreen2 = 60;
+
+    public static int defendAndBleed(int damage, String soldierAttack) {
+        // calculate resistance to attack based on attackingSoldier
+        if (soldierAttack.equals("wardog")){
+            return damage - 5;
+        }
+        return damage;
     }
 }
