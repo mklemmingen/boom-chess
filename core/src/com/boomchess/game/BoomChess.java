@@ -13,12 +13,13 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 
 public class BoomChess extends ApplicationAdapter {
@@ -30,18 +31,24 @@ public class BoomChess extends ApplicationAdapter {
 	private Texture background;
 	// start of asset loading Sound and Music
 	public Sound boom;
-	public Music background_music;
-	public Music menu_music;
+	public static Music background_music;
+	public static Music menu_music;
 	// usage sor main menu skin and stages
-	private Skin skin;
-	private Stage currentStage;
+	private static Skin skin;
+	private static Stage currentStage;
+	// gameBoard
+	public static Soldier[][] gameBoard;
+	public static boolean gameInSession;
 
 	// for the tiled map
 	TiledMap tiledMap;
 	TiledMapRenderer tiledMapRenderer;
 
+	// for determining game stage affairs down the line
+	public static String winnerTeamColour;
+
 	@Override
-	public void create () {
+	public void create() {
 		batch = new SpriteBatch();
 		background = new Texture("background.png");
 
@@ -51,7 +58,7 @@ public class BoomChess extends ApplicationAdapter {
 		// creation of the camera fitting to the set resolution in DesktopLauncher
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1536, 896);
+		camera.setToOrtho(false, 1536, 880);
 
 
 		// load the boom sound effect and background music
@@ -69,20 +76,20 @@ public class BoomChess extends ApplicationAdapter {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
 		/*
-		* creation of the stages for the menu - this allows the Scene2D.ui to be used for quick swapping of screens
-		* and the usage of the buttons/ui-elements/so-called actors and child actors to be used
-		* stages will be the way we display all menus and the game itself
-		*/
+		 * creation of the stages for the menu - this allows the Scene2D.ui to be used for quick swapping of screens
+		 * and the usage of the buttons/ui-elements/so-called actors and child actors to be used
+		 * stages will be the way we display all menus and the game itself
+		 */
 
 		// skin (look) of the buttons via a prearranged json file
 		skin = new Skin(Gdx.files.internal("menu.commodore64/uiskin.json"));
 
-
 		currentStage = createMainMenuStage();
+
 	}
 
 	@Override
-	public void render () {
+	public void render() {
 		ScreenUtils.clear(1, 0, 0, 1);
 		batch.begin();
 		batch.draw(background, 0, 0);
@@ -95,22 +102,29 @@ public class BoomChess extends ApplicationAdapter {
 		// for the stages, displays only stage assigned as currentStage, see method switchToStage
 		currentStage.act();
 		currentStage.draw();
+
 	}
-	
+
 	@Override
-	public void dispose () {
+	public void dispose() {
 		batch.dispose();
 		skin.dispose();
 		currentStage.dispose();
 	}
 
-	private void switchToStage(Stage newStage) {
+	private static void switchToStage(Stage newStage) {
+		// this method removes the currentStage and loads a new one
 		currentStage.dispose();
 		currentStage = newStage;
 		Gdx.input.setInputProcessor(currentStage);
 	}
 
-	private Stage createMainMenuStage() {
+	public static void addStageToStage(Stage newStage) {
+		// this method adds a new stage to the current stage
+		currentStage.addActor(newStage.getRoot());
+	}
+
+	private static Stage createMainMenuStage() {
 
 		Stage menuStage = new Stage();
 		Gdx.input.setInputProcessor(menuStage);
@@ -136,7 +150,7 @@ public class BoomChess extends ApplicationAdapter {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				switchToStage(createHelpStage());
-				}
+			}
 		});
 		root.row();
 
@@ -197,7 +211,7 @@ public class BoomChess extends ApplicationAdapter {
 		return menuStage;
 	}
 
-	private Stage createHelpStage() {
+	private static Stage createHelpStage() {
 		Stage helpStage = new Stage();
 
 		// Begin of Help Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
@@ -223,7 +237,7 @@ public class BoomChess extends ApplicationAdapter {
 		return helpStage;
 	}
 
-	private Stage createOptionsStage() {
+	private static Stage createOptionsStage() {
 		Stage optionsStage = new Stage();
 
 		// Begin of Options Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
@@ -248,7 +262,7 @@ public class BoomChess extends ApplicationAdapter {
 		return optionsStage;
 	}
 
-	private Stage createCreditsStage() {
+	private static Stage createCreditsStage() {
 		Stage creditsStage = new Stage();
 
 		// Begin of Options Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
@@ -275,23 +289,8 @@ public class BoomChess extends ApplicationAdapter {
 		return creditsStage;
 	}
 
-	private Stage createGameStage(boolean isBotMatch) {
-		Stage gameStage = new Stage();
-
-		// start of asset loading red team
-		Texture general_red_left;
-		Texture infantry_red_left;
-		Texture tank_red_left;
-		Texture helicopter_red_left;
-		Texture artillery_red_left;
-		Texture wardogs_red_left;
-		// start of asset loading red team
-		Texture general_green_right;
-		Texture infantry_green_right;
-		Texture tank_green_right;
-		Texture helicopter_green_right;
-		Texture artillery_green_right;
-		Texture wardogs_green_right;
+	private static Stage createGameStage(boolean isBotMatch) {
+		Stage gameStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
 		// stop menu music and start background_music
 		menu_music.stop();
@@ -299,15 +298,22 @@ public class BoomChess extends ApplicationAdapter {
 		background_music.play();
 
 		// Begin of GameLayout - Root Table arranges content automatically and adaptively as ui-structure
-		final Table root = new Table();
-		root.setFillParent(true);
+		Table root = new Table();
+
+		root.setSize(512, 512);
+		root.center(); // Center the gameBoard in the parent container (stage)
+		// refine the position of the root Table, since the orthoCamera is centered on a screen that may change size
+		root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
+				(Gdx.graphics.getHeight() - root.getHeight()) / 2f);
+		root.setTouchable(Touchable.enabled);
+
 		gameStage.addActor(root);
 
 		// TODO try to implement the game board as a tiled map and the pieces as actors on top of it
 		//  combine the tiled map renderer with the stage renderer? Research: addressing individual .tmx tiles in code
 		//  - corresponding to the 2D Array Game Board, the pieces on it, their stats as clean health bars.
 		//  ----------------------------------------------------------------------------------------------
-		//  Actor-Images must be 64x64px. Add Exit-Button at the Bottom right corner of the screen
+		//  Actor-Images must be 80x80px. Add Exit-Button at the Bottom right corner of the screen
 		//  Actors should be able to be drag-droppable and snap to the grid. They can only move to tiles
 		//  their chess characteristics allow them to. This should be checked by the backend, and be send back as tile
 		//  coordinates, so the allowed tiles can temporarily be highlighted. If piece is dropped on an allowed tile,
@@ -339,19 +345,177 @@ public class BoomChess extends ApplicationAdapter {
 		//  	display as dotted red line
 		//  	if a general is killed, end game and display winner
 
+		// render the gameBoard by iterating through the 2D Array Soldiers[][] gameBoard
+		// checking which type of piece at position and drawing the correct image there
+
+		// create the first gameBoard
+		Soldier[][] gameBoard = Board.initialise();
+
+		// for the size of the tiles
+		int tileSize = 80;
+		int numRows = 8;
+		int numColumns = 8;
+
+
+
+		for (int j = 0; j < numColumns; j++) {
+			// add a new stage Table row after each row of the gameBoard
+			root.row();
+			for (int i = 0; i < numRows; i++) {
+				// create a new box like widget at each position of the board and add it to the root table
+				// it is 80x80 pixels, holds the image of the piece at that position and is movable to other positions
+				// switch statement to check which type of piece it is
+				switch (gameBoard[i][j].getSoldierType()) {
+					case "general":
+						// if the piece is on the red team
+						if (gameBoard[i][j].getTeamColor().equals("red")) {
+							// load tile and draw image in it
+							root.add(drawPiece("general_red_left.png")).size(tileSize);
+						}
+						// if the piece is on the green team
+						else {
+							// load tile and draw image in it
+							root.add(drawPiece("general_green_right.png")).size(tileSize);
+						}
+						break;
+					case "infantry":
+						// if the piece is on the red team
+						if (gameBoard[i][j].getTeamColor().equals("red")) {
+							// load tile and draw image in it
+							root.add(drawPiece("infantry_red_left.png")).size(tileSize);
+						}
+						// if the piece is on the green team
+						else {
+							// load tile and draw image in it
+							root.add(drawPiece("infantry_green_right.png")).size(tileSize);
+						}
+						break;
+					case "helicopter":
+						// if the piece is on the red team
+						if (gameBoard[i][j].getTeamColor().equals("red")) {
+							// load tile and draw image in it
+							root.add(drawPiece("helicopter_red_left.png")).size(tileSize);
+						}
+						// if the piece is on the green team
+						else {
+							// load tile and draw image in it
+							root.add(drawPiece("helicopter_green_right.png")).size(tileSize);
+						}
+						break;
+					case "tank":
+						// if the piece is on the red team
+						if (gameBoard[i][j].getTeamColor().equals("red")) {
+							// load tile and draw image in it
+							root.add(drawPiece("tank_red_left.png")).size(tileSize);
+						}
+						// if the piece is on the green team
+						else {
+							// load tile and draw image in it
+							root.add(drawPiece("tank_green_right.png")).size(tileSize);
+						}
+						break;
+					case "commando":
+						// if the piece is on the red team
+						if (gameBoard[i][j].getTeamColor().equals("red")) {
+							// load tile and draw image in it
+							root.add(drawPiece("commando_red_left.png")).size(tileSize);
+						}
+						// if the piece is on the green team
+						else {
+							// load tile and draw image in it
+							root.add(drawPiece("commando_green_right.png")).size(tileSize);
+						}
+						break;
+					case "wardog":
+						// if the piece is on the red team
+						if (gameBoard[i][j].getTeamColor().equals("red")) {
+							// load tile and draw image in it
+							root.add(drawPiece("war_dog_red_left.png")).size(tileSize);
+						}
+						// if the piece is on the green team
+						else {
+							// load tile and draw image in it
+							root.add(drawPiece("war_dogs_green_right.png")).size(tileSize);
+						}
+						break;
+					case "empty":
+						 // Empty box (no image)
+						root.add(drawPiece("empty.png")).size(tileSize);
+						break;
+				}
+			}
+		}
+
+		// create another stage for the back to main menu button
+		Table backTable = new Table();
+		backTable.setSize(400, 80); // determines the frame size for the backTable (button: to main menu)
+		// bottom right the table in the parent container
+		backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 0);
+		gameStage.addActor(backTable); // Add the table to the stage
+
 		// Exit to Main Menu button to return to the main menu
 		TextButton menuButton = new TextButton("Return to Main Menu", skin);
-		root.add(menuButton).padBottom(20);
+		menuButton.align(Align.bottomRight);
+		backTable.add(menuButton);
 		menuButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				switchToStage(createMainMenuStage());
 			}
 		});
-		root.row();
 
 		return gameStage;
 	}
 
-}
+	private static Actor drawPiece(String fileLocation) {
+		// load the corresponding image
+		Image solPiece = new Image(new Texture(Gdx.files.internal(fileLocation)));
+		// draw the image at the correct position
+		solPiece.setSize(80, 80);
+		solPiece.setScaling(Scaling.fit);
+		System.out.println("Image dimensions rendered: " + solPiece.getWidth() + "x" + solPiece.getHeight() + "from" +
+				" file " + fileLocation);
 
+		// TODO add a listener to each box that checks if it is dragged checks which team is currently in move,
+		//  if the picked up piece is of that team: yes - allow drag; no - set piece back to original position
+
+		return solPiece;
+	}
+
+	// TODO implement a function that checks if the piece can be moved to the new position by the pieces rule
+	// TODO light up all the tiles that the piece can move to
+	// TODO when dragged somehwere run a try loop that calls upon board.update with the coordinates
+	//  so long till it returns true
+
+	public static Stage createGameEndStage (String winnerTeamColour){
+		Stage gameEndStage = new Stage();
+
+		// change input to gameEndStage so old Back to Main Menu isn't trigger-able as well as Drag and Drop
+		Gdx.input.setInputProcessor(gameEndStage);
+
+		// Begin of GameEndLayout - Root Table arranges content automatically and adaptively as ui-structure
+		final Table endRoot = new Table();
+		endRoot.setFillParent(true);
+		gameEndStage.addActor(endRoot);
+
+		// display the winner and a button to return to the main menu.
+		Label winnerLabel = new Label("The " + winnerTeamColour + " Team won!", skin);
+		endRoot.add(winnerLabel).padBottom(20);
+		endRoot.row();
+
+		// back button to return to the main menu
+		TextButton backButton = new TextButton("Return To Main Menu", skin);
+		endRoot.add(backButton).padBottom(20);
+		backButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				// refresh gameBoard to initial state
+				Soldier[][] gameBoard = Board.initialise();
+				switchToStage(createMainMenuStage());
+			}
+		});
+		endRoot.row();
+
+		return gameEndStage;
+	}
+}

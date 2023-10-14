@@ -25,23 +25,25 @@ public class General {
         if (Objects.equals(hurtColor, "red")) {
             General.healthRed -= takenDamage;
             if (General.healthRed <= 0) {
+                BoomChess.addStageToStage(BoomChess.createGameEndStage("green"));
                 // TODO End Game
-                //  Add Killer of the General with parameter attackingSoldier
                 // new overlay stage should be added to the game screen
                 // in this new stage the winner should be displayed and the option to return to main menu
                 // if this button is clicked, also run:
                 //  Damage.defaultHealth();
+                // also make sure to renew the 2D array of the game screen
             }
         }
         else {
             General.healthGreen -= takenDamage;
             if (General.healthGreen <= 0) {
+                BoomChess.addStageToStage(BoomChess.createGameEndStage("red"));
                 // TODO End Game
-                //  Add Killer of the General with parameter attackingSoldier
                 // new overlay stage should be added to the game screen
                 // in this new stage the winner should be displayed and the option to return to main menu
                 // if this button is clicked, also run:
                 //  Damage.defaultHealth();
+                // also make sure to renew the 2D array of the game screen
             }
         }
     }

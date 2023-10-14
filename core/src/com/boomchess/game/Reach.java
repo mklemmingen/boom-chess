@@ -4,7 +4,7 @@ public class Reach {
     /*
      * Reach.java handles the calculation of any possible attack for each soldier at the end of a round.
      */
-    public static void calculateReach(String[][] board, int position) {
+    public static void calculateReach(Soldier[][] board, int position) {
         /* the methode calculateReach takes a 2D-Array of the board
         * and the current position from which an iteration through each adjacent tile is started.
         * After checking the information of the position-soldier into usable variables, it then iterates through each
@@ -59,6 +59,7 @@ public class Reach {
 
         int[] surrPositions = {a, b, c, d, e, f, g, h};
         // TODO check in with the way we plan on storing data in the 2D Array and adjust this accordingly
+        // in order to get the info if a tile has a soldier, we
     }
 
 }
