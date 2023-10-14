@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,9 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
@@ -33,8 +32,9 @@ public class BoomChess extends ApplicationAdapter {
 	public Sound boom;
 	public static Music background_music;
 	public static Music menu_music;
-	// usage sor main menu skin and stages
+	// usage for Scene2DUI-skins and stages
 	private static Skin skin;
+	private static Skin progressBarSkin;
 	private static Stage currentStage;
 	// gameBoard
 	public static Soldier[][] gameBoard;
@@ -84,6 +84,8 @@ public class BoomChess extends ApplicationAdapter {
 
 		// skin (look) of the buttons via a prearranged json file
 		skin = new Skin(Gdx.files.internal("menu.commodore64/uiskin.json"));
+		// skin (look) of the progress bar via a prearranged json file
+		progressBarSkin = new Skin(Gdx.files.internal("progressBarSkin/neon-ui.json"));
 
 		currentStage = createMainMenuStage();
 
@@ -364,82 +366,90 @@ public class BoomChess extends ApplicationAdapter {
 				// create a new box like widget at each position of the board and add it to the root table
 				// it is 80x80 pixels, holds the image of the piece at that position and is movable to other positions
 				// switch statement to check which type of piece it is
+
+				// current health value of the coordinate in the 2D Array IF it is taken, otherwise make it -1
+				int currentHealth = -1;
+				// if the position is taken
+				if (gameBoard[j][i].getTaken()) {
+					// get the current health value of the piece at that position
+					currentHealth = gameBoard[j][i].getHealth();
+				}
 				switch (gameBoard[j][i].getSoldierType()) {
 					case "general":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("general_red_left.png")).size(tileSize);
+							root.add(drawPiece("general_red_left.png", currentHealth)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("general_green_right.png")).size(tileSize);
+							root.add(drawPiece("general_green_right.png", currentHealth)).size(tileSize);
 						}
 						break;
 					case "infantry":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("infantry_red_left.png")).size(tileSize);
+							root.add(drawPiece("infantry_red_left.png", currentHealth)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("infantry_green_right.png")).size(tileSize);
+							root.add(drawPiece("infantry_green_right.png", currentHealth)).size(tileSize);
 						}
 						break;
 					case "helicopter":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("helicopter_red_left.png")).size(tileSize);
+							root.add(drawPiece("helicopter_red_left.png", currentHealth)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("helicopter_green_right.png")).size(tileSize);
+							root.add(drawPiece("helicopter_green_right.png", currentHealth)).size(tileSize);
 						}
 						break;
 					case "tank":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("tank_red_left.png")).size(tileSize);
+							root.add(drawPiece("tank_red_left.png", currentHealth)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("tank_green_right.png")).size(tileSize);
+							root.add(drawPiece("tank_green_right.png", currentHealth)).size(tileSize);
 						}
 						break;
 					case "commando":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("commando_red_left.png")).size(tileSize);
+							root.add(drawPiece("commando_red_left.png", currentHealth)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("commando_green_right.png")).size(tileSize);
+							root.add(drawPiece("commando_green_right.png", currentHealth)).size(tileSize);
 						}
 						break;
 					case "wardog":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("war_dog_red_left.png")).size(tileSize);
+							root.add(drawPiece("war_dog_red_left.png", currentHealth)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("war_dogs_green_right.png")).size(tileSize);
+							root.add(drawPiece("war_dogs_green_right.png", currentHealth)).size(tileSize);
 						}
 						break;
 					case "empty":
 						 // Empty box (no image)
-						root.add(drawPiece("empty.png")).size(tileSize);
+						root.add(drawPiece("empty.png", currentHealth)).size(tileSize);
 						break;
 				}
 			}
@@ -466,19 +476,52 @@ public class BoomChess extends ApplicationAdapter {
 		return gameStage;
 	}
 
-	private static Actor drawPiece(String fileLocation) {
+	private static Actor drawPiece(String fileLocation, int health) {
 		// load the corresponding image
 		Image solPiece = new Image(new Texture(Gdx.files.internal(fileLocation)));
 		// draw the image at the correct position
 		solPiece.setSize(80, 80);
 		solPiece.setScaling(Scaling.fit);
-		System.out.println("Image dimensions rendered: " + solPiece.getWidth() + "x" + solPiece.getHeight() + "from" +
-				" file " + fileLocation);
+		System.out.println("Image rendered: file " + fileLocation);
+
+		Stack tileWidget = new Stack();
+		tileWidget.add(solPiece);
+
+
+		if (!(health == -1)) {
+			// draw the health bar
+			final ProgressBar healthBar = new ProgressBar(0f, 60f, 1f, false, progressBarSkin);
+			healthBar.setSize(0.025F, 0.1F);
+
+			healthBar.setValue(health);
+			tileWidget.add(healthBar);
+
+			// hide the health bar by default
+			healthBar.setVisible(false);
+
+			// the tileWidget Listener checks if the mouse if over the tile and if yes, displays healthBar
+			tileWidget.addListener(new InputListener() {
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+					healthBar.setVisible(true); // Show the health bar when the mouse enters
+				}
+
+				@Override
+				public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+					healthBar.setVisible(false); // Hide the health bar when the mouse exits
+				}
+			});
+			if (health < 15) {
+				// Apply a light red hue effect to the tileWidget's image
+				Color lightRed = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+				solPiece.setColor(lightRed);
+			}
+		}
 
 		// TODO add a listener to each box that checks if it is dragged checks which team is currently in move,
 		//  if the picked up piece is of that team: yes - allow drag; no - set piece back to original position
 
-		return solPiece;
+		return tileWidget;
 	}
 
 	// TODO implement a function that checks if the piece can be moved to the new position by the pieces rule

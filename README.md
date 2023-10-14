@@ -172,3 +172,8 @@ https://libgdx.com/wiki/
 
 For Usage of Tiled for tmx map and tileset conversion:
 https://www.youtube.com/watch?v=N6xqCwblyiw
+
+-----------
+source skins for Scene2DUI
+https://github.com/czyzby/gdx-skins/blob/master/flat
+https://github.com/czyzby/gdx-skins/tree/master/commodore64
