@@ -477,6 +477,11 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	private static Actor drawPiece(String fileLocation, int health) {
+
+		// if fileLocation is general_red_left.png or general_green_right.png, the animations for them are loaded
+
+		// TODO GENERAL ANIMATION
+
 		// load the corresponding image
 		Image solPiece = new Image(new Texture(Gdx.files.internal(fileLocation)));
 		// draw the image at the correct position
