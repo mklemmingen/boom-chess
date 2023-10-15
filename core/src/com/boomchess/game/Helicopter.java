@@ -20,7 +20,7 @@ public class Helicopter {
         return 0;
     }
 
-    public static int[] tellMoves(int positionX, int positionY){
+    public static int[] mathMove(int positionX, int positionY){
         // this method returns an array of all possible move-location for this soldier (positionXY, position XY)
         int[] possibleMoves = new int[8];
 
