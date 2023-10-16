@@ -388,78 +388,102 @@ public class BoomChess extends ApplicationAdapter {
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("general_red_left.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("general_red_left.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("general_green_right.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("general_green_right.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						break;
 					case "infantry":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("infantry_red_left.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("infantry_red_left.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("infantry_green_right.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("infantry_green_right.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						break;
 					case "helicopter":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("helicopter_red_left.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("helicopter_red_left.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("helicopter_green_right.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("helicopter_green_right.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						break;
 					case "tank":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("tank_red_left.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("tank_red_left.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("tank_green_right.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("tank_green_right.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						break;
 					case "commando":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("commando_red_left.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("commando_red_left.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("commando_green_right.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("commando_green_right.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						break;
 					case "wardog":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("war_dog_red_left.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("war_dog_red_left.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("war_dogs_green_right.png", currentHealth, i, j, gameBoard)).size(tileSize);
+							root.add(drawPiece("war_dog_green_right.png", currentHealth, i, j,
+									gameBoard)).size(tileSize);
 						}
 						break;
 					case "empty":
-						 // Empty box (no image)
-						root.add(drawPiece("empty.png", currentHealth, i, j, gameBoard)).size(tileSize);
-						break;
+						// Empty box (no image) or xMarker (red X) if it is a valid move
+						// as coordinates generation in touch.dragged-Event
+						boolean xMarkerAdded = false;
+						for (Coordinates validMoveTile : validMoveTiles) {
+							if (validMoveTile.getX() == j && validMoveTile.getY() == i) {
+								// Apply a red X
+								root.add(drawPiece("xMarker.png", currentHealth, i, j,
+										gameBoard)).size(tileSize);
+								xMarkerAdded = true;
+								break;
+							}
+						}
+						if (!xMarkerAdded) {
+							root.add(drawPiece("empty.png", currentHealth, i, j, gameBoard)).size(tileSize);
+					}
 				}
 			}
 		}
@@ -503,6 +527,12 @@ public class BoomChess extends ApplicationAdapter {
 
 		final Stack tileWidget = new Stack();
 
+		if (health < 15 && health > 0) {
+			// Apply a light red hue effect to the tileWidget's image
+			Color lightRed = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+			solPiece.setColor(lightRed);
+		}
+
 		tileWidget.add(solPiece);
 
 		if (!(health == -1)) {
@@ -530,25 +560,45 @@ public class BoomChess extends ApplicationAdapter {
 					healthBar.setVisible(false); // Hide the health bar when the mouse exits
 				}
 			});
-			if (health < 15) {
-				// Apply a light red hue effect to the tileWidget's image
-				Color lightRed = new Color(1.0f, 0.5f, 0.5f, 1.0f);
-				solPiece.setColor(lightRed);
-			}
 		}
-
 
 
 		tileWidget.addListener(new InputListener() {
 			float offsetX, offsetY;
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+				// function activated if the user has clicked somehwere
+
 				// variables changed by the touchDown and touchDragged methods and are used to store positional data
 				// for the actor
 				// Store the offset between the touch point and the center of the actor
 				offsetX = x - 32;
 				offsetY = y - 32;
 				tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
+
+				// the icon figurine can only end their movement at a tileWidget that is in validMoveTiles
+				// if the tileWidget is not in validMoveTiles, the icon figurine is moved back to its original position
+
+				// TODO
+
+				// and the validMoveTiles are cleared
+				clearAllowedTiles();
+
+				return true;
+			}
+
+			// function used for moving the actor around the screen - not the input, the actual movement
+			// drag overrides touchDragged manually and touchDragged overrides Scene2DUIs touchDragged
+			// for better performance and more control over the actual movement
+			@Override
+			public void touchDragged(InputEvent event, float x, float y, int pointer) {
+				drag(event, x, y, pointer);
+			}
+			public void drag(InputEvent event, float x, float y, int pointer) {
+				tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
+
+				// function called if the user is Dragging something
 
 				// as long as the mouse is pressed down, the actor is moved to the mouse position
 				// we calculate the tiles it can move to and highlight these tiles with a slightly red hue
@@ -558,8 +608,13 @@ public class BoomChess extends ApplicationAdapter {
 				// switch statement for deciding which
 				// Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
 
-				switch (functionsBoard[X][Y].getSoldierType()){
-					case "infantry":
+				// because the tileWidget doesn't save its Coordinates, we
+				// split String fileLocation into only the first part before _ and have our typeOfSoldier variable
+
+				String typeOfSoldier = fileLocation.split("_")[0];
+
+				switch (typeOfSoldier){
+					case ("infantry"):
 						setAllowedTiles(Infantry.mathMove(functionsBoard, X, Y ));
 						break;
 					case "general":
@@ -578,26 +633,6 @@ public class BoomChess extends ApplicationAdapter {
 						setAllowedTiles(Tank.mathMove(functionsBoard, X, Y ));
 						break;
 				}
-				// TODO add functionality for marker addition
-				for (int i = 0; i < validMoveTiles.size(); i++) {
-					if (validMoveTiles.get(i).getX() == X && validMoveTiles.get(i).getY() == Y) {
-						// Apply a red X
-						tileWidget.add(xMarker);
-						break;
-					}
-				}
-				return true;
-			}
-
-			@Override
-			public void touchDragged(InputEvent event, float x, float y, int pointer) {
-				// If the tile the Actor is over is a tile it is allowed to move to, it updates it position
-				// to the Soldier-Object of the 2D-Array Index Coordinate
-				// If not, it ends the touchDown and puts the soldier back to its original position without updating
-				// the 2D-Array
-
-				tileWidget.setPosition(x - offsetX, y - offsetY);
-
 			}
 		});
 		return tileWidget;

@@ -113,8 +113,6 @@ public class Board {
             gameBoard[positionX][positionY].setSoldierType("empty");
             gameBoard[positionX][positionY].setPieceID(0);
             gameBoard[positionX][positionY].setHealth(0);
-            // clears the allowedtiles after succesful move
-            BoomChess.clearAllowedTiles();
         }
         return validMove;
     }
