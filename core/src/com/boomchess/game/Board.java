@@ -112,4 +112,9 @@ public class Board {
         }
         return validMove;
     }
+
+    // Helper method to check if the coordinates are within bounds
+    public static boolean isValidMove(int x, int y) {
+        return x >= 0 && x < 9 && y >= 0 && y < 8;
+    }
 }

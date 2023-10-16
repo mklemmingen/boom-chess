@@ -1,5 +1,7 @@
 package com.boomchess.game;
 
+import java.util.ArrayList;
+
 public class Wardog {
     /*
      * Wardog.java is the object for the chess piece General in the game Boom Chess.
@@ -21,14 +23,83 @@ public class Wardog {
         return 0;
     }
 
-    public static int[] mathMove(int positionX, int positionY){
-        // this method returns an array of all possible move-location for this soldier (positionXY, position XY)
-        int[] possibleMoves = new int[8];
+    public static ArrayList<Coordinates> mathMove(Soldier[][] gameBoard, int positionX, int positionY) {
+        // this method returns a Coordinates array of all possible move-location for this soldier
+        ArrayList<Coordinates> possibleMoves = new ArrayList<>();
 
-        // TODO
-        // an Helicopter can move to any tile that is 3 tiles forward and 1 to the left
-        // or right in any direction except diagonal
-        // we need to check if the tile is occupied by anything before putting it in the array
+        // a war dog can move diagonally in all directions
+
+        // Loop to move diagonally up and to the right
+        for (int offset = 1; offset <= 7; offset++) {
+            int newX = positionX + offset;
+            int newY = positionY + offset;
+
+            if (Board.isValidMove(newX, newY)) {
+                if (!gameBoard[newX][newY].getTaken()) {
+                    Coordinates coordinates = new Coordinates();
+                    coordinates.setCoordinates(newX, newY);
+                    possibleMoves.add(coordinates);
+                } else {
+                    break; // Stop if the tile is not empty
+                }
+            } else {
+                break; // Stop if it goes out of bounds
+            }
+        }
+
+        // Loop to move diagonally up and to the left
+        for (int offset = 1; offset <= 7; offset++) {
+            int newX = positionX - offset;
+            int newY = positionY + offset;
+
+            if (Board.isValidMove(newX, newY)) {
+                if (!gameBoard[newX][newY].getTaken()) {
+                    Coordinates coordinates = new Coordinates();
+                    coordinates.setCoordinates(newX, newY);
+                    possibleMoves.add(coordinates);
+                } else {
+                    break; // Stop if the tile is not empty
+                }
+            } else {
+                break; // Stop if it goes out of bounds
+            }
+        }
+
+        // Loop to move diagonally down and to the right
+        for (int offset = 1; offset <= 7; offset++) {
+            int newX = positionX + offset;
+            int newY = positionY - offset;
+
+            if (Board.isValidMove(newX, newY)) {
+                if (!gameBoard[newX][newY].getTaken()) {
+                    Coordinates coordinates = new Coordinates();
+                    coordinates.setCoordinates(newX, newY);
+                    possibleMoves.add(coordinates);
+                } else {
+                    break; // Stop if the tile is not empty
+                }
+            } else {
+                break; // Stop if it goes out of bounds
+            }
+        }
+
+        // Loop to move diagonally down and to the left
+        for (int offset = 1; offset <= 7; offset++) {
+            int newX = positionX - offset;
+            int newY = positionY - offset;
+
+            if (Board.isValidMove(newX, newY)) {
+                if (!gameBoard[newX][newY].getTaken()) {
+                    Coordinates coordinates = new Coordinates();
+                    coordinates.setCoordinates(newX, newY);
+                    possibleMoves.add(coordinates);
+                } else {
+                    break; // Stop if the tile is not empty
+                }
+            } else {
+                break; // Stop if it goes out of bounds
+            }
+        }
 
         return possibleMoves;
     }
