@@ -13,14 +13,17 @@ public class Soldier {
     private String teamColor;
     private int pieceID;
     private int health;
-    private Coordinates coordinates;
+    private final Coordinates coordinates;
 
-    public Soldier(boolean taken, String type, String Color, int ID, int health) {;
+    public Soldier(boolean taken, String type, String Color, int ID, int health, int X, int Y) {;
         this.isTaken = taken;
         this.soldierType = type;
         this.teamColor = Color;
         this.pieceID = ID;
         this.health = health;
+        Coordinates coordinates = new Coordinates();
+        coordinates.setCoordinates(X, Y);
+        this.coordinates = coordinates;
     }
 
     public Coordinates getCoordinates() {
