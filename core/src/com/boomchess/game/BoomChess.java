@@ -51,7 +51,14 @@ public class BoomChess extends ApplicationAdapter {
 
 	// for determining which tiles should be slightly highlighted with a red hue to indicate that the dragged
 	// piece can be dropped there
-	public static ArrayList<Coordinates> validMoveTiles;
+	// public static ArrayList<Coordinates> validMoveTiles;
+
+	// for setting the current "Mover" of the game
+	public static boolean isRedTurn = true;
+
+	// for the x-marker overlay over the game-field
+	public static boolean renderOverlay = false;
+	public static Stage possibleMoveOverlay;
 
 
 	@Override
@@ -108,6 +115,12 @@ public class BoomChess extends ApplicationAdapter {
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 
+		// for the overlay of possible moves
+		if (renderOverlay){
+			possibleMoveOverlay.act();
+			possibleMoveOverlay.draw();
+		}
+
 		// for the stages, displays only stage assigned as currentStage, see method switchToStage
 		currentStage.act();
 		currentStage.draw();
@@ -119,6 +132,7 @@ public class BoomChess extends ApplicationAdapter {
 		batch.dispose();
 		skin.dispose();
 		currentStage.dispose();
+		possibleMoveOverlay.dispose();
 	}
 
 	private static void switchToStage(Stage newStage) {
@@ -135,8 +149,12 @@ public class BoomChess extends ApplicationAdapter {
 
 	private static Stage createMainMenuStage() {
 
+		// setOverlay to false
+		renderOverlay = false;
+
 		// create a empty validMoveTiles to prevent .size null exception
-		validMoveTiles = new ArrayList<Coordinates>();
+		// TODO REMOVE THIS VARIABLE IF CODE WORKING
+		// validMoveTiles = new ArrayList<Coordinates>();
 
 		Stage menuStage = new Stage();
 		Gdx.input.setInputProcessor(menuStage);
@@ -302,7 +320,11 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	private static Stage createGameStage(boolean isBotMatch) {
+
 		Stage gameStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+
+		// xMarkerOverlay
+		possibleMoveOverlay = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
 		// stop menu music and start background_music
 		menu_music.stop();
@@ -317,11 +339,12 @@ public class BoomChess extends ApplicationAdapter {
 		// refine the position of the root Table, since the orthoCamera is centered on a screen that may change size
 		root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
 				(Gdx.graphics.getHeight() - root.getHeight()) / 2f);
-		root.setTouchable(Touchable.enabled);
+
+		// root.setTouchable(Touchable.enabled);
 
 		gameStage.addActor(root);
 
-		// TODO try to implement the game board as a tiled map and the pieces as actors on top of it
+		// CHECKED try to implement the game board as a tiled map and the pieces as actors on top of it
 		//  combine the tiled map renderer with the stage renderer? Research: addressing individual .tmx tiles in code
 		//  - corresponding to the 2D Array Game Board, the pieces on it, their stats as clean health bars.
 		//  ----------------------------------------------------------------------------------------------
@@ -388,13 +411,13 @@ public class BoomChess extends ApplicationAdapter {
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("general_red_left.png", currentHealth, i, j,
+							root.add(drawPiece("general_red_left.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("general_green_right.png", currentHealth, i, j,
+							root.add(drawPiece("general_green_right.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						break;
@@ -402,13 +425,13 @@ public class BoomChess extends ApplicationAdapter {
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("infantry_red_left.png", currentHealth, i, j,
+							root.add(drawPiece("infantry_red_left.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("infantry_green_right.png", currentHealth, i, j,
+							root.add(drawPiece("infantry_green_right.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						break;
@@ -416,13 +439,13 @@ public class BoomChess extends ApplicationAdapter {
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("helicopter_red_left.png", currentHealth, i, j,
+							root.add(drawPiece("helicopter_red_left.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("helicopter_green_right.png", currentHealth, i, j,
+							root.add(drawPiece("helicopter_green_right.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						break;
@@ -430,13 +453,13 @@ public class BoomChess extends ApplicationAdapter {
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("tank_red_left.png", currentHealth, i, j,
+							root.add(drawPiece("tank_red_left.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("tank_green_right.png", currentHealth, i, j,
+							root.add(drawPiece("tank_green_right.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						break;
@@ -444,13 +467,13 @@ public class BoomChess extends ApplicationAdapter {
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("commando_red_left.png", currentHealth, i, j,
+							root.add(drawPiece("commando_red_left.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("commando_green_right.png", currentHealth, i, j,
+							root.add(drawPiece("commando_green_right.png", currentHealth,j, i,
 									gameBoard)).size(tileSize);
 						}
 						break;
@@ -458,32 +481,20 @@ public class BoomChess extends ApplicationAdapter {
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("war_dog_red_left.png", currentHealth, i, j,
+							root.add(drawPiece("war_dog_red_left.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("war_dog_green_right.png", currentHealth, i, j,
+							root.add(drawPiece("war_dog_green_right.png", currentHealth, j, i,
 									gameBoard)).size(tileSize);
 						}
 						break;
 					case "empty":
-						// Empty box (no image) or xMarker (red X) if it is a valid move
-						// as coordinates generation in touch.dragged-Event
-						boolean xMarkerAdded = false;
-						for (Coordinates validMoveTile : validMoveTiles) {
-							if (validMoveTile.getX() == j && validMoveTile.getY() == i) {
-								// Apply a red X
-								root.add(drawPiece("xMarker.png", currentHealth, i, j,
-										gameBoard)).size(tileSize);
-								xMarkerAdded = true;
-								break;
-							}
-						}
-						if (!xMarkerAdded) {
-							root.add(drawPiece("empty.png", currentHealth, i, j, gameBoard)).size(tileSize);
-					}
+						// Empty box (no image)
+						root.add(drawPiece("empty.png", currentHealth, j, i, gameBoard)).size(tileSize);
+						break;
 				}
 			}
 		}
@@ -593,12 +604,8 @@ public class BoomChess extends ApplicationAdapter {
 			// for better performance and more control over the actual movement
 			@Override
 			public void touchDragged(InputEvent event, float x, float y, int pointer) {
-				drag(event, x, y, pointer);
-			}
-			public void drag(InputEvent event, float x, float y, int pointer) {
-				tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
-
 				// function called if the user is Dragging something
+				tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
 
 				// as long as the mouse is pressed down, the actor is moved to the mouse position
 				// we calculate the tiles it can move to and highlight these tiles with a slightly red hue
@@ -640,12 +647,57 @@ public class BoomChess extends ApplicationAdapter {
 
 	// method for setting the ArrayList of allowed tiles to move to and a method for clearing it to nothing
 
-	public static void setAllowedTiles (ArrayList<Coordinates> allowedTiles) {
-		validMoveTiles = allowedTiles;
+	public static void setAllowedTiles (ArrayList<Coordinates> validMoveTiles) {
+
+		// renew the whole Stage inside possibleMovesOverlay to clear the old tiles
+		possibleMoveOverlay.clear();	// clear the old tiles
+
+		// start of overlay creation, works similiar to the tileWidget creation
+
+		Table root = new Table();
+
+		root.setSize(720, 640);
+		root.center(); // Center the Overlay exactly above the gameBoard in the parent container (stage)
+		// refine the position of the root Table, since the orthoCamera is centered on a screen that may change size
+		root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
+				(Gdx.graphics.getHeight() - root.getHeight()) / 2f);
+
+		// for the size of the tiles
+		int tileSize = 80;
+		int numRows = 8;
+		int numColumns = 9;
+
+		for (int i = 0; i < numRows; i++) {
+			// add a new stage Table row after each row of the gameBoard
+			root.row();
+			for (int j = 0; j < numColumns; j++) {
+				// create a new box like widget at each position of the board and add it to the root table
+				// it is 80x80 pixels, holds the image of the piece at that position and is movable to other positions
+				// switch statement to check which type of piece it is
+
+				// Empty box (no image) or xMarker (red X) if it is a valid move
+				// as coordinates generation in touch.dragged-Event
+				boolean xMarkerAdded = false;
+				for (Coordinates validMoveTile : validMoveTiles) {
+					if (validMoveTile.getX() == j && validMoveTile.getY() == i) {
+						// Apply a red X
+						root.add(new Image(new Texture("xMarker.png"))).size(tileSize);
+						xMarkerAdded = true;
+						break;
+					}
+				}
+				if (!xMarkerAdded) {
+					root.add(new Image(new Texture("empty.png"))).size(tileSize);
+				}
+			}
+		}
+		// add the root table to the stage
+		possibleMoveOverlay.addActor(root);
+		renderOverlay = true;
 	}
 
 	public static void clearAllowedTiles () {
-		validMoveTiles = new ArrayList<Coordinates>();
+		renderOverlay = false;
 	}
 
 	// method for creating the stage for the game end ON TOP of the gameStage
@@ -673,8 +725,7 @@ public class BoomChess extends ApplicationAdapter {
 		backButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				// refresh gameBoard to initial state
-				Soldier[][] gameBoard = Board.initialise();
+				// refresh gameBoard to initial state by going to the mainMenu
 				switchToStage(createMainMenuStage());
 			}
 		});

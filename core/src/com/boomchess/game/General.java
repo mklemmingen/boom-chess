@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class General {
     /*
-        * General.java is the object for the chess piece General in the game Boom Chess.
-        * It holds the specific movement patterns for this piece, the special damage it can deal and the initial health.
-        * The method hurtGeneral lowers the current health amount any returns the new health amount.
-        * The method defaultGeneral resets the health to the initial amount.
+     * General.java is the object for the chess piece General in the game Boom Chess.
+     * It holds the specific movement patterns for this piece, mathMove,
+     * the special damage it can deal calculateDamage,
+     * and the initial health. getHealth
      */
 
     public static int getHealth(){
@@ -15,10 +15,15 @@ public class General {
     }
 
     public static int calculateDamage(String soldierDefend) {
-        // TODO find fitting randomisation in java
-        // only deals 1-5 damage
+        // only deals 5-10 damage
 
-        return 0;
+        int minValue = 5;
+        int maxValue = 10;
+
+        // we achieve this randomisation using random.Math`s floor and random methods
+        // that generate a random number between 0 and 1 that we multiply
+
+        return (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
     }
 
     public static ArrayList<Coordinates> mathMove(Soldier[][] gameBoard, int positionX, int positionY) {
@@ -36,16 +41,8 @@ public class General {
 
         // for loop that does -1 0 and +1 onto the x coordinate
         // for loop that does -1 0 and +1 onto the y coordinate
-        // in total, we will have 8 iterations
+        // in total, we will have 9 iterations
 
-        //   ax = x - 1 ; ay = y + 1
-        //   bx = x ; by = y + 1
-        //   cx = x + 1 ; cy = y + 1
-        //   dx = x - 1 ; dy = y
-        //   ex = x + 1 ; ey = y
-        //   fx = x - 1 ; fy = y - 1
-        //   gx = x ; gy = y - 1
-        //   hx = x + 1 ; hy = y - 1
         //   we need to check if the tile is occupied by anything before putting it in the array
 
         for (int xOffset = -1; xOffset <= 1; xOffset++) {

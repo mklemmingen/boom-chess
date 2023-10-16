@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class Helicopter {
     /*
      * Helicopter.java is the object for the chess piece General in the game Boom Chess.
-     * It holds the specific movement patterns for this piece, the special damage it can deal and the initial health.
-     * The method hurtGeneral lowers the current health amount any returns the new health amount.
-     * The method defaultGeneral resets the health to the initial amount.,
+     * It holds the specific movement patterns for this piece, mathMove,
+     * the special damage it can deal calculateDamage,
+     * and the initial health. getHealth
      */
 
     public static int getHealth(){
@@ -15,11 +15,22 @@ public class Helicopter {
     }
 
     public static int calculateDamage(String soldierDefend) {
-        // TODO find fitting randomisation in java
-        // deals 10-20 damage
+
+        // deals 5-20 damage
         // advantages: deals +5 to tanks
 
-        return 0;
+        int minValue = 5;
+        int maxValue = 20;
+
+        // we achieve this randomisation using random.Math`s floor and random methods
+        // that generate a random number between 0 and 1 that we multiply
+        int randomDamage = (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
+
+        if(soldierDefend.equals("tank")){
+            randomDamage += 5;
+        }
+
+        return randomDamage;
     }
 
     public static ArrayList<Coordinates> mathMove(Soldier[][] gameBoard, int positionX, int positionY) {

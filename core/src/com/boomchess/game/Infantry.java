@@ -5,20 +5,32 @@ import java.util.ArrayList;
 public class Infantry {
     /*
      * Infantry.java is the object for the chess piece General in the game Boom Chess.
-     * It holds the specific movement patterns for this piece, the special damage it can deal and the initial health.
-     * The method hurtGeneral lowers the current health amount any returns the new health amount.
-     * The method defaultGeneral resets the health to the initial amount.,
+     * It holds the specific movement patterns for this piece, mathMove,
+     * the special damage it can deal calculateDamage,
+     * and the initial health. getHealth
      */
     public static int getHealth(){
         return 40;
     }
 
     public static int calculateDamage(String soldierDefend) {
-        // TODO find fitting randomisation in java
+
         // deals 01-20 damage
         // advantages +5 to attacking helicopters
 
-        return 0;
+        int minValue = 1;
+        int maxValue = 20;
+
+        // we achieve this randomisation using random.Math`s floor and random methods
+        // that generate a random number between 0 and 1 that we multiply
+        int randomDamage = (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
+
+        if(soldierDefend.equals("helicopter")){
+            randomDamage += 5;
+        }
+
+        return randomDamage;
+
     }
 
 
