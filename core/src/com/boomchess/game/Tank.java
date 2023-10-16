@@ -1,5 +1,7 @@
 package com.boomchess.game;
 
+import java.util.ArrayList;
+
 public class Tank {
     /*
      * Tank.java is the object for the chess piece General in the game Boom Chess.
@@ -21,14 +23,83 @@ public class Tank {
         return 0;
     }
 
-    public static int[] mathMove(int positionX, int positionY){
-        // this method returns an array of all possible move-location for this soldier (positionXY, position XY)
-        int[] possibleMoves = new int[8];
+    public static ArrayList<Coordinates> mathMove(Soldier[][] gameBoard, int positionX, int positionY) {
+        // this method returns a Coordinates array of all possible move-location for this soldier
+        ArrayList<Coordinates> possibleMoves = new ArrayList<>();
 
-        // TODO
-        // a tank can move vertically and horizontally till it hits a wall or another soldier
-        // we need to check if the tile is occupied by anything before putting it in the array
+        // a tank can move horizontally and vertically in all directions
 
+        // Loop to move upwards
+        for (int yOffset = 1; yOffset <= 7; yOffset++) {
+            int newX = positionX;
+            int newY = positionY + yOffset;
+
+            if (Board.isValidMove(newX, newY)) {
+                if (!gameBoard[newX][newY].getTaken()) {
+                    Coordinates coordinates = new Coordinates();
+                    coordinates.setCoordinates(newX, newY);
+                    possibleMoves.add(coordinates);
+                } else {
+                    break; // Stop if the tile is not empty
+                }
+            } else {
+                break; // Stop if it goes out of bounds
+            }
+        }
+
+        // Loop to move downwards
+        for (int yOffset = 1; yOffset <= 7; yOffset++) {
+            int newX = positionX;
+            int newY = positionY - yOffset;
+
+            if (Board.isValidMove(newX, newY)) {
+                if (!gameBoard[newX][newY].getTaken()) {
+                    Coordinates coordinates = new Coordinates();
+                    coordinates.setCoordinates(newX, newY);
+                    possibleMoves.add(coordinates);
+                } else {
+                    break; // Stop if the tile is not empty
+                }
+            } else {
+                break; // Stop if it goes out of bounds
+            }
+        }
+
+        // Loop to move to the right
+        for (int xOffset = 1; xOffset <= 7; xOffset++) {
+            int newX = positionX + xOffset;
+            int newY = positionY;
+
+            if (Board.isValidMove(newX, newY)) {
+                if (!gameBoard[newX][newY].getTaken()) {
+                    Coordinates coordinates = new Coordinates();
+                    coordinates.setCoordinates(newX, newY);
+                    possibleMoves.add(coordinates);
+                } else {
+                    break; // Stop if the tile is not empty
+                }
+            } else {
+                break; // Stop if it goes out of bounds
+            }
+        }
+
+        // Loop to move to the left
+        for (int xOffset = 1; xOffset <= 7; xOffset++) {
+            int newX = positionX - xOffset;
+            int newY = positionY;
+
+            if (Board.isValidMove(newX, newY)) {
+                if (!gameBoard[newX][newY].getTaken()) {
+                    Coordinates coordinates = new Coordinates();
+                    coordinates.setCoordinates(newX, newY);
+                    possibleMoves.add(coordinates);
+                } else {
+                    break; // Stop if the tile is not empty
+                }
+            } else {
+                break; // Stop if it goes out of bounds
+            }
+        }
         return possibleMoves;
     }
 

@@ -46,7 +46,7 @@ public class Commando {
         // it would take more computations doing that each loop that it takes to just check if the
         // tile is occupied and a valid move
 
-// Loop to move upwards
+        // Loop to move upwards
         for (int yOffset = 1; yOffset <= 7; yOffset++) {
             int newX = positionX;
             int newY = positionY + yOffset;
