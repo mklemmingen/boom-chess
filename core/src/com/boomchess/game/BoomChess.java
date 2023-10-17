@@ -61,6 +61,7 @@ public class BoomChess extends ApplicationAdapter {
 	public static Stage possibleMoveOverlay;
 
 
+
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
@@ -505,6 +506,21 @@ public class BoomChess extends ApplicationAdapter {
 		// bottom right the table in the parent container
 		backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 0);
 		gameStage.addActor(backTable); // Add the table to the stage
+
+		// Image of the currentMover
+		Stack currentMover = new Stack();
+		currentMover.setSize(250, 125);
+		currentMover.setPosition(currentMover.getWidth()/6,
+				currentMover.getHeight()/2);
+		Image redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
+		Image greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
+		if (isRedTurn){
+			currentMover.add(greenMove);
+		} else {
+			currentMover.add(redMove);
+		}
+
+		gameStage.addActor(currentMover);
 
 		// Exit to Main Menu button to return to the main menu
 		TextButton menuButton = new TextButton("Return to Main Menu", skin);
