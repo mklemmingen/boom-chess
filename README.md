@@ -23,7 +23,7 @@ configuration for desktop-specific rendering:
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Schematics for the Program
 
-![Schematics for the Program. frontend on top, backend on bottom. the frontend is libGDX based and the backend is a 2D Array of a Soldier class, a Damage class, a Board Class and a couple of Classes for pieces. It is not a much-more-indepth diagram](https://github.com/mklemmingen/boom-chess/blob/master/readme_assets/Schematics_ProgrammierprojectHD.png?raw=true)
+![Schematics for the Program. frontend on top, backend on bottom. the frontend is libGDX based and the backend is a 2D Array of a Soldier class, a Damage class, a Board Class and a couple of Classes for pieces. It is not a much-more-indepth diagram](https://github.com/mklemmingen/boom-chess/blob/master/readme_asset/Schematics_ProgrammierprojectHD.png?raw=true)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
