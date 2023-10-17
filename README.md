@@ -23,7 +23,7 @@ configuration for desktop-specific rendering:
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Schematics for the Program
 
-![Schematics for the Program. frontend on top, backend on bottom. the frontend is libGDX based and the backend is a 2D Array of a Soldier class, a Damage class, a Board Class and a couple of Classes for pieces. It is not a much-more-indepth diagram](https://github.com/mklemmingen/boom-chess//master/readme_assets/Schematics_ProgrammierprojectHD.png?raw=true)
+![Schematics for the Program. frontend on top, backend on bottom. the frontend is libGDX based and the backend is a 2D Array of a Soldier class, a Damage class, a Board Class and a couple of Classes for pieces. It is not a much-more-indepth diagram](https://github.com/mklemmingen/boom-chess/blob/master/readme_assets/Schematics_ProgrammierprojectHD.png?raw=true)
 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -189,22 +189,22 @@ https://github.com/czyzby/gdx-skins/tree/master/commodore64
 Documentation:
 
 Creation of the Background in LibreSprite https://github.com/LibreSprite/LibreSprite
-![Background Creation](https://github.com/mklemmingen/The-Boom-Chess//readme_assets/backgroundCreation.png?raw=true)
+![Background Creation](https://github.com/mklemmingen/The-Boom-Chess/blob/master/readme_assets/backgroundCreation.png?raw=true)
 
 creating better PixelArt Icons for the Soldier Pieces using bings ai creation powered by Dall-E 3
-![Icon Creation using DallE3](https://github.com/mklemmingen/The-Boom-Chess//readme_assets/creatingBetterPixelArtIconsWithDallE3.png?raw=true)
+![Icon Creation using DallE3](https://github.com/mklemmingen/The-Boom-Chess/blob/masterreadme_assets/creatingBetterPixelArtIconsWithDallE3.png?raw=true)
 
 Creation of mixed Icons for making the Pieces more diverse in their type USING inkscape https://inkscape.org
 ![Mixed Icons Creation in inkscape](https://github.com/mklemmingen/The-Boom-Chess/readme_assets/combiningAndRefining.png?raw=true)
 
 GameBoard Debugging in IntelliJ IDE Community Edition
-![GameBoard Debugging in IntelliJ IDE Community Edition](https://github.com/mklemmingen/The-Boom-Chess//readme_assets/DebugginTheGameBoard.png?raw=true)
+![GameBoard Debugging in IntelliJ IDE Community Edition](https://github.com/mklemmingen/The-Boom-Chess/blob/masterreadme_assets/DebugginTheGameBoard.png?raw=true)
 
 Creation of the Boom Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite
-![Creation of the Boom Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite](https://github.com/mklemmingen/The-Boom-Chess//readme_assets/How_to_Boom-Logo.png?raw=true)
+![Creation of the Boom Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite](https://github.com/mklemmingen/The-Boom-Chess/blob/masterreadme_assets/How_to_Boom-Logo.png?raw=true)
 
 Creation of the Move Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite
-![Creation of the Move Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite](https://github.com/mklemmingen/The-Boom-Chess//readme_assets/Move_Logo_Creation.png?raw=true)
+![Creation of the Move Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite](https://github.com/mklemmingen/The-Boom-Chess/blob/masterreadme_assets/Move_Logo_Creation.png?raw=true)
 
 
 Creation of the Schematics USING inkscape https://inkscape.org
