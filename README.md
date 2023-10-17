@@ -189,5 +189,30 @@ https://github.com/czyzby/gdx-skins/tree/master/commodore64
 Documentation:
 
 Creation of the Background in LibreSprite https://github.com/LibreSprite/LibreSprite
-![Background Creation](https://github.com/mklemmingen/The-Boom-Chess/blob/b875f088642956df3cc16c7d549107116ead5efd/readme_assets/backgroundCreation.png?raw=true)
+![Background Creation](https://github.com/mklemmingen/The-Boom-Chess/blob/readme_assets/backgroundCreation.png?raw=true)
+
+creating better PixelArt Icons for the Soldier Pieces using bings ai creation powered by Dall-E 3
+![Icon Creation using DallE3](https://github.com/mklemmingen/The-Boom-Chess/blob/readme_assets/creatingBetterPixelArtIconsWithDallE3.png?raw=true)
+
+Creation of mixed Icons for making the Pieces more diverse in their type USING inkscape https://inkscape.org
+![Mixed Icons Creation in inkscape](https://github.com/mklemmingen/The-Boom-Chess/blob//readme_assets/combiningAndRefining.png?raw=true)
+
+GameBoard Debugging in IntelliJ IDE Community Edition
+![GameBoard Debugging in IntelliJ IDE Community Edition](https://github.com/mklemmingen/The-Boom-Chess/blob/readme_assets/DebugginTheGameBoard.png?raw=true)
+
+Creation of the Boom Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite
+![Creation of the Boom Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite](https://github.com/mklemmingen/The-Boom-Chess/blob/readme_assets/How_to_Boom-Logo.png?raw=true)
+
+Creation of the Move Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite
+![Creation of the Move Logo pixel by pixel in LibreSprite https://github.com/LibreSprite/LibreSprite](https://github.com/mklemmingen/The-Boom-Chess/blob/readme_assets/Move_Logo_Creation.png?raw=true)
+
+
+Creation of the Schematics USING inkscape https://inkscape.org
+![Schematics Creation in inkscape](https://github.com/mklemmingen/The-Boom-Chess/blob//readme_assets/schematicsCreation.png?raw=true)
+
+Creation of the underlaying .tmx tiled map using TILED https://www.mapeditor.org/
+![Creation of the underlaying .tmx tiled map using TILED](https://github.com/mklemmingen/The-Boom-Chess/blob//readme_assets/TiledUsage.png?raw=true)
+
+Using Inkscape for refining Icons
+![Using Inkscape for refining Icons](https://github.com/mklemmingen/The-Boom-Chess/blob//readme_assets/UsingInkScapeForRefininigPNGs.png.png?raw=true)
 
