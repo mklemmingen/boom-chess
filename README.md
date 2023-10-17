@@ -25,8 +25,6 @@ Schematics for the Program
 
 ![Schematics for the Program. frontend on top, backend on bottom. the frontend is libGDX based and the backend is a 2D Array of a Soldier class, a Damage class, a Board Class and a couple of Classes for pieces. It is not a much-more-indepth diagram](https://github.com/mklemmingen/boom-chess/blob/master/readme_assets/Schematics_ProgrammierprojectHD.png?raw=true)
 
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -185,3 +183,11 @@ https://www.youtube.com/watch?v=N6xqCwblyiw
 source skins for Scene2DUI
 https://github.com/czyzby/gdx-skins/blob/master/flat
 https://github.com/czyzby/gdx-skins/tree/master/commodore64
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Documentation:
+
+Creation of the Background in LibreSprite https://github.com/LibreSprite/LibreSprite
+![Background Creation](https://github.com/mklemmingen/The-Boom-Chess/blob/b875f088642956df3cc16c7d549107116ead5efd/readme_assets/backgroundCreation.png?raw=true)
+
