@@ -222,5 +222,5 @@ Creation of the underlaying .tmx tiled map using TILED https://www.mapeditor.org
 
 Using Inkscape for refining Icons
 
-![Using Inkscape for refining Icons](https://github.com/mklemmingen/The-Boom-Chess/blob/master/readme_assets/UsingInkScapeForRefininigPNGs.png.png?raw=true)
+![Using Inkscape for refining Icons](https://github.com/mklemmingen/The-Boom-Chess/blob/master/readme_assets/UsingInkScapeForRefininigPNGs.png?raw=true)
 
