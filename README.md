@@ -23,62 +23,9 @@ configuration for desktop-specific rendering:
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Schematics for the Program
 
-![Schematics for the Program. frontend on top, backend on bottom. the frontend is libGDX based and the backend is a 2D Array of a Soldier class, a Damage class, a Board Class and a couple of Classes for pieces. It is not a much-more-indepth diagram](https://github.com/mklemmingen/boom-chess/blob/master/README-assets/image.jpg?raw=true)
+![Schematics for the Program. frontend on top, backend on bottom. the frontend is libGDX based and the backend is a 2D Array of a Soldier class, a Damage class, a Board Class and a couple of Classes for pieces. It is not a much-more-indepth diagram](https://github.com/mklemmingen/boom-chess/blob/master/Rreadme_assets/Schematics_ProgrammierprojectHD.png?raw=true)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-A daring big 10x10 board
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-Decide how many obstacles you want in your board - how about a rock? how about 5?
-
-In a 2-Player-Game, a coin throw decides who decides! 
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-Starting Menu Layout:
-
-Welcome to Boom-Chess
-Do you dare to blow up?
-
-1. HELP!
-2. Read the lore
-   
-4. Start a 2-player-game
-5. Start a game against a bot
-
-6. Options
-
-7. Credit where Credit is due
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-1.1 Learn the game
-
-   ......  explanation about the different figurines, their stats, their dis/advantages 
-
-2.1 
-
-  ....... Big Lore about the game world you find yourself in
-
-4.1 Options about the game that will start
-  4.2 Choose your queens name
-  4.3 coin toss - winner decides board
-  
-5.1  Options about the game that will start
-  5.2 Choose your queens name
-  5.3 Choose the Difficulty of your enemy
-  5.4 Choose the Layout of the board and obstacles
-  
-
-6.1 Options about the colours of the game-board, about colour-blindness
-
-7.1 Let the credits and info about the game run down
-   - display libGDX
-   - display where code snippets have been taken from
-   - display people that have worked on this project
-   - display programs that have been used in creating the art and sounds
 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -86,10 +33,53 @@ Do you dare to blow up?
 the front end framwork will be run my libGDX, which will help in things running smoothly and more easy to setup. 
 Gradle will be used to easily work with libraries (dependencies) and for smooth game starts.
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Board Size: 9x8
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Starting Menu Layout:
+
+Boom-Chess
+
+1. HELP!
+   
+4. Start a 2-player-game
+5. Start a game against a bot
+
+6. Options
+
+7. Credits
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1.1 Learn the game
+
+   ......  explanation about the different figurines, their stats, their dis/advantages 
+
+5.1 Options about the game that will start
+  4.2 Choose your queens name
+  4.3 coin toss - winner decides board
+  
+6.1  Options about the game that will start
+  6.2 Choose your queens name
+  6.3 Choose the Difficulty of your enemy
+  6.4 Choose the Layout of the board and obstacles
+  
+
+7.1 Options about the colours of the game-board, about colour-blindness
+
+8.1 Let the credits and info about the game run down
+   - display libGDX
+   - display where code snippets have been taken from
+   - display people that have worked on this project
+   - display programs that have been used in creating the art and sounds
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Quick intro:
-The game will be modernized using a different approach to chess. Each piece is a new piece resembling it only in the way it can move. The King will be a General. The Towers will be tanks. The Pawns Infantry. The Runners will be Dogs. The Horses will be Helicopters. The Queen will be a Commando. 
+The game will be modernized using a different approach to chess. Each piece is a new piece resembling it only slightly in the way it can move. T
+he King will be a General. The Towers will be tanks. The Pawns Infantry. The Runners will be Dogs. The Horses will be Helicopters. The Queen will be a Commando. 
 There will also be an extra Piece called Artillery that can attack at a distance of 3 tiles and move sideways 2 tiles and diagonally 1 tile per round. 
 The whole board will be 10x10. Each piece has a healthbar. Each piece will attack everything it can attack, whose target, except for artillery, must be within the first next tiles. If multiple tiles around have enemies, the D20 damage will be split between enemies. 
 The pieces have advantages and disadvantages for different kinds of enemies.  
@@ -98,7 +88,7 @@ at each turn, a D20 is thrown to determine damage on each other
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-quick ids for pieces:
+quick ids for pieces:   // TODO UPDATE THE STATS TO THE CURRENT INGAME CHARACTERISTICS
 
 General(King) - int: 10          / health: int: 50   / damage: 1-5  
 
@@ -152,10 +142,20 @@ Background-Music ingame:
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 general backend setup:
 
-Tile[][] board = new Tile[10][10];
+Soldier[][] gameBoard = new Soldier[9][8];
 
+Tile will hold information as to if the tile has a :  - rock on it - a piece on it, which and which team, pieceID, Health 
 
-Tile will hold information as to if the tile has a :  - rock on it - a piece on it, which and which team 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+gameStage-Explanation:
+
+the game Stage will be created by initialising the gameBoard. This gameBoard will hold the Soldiers.
+The gameStage will create the gameBoard by looping trough it and creating the Overlay-GameBoard depending on what Soldiers are on what tile.
+Each tile has a Listener on it that activated if the Widget is dragged - during dragging, its possible moves from its current Drag-Start location get calculated and 
+overlayd above the gameBoard-Stage. It ends when a click occurs.
+
+- game Loop Explanation //TODO 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
