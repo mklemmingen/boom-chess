@@ -78,11 +78,11 @@ Boom-Chess
 Quick intro:
 The game will be modernized using a different approach to chess. Each piece is a new piece resembling it only slightly in the way it can move. T
 he King will be a General. The Towers will be tanks. The Pawns Infantry. The Runners will be Dogs. The Horses will be Helicopters. The Queen will be a Commando. 
-There will also be an extra Piece called Artillery that can attack at a distance of 3 tiles and move sideways 2 tiles and diagonally 1 tile per round. 
-The whole board will be 10x10. Each piece has a healthbar. Each piece will attack everything it can attack, whose target, except for artillery, must be within the first next tiles. If multiple tiles around have enemies, the D20 damage will be split between enemies. 
+
+The whole board will be 10x10. Each piece has a healthbar.  
+
 The pieces have advantages and disadvantages for different kinds of enemies.  
 At the end of each chess-like turn, the current players pieces will all attack anyone they can. 
-at each turn, a D20 is thrown to determine damage on each other
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
