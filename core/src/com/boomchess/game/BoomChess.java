@@ -105,6 +105,9 @@ public class BoomChess extends ApplicationAdapter {
 
 		currentStage = createMainMenuStage();
 
+		int BasharGitTest = 12;
+
+
 	}
 
 	@Override
