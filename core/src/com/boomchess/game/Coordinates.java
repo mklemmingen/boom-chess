@@ -18,6 +18,13 @@ public class Coordinates {
         this.Y = y;
     }
 
+    // method for using a coordinate object to set a coordinate object, used in Soldier.java
+    public void setCoordinatesObj(Coordinates coordinates) {
+        // this method sets BOTH coordinates, for separate setting use setX and setY
+        this.X = coordinates.getX();
+        this.Y = coordinates.getY();
+    }
+
     public void setX(int x) {
         this.X = x;
     }
@@ -34,5 +41,8 @@ public class Coordinates {
         return this.Y;
     }
 
-
+    public boolean checkEqual(Coordinates tile) {
+        // method for checking if this coordinate object equals a parameter one
+        return this.X == tile.getX() && this.Y == tile.getY();
+    }
 }

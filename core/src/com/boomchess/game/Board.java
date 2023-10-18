@@ -1,5 +1,7 @@
 package com.boomchess.game;
 
+import java.util.ArrayList;
+
 public class Board {
     /*
      * Board.java is the object for the chess board in the game Boom Chess.
@@ -11,7 +13,10 @@ public class Board {
     // Define the board as a 2D array
     private static Soldier[][] board;
 
-    public static Soldier[][] initialise() {
+    // current validMoveTiles
+    public static ArrayList<Coordinates> validMoveTiles;
+
+    public static void initialise() {
         board = new Soldier[9][8];
         // initialize the board with the correct pieces
 
@@ -92,42 +97,42 @@ public class Board {
             }
         }
 
-        return board;
     }
 
     public static Soldier[][] getGameBoard(){
         return board;
     }
 
-    public static boolean update(int positionX, int positionY,
+    public static void update(int positionX, int positionY,
                                  int newPositionX, int newPositionY) {
-        // run this in a Try loop till it returns true to not allow the player to make a move until it is valid
-        boolean validMove = false;
-        // make a call to the Soldier object in board behind newPosition to check if it is taken
-        if (board[newPositionX][newPositionY].getTaken()) {
-            // print out "invalid move"
-            System.out.println("Invalid move. Position is already taken.");
-        }
-        // if not taken, replace current position soldier with empty values and replace new position soldier with
-        // the old information
-        else {
-            validMove = true;
-            board[newPositionX][newPositionY].setTaken(true);
-            board[newPositionX][newPositionY].setTeamColor(board[positionX][positionY].getTeamColor());
-            board[newPositionX][newPositionY].setSoldierType(board[positionX][positionY].getSoldierType());
-            board[newPositionX][newPositionY].setPieceID(board[positionX][positionY].getPieceID());
-            board[newPositionX][newPositionY].setHealth(board[positionX][positionY].getHealth());
-            board[positionX][positionY].setTaken(false);
-            board[positionX][positionY].setTeamColor("none");
-            board[positionX][positionY].setSoldierType("empty");
-            board[positionX][positionY].setPieceID(0);
-            board[positionX][positionY].setHealth(0);
-        }
-        return validMove;
+        board[newPositionX][newPositionY].setTaken(true);
+        board[newPositionX][newPositionY].setTeamColor(board[positionX][positionY].getTeamColor());
+        board[newPositionX][newPositionY].setSoldierType(board[positionX][positionY].getSoldierType());
+        board[newPositionX][newPositionY].setPieceID(board[positionX][positionY].getPieceID());
+        board[newPositionX][newPositionY].setHealth(board[positionX][positionY].getHealth());
+        board[positionX][positionY].setTaken(false);
+        board[positionX][positionY].setTeamColor("none");
+        board[positionX][positionY].setSoldierType("empty");
+        board[positionX][positionY].setPieceID(0);
+        board[positionX][positionY].setHealth(0);
     }
 
     // Helper method to check if the coordinates are within bounds
     public static boolean isValidMove(int x, int y) {
         return x >= 0 && x < 9 && y >= 0 && y < 8;
     }
+
+    // methods for setting and getting the validMoveTiles, as well as emptying them
+    public static void setValidMoveTiles(ArrayList<Coordinates> newValidMoveTiles) {
+        validMoveTiles = newValidMoveTiles;
+    }
+
+    public static void emptyValidMoveTiles() {
+        validMoveTiles = new ArrayList<>();
+    }
+
+    public static ArrayList<Coordinates> getValidMoveTiles() {
+        return validMoveTiles;
+    }
 }
+

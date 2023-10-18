@@ -12,9 +12,11 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -46,10 +48,6 @@ public class BoomChess extends ApplicationAdapter {
 	// for determining game stage affairs down the line
 	public static String winnerTeamColour;
 
-	// for determining which tiles should be slightly highlighted with a red hue to indicate that the dragged
-	// piece can be dropped there
-	// public static ArrayList<Coordinates> validMoveTiles;
-
 	// for setting the current "Mover" of the game
 	public static boolean isRedTurn = true;
 
@@ -60,6 +58,10 @@ public class BoomChess extends ApplicationAdapter {
 	// for the x-marker overlay over the game-field
 	public static boolean renderOverlay = false;
 	public static Stage possibleMoveOverlay;
+
+	// for bot matching
+
+	public static boolean isBotMatch;
 
 	@Override
 	public void create() {
@@ -105,6 +107,9 @@ public class BoomChess extends ApplicationAdapter {
 
 		currentStage = createMainMenuStage();
 
+		// creation of empty Board.validMoveTiles for null-pointer exception avoidance
+		Board.validMoveTiles = new ArrayList<Coordinates>();
+
 		int BasharGitTest = 12;
 
 
@@ -140,42 +145,74 @@ public class BoomChess extends ApplicationAdapter {
 				currentMover.getHeight()/2);
 
 
-		// for the in-game loop for setting the turn
-		if (isRedTurn && inGame) {
-			// red team's turn
+		if (inGame) {
+			addToStage(currentMover);
+			// for the in-game loop for setting the turn
+			if (isRedTurn) {
+				// red team's turn
 				// draw Stage with Red Logo
 				Image redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
 				currentMover.add(redMove);
-			// if red team move was legit (legitTurn true)
-			if (legitTurn) {
-				// update position draw new gameBoard inside the update function
-				// drawTheGameBoard(gameBoard);
+				// if red team move was legit (legitTurn true)
+				if (legitTurn) {
+					currentMover.clear();
+					// legitTurn set to true in tileWidgets active listener
+					// also update position draw new gameBoard inside the update function
+					// drawTheGameBoard();
 
-				// calculate damage from all red pieces to all green pieces
-				// TODO link existing functions
+					// calculate damage from all red pieces to all green pieces
+					// for loop through the whole board and checkSurrounding on all soldiers
+					Soldier[][] gameBoard = Board.getGameBoard();
+					for(int i = 0; i < 9; i++){
+						for(int j = 0; j < 8; j++){
+							if(gameBoard[i][j] != null){
+								if(gameBoard[i][j].getTeamColor().equals("red")){
+									Damage.checkSurroundings(i, j);
+								}
+							}
+						}
+					}
 
-				// set variable of isRedTurn to false after all damage dealt
-				isRedTurn = false;
-				// set variable of legitTurn to false
-				legitTurn = false;
+					// set variable of isRedTurn to false after all damage dealt
+					isRedTurn = false;
+					// set variable of legitTurn to false
+					legitTurn = false;
 				}
-		} else {
-			// Green team's turn
-			// draw Stage with Green logo
-			Image greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
-			currentMover.add(greenMove);
-			// if green team move was legit
-			if (legitTurn) {
-				// update position draw new gameBoard inside the update function
-				// drawTheGameBoard(gameBoard);
-				// calculate damage from all green pieces to all red pieces
-				// TODO link existing functions
+			} else {
+				// Green team's turn
+				// draw Stage with Green logo
+				Image greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
+				currentMover.add(greenMove);
+				// if green team move was legit
+				if (legitTurn) {
+					currentMover.clear();
+					// legitTurn set to true in tileWidgets active listener
+					// also update position draw new gameBoard inside the update function
+					// drawTheGameBoard();
 
-				// set variable of isRedTurn to true after all damage dealt
-				isRedTurn = true;
-				// set variable of legitTurn to false
-				legitTurn = false;
+					// calculate damage from all red pieces to all green pieces
+					// for loop through the whole board and checkSurrounding on all soldiers
+					Soldier[][] gameBoard = Board.getGameBoard();
+					for(int i = 0; i < 9; i++){
+						for(int j = 0; j < 8; j++){
+							if(gameBoard[i][j] != null){
+								if(gameBoard[i][j].getTeamColor().equals("green")){
+									Damage.checkSurroundings(i, j);
+								}
+							}
+						}
+					}
+
+					// set variable of isRedTurn to true after all damage dealt
+					isRedTurn = true;
+					// set variable of legitTurn to false
+					legitTurn = false;
+				}
 			}
+		} else {
+			// not in game
+			// remove the currentMover
+			currentMover.clear();
 		}
 	}
 
@@ -234,10 +271,20 @@ public class BoomChess extends ApplicationAdapter {
 
 		TextButton play2Button = new TextButton("Play a 2 Player Game", skin);
 		root.add(play2Button).padBottom(20);
+
 		play2Button.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createGameStage(false));
+				// create the first gameBoard
+				setGameBoard();
+
+				// stop menu music and start background_music
+				menu_music.stop();
+				background_music.setLooping(true);
+				background_music.play();
+
+				boolean isBotMatch = false;
+				switchToStage(createGameStage(isBotMatch));
 			}
 		});
 		root.row();
@@ -247,7 +294,15 @@ public class BoomChess extends ApplicationAdapter {
 		playBotButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createGameStage(true));
+				// create the first gameBoard
+				setGameBoard();
+
+				// stop menu music and start background_music
+				menu_music.stop();
+				background_music.setLooping(true);
+				background_music.play();
+				boolean isBotMatch = true;
+				switchToStage(createGameStage(isBotMatch));
 			}
 		});
 		root.row();
@@ -376,11 +431,6 @@ public class BoomChess extends ApplicationAdapter {
 		// xMarkerOverlay
 		possibleMoveOverlay = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
-		// stop menu music and start background_music
-		menu_music.stop();
-		background_music.setLooping(true);
-		background_music.play();
-
 		// CHECKED try to implement the game board as a tiled map and the pieces as actors on top of it
 		//  combine the tiled map renderer with the stage renderer? Research: addressing individual .tmx tiles in code
 		//  - corresponding to the 2D Array Game Board, the pieces on it, their stats as clean health bars.
@@ -396,32 +446,8 @@ public class BoomChess extends ApplicationAdapter {
 		//  If not, switch to the next player.
 		//  If yes, create Game-End-Stage: display the winner and a button to return to the main menu.
 
-		// TODO while this function holds the gameStage and updates the tiled map, a different function
-		//  for input-handling is called on for the red team depending if isBotMatch is true or false. Meaning if its
-		//  a 2-Player game or a one player game against a bot. If false, the input-handling is indiscriminate and just
-		//  run in a while both-general-alive loop until the game is over, switching between
-		//  green team movable followed by damage calculation and red team movable fol. by red team damage calculation.
-
-		// TODO OUTLINE of game handling:
-		//  while both generals are alive do:
-		//  	green moves calculate
-		//  	damage green onto red
-		// 		save damage-info as a list of tuples (attacker, defender, damage) for immediate display as dotted red line
-		//  	if a general is killed, end game and display winner
-		//  	if isBotMatch == false
-		//  		red moves calculate
-		//  	else
-		//  		redBot moves calculate
-		//  	damage red onto green
-		//  	save damage-info as a list of tuples (attacker, defender, damage) while iterating for immediate
-		//  	display as dotted red line
-		//  	if a general is killed, end game and display winner
-
 		// render the gameBoard by iterating through the 2D Array Soldiers[][] gameBoard
 		// checking which type of piece at position and drawing the correct image there
-
-		// create the first gameBoard
-		setGameBoard();
 
 		// add game board
 		gameStage.addActor(drawTheGameBoard());
@@ -443,6 +469,9 @@ public class BoomChess extends ApplicationAdapter {
 				switchToStage(createMainMenuStage());
 				// create a new gameBoard since game has ended
 				setGameBoard();
+				// set inGame to false and isRedTurn to true to default the game variables
+				inGame = false;
+				isRedTurn = true;
 			}
 		});
 
@@ -453,7 +482,7 @@ public class BoomChess extends ApplicationAdapter {
 		Board.initialise();
 	}
 
-	private static Table drawTheGameBoard() {
+	public static Table drawTheGameBoard() {
 
 		Soldier[][] gameBoard = Board.getGameBoard();
 
@@ -635,81 +664,219 @@ public class BoomChess extends ApplicationAdapter {
 			});
 		}
 
+		if(functionsBoard[X][Y].getTeamColor().equals(getTurnColour())) {
 
-		tileWidget.addListener(new InputListener() {
-			float offsetX, offsetY;
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			/* old code
+			tileWidget.addListener(new InputListener() {
+				float offsetX, offsetY;
 
-				// function activated if the user has clicked somehwere
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-				// variables changed by the touchDown and touchDragged methods and are used to store positional data
-				// for the actor
-				// Store the offset between the touch point and the center of the actor
-				offsetX = x - 32;
-				offsetY = y - 32;
-				tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
+					// function activated if the user has clicked somewhere
 
-				// the icon figurine can only end their movement at a tileWidget that is in validMoveTiles
-				// if the tileWidget is not in validMoveTiles, the icon figurine is moved back to its original position
+					// variables changed by the touchDown and touchDragged methods and are used to store positional data
+					// for the actor
+					// Store the offset between the touch point and the center of the actor
+					offsetX = x - 32;
+					offsetY = y - 32;
+					tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
 
-				// TODO
+					// the icon figurine can only end their movement at a tileWidget that is in validMoveTiles
+					// if the tileWidget is not in validMoveTiles, the icon figurine is moved back to its original position
 
-				// and the validMoveTiles are cleared
-				clearAllowedTiles();
+					int currentPixelX = Board.getLastDraggedCoordX();
+					int currentPixelY = Board.getLastDraggedCoordY();
+					Coordinates currentCoord = calculateTileByPX(currentPixelX, currentPixelY);
 
-				return true;
-			}
+					// for loop through validMoveTiles, at each tile we check for equality of currentCoord with the Coordinate
+					// in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true, we set the
+					// validMove Variable to true, call on the update method of the Board class and break the for loop
+					// then clear the Board.
+					ArrayList<Coordinates> validMoveTiles = Board.getValidMoveTiles();
+					for (Coordinates validMoveTile : validMoveTiles) {
+						if (currentCoord.checkEqual(validMoveTile)) {
+							clearAllowedTiles();
+							// Board.update with oldX, oldY, newX, newY
+							Board.update(X, Y, currentCoord.getX(), currentCoord.getY());
+							BoomChess.drawTheGameBoard();
+							legitTurn = true;
+							break;
+						}
+					}
 
-			// function used for moving the actor around the screen - not the input, the actual movement
-			// drag overrides touchDragged manually and touchDragged overrides Scene2DUIs touchDragged
-			// for better performance and more control over the actual movement
-			@Override
-			public void touchDragged(InputEvent event, float x, float y, int pointer) {
-				// function called if the user is Dragging something
-				tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
+					// and the validMoveTiles are cleared
+					clearAllowedTiles();
 
-				// as long as the mouse is pressed down, the actor is moved to the mouse position
-				// we calculate the tiles it can move to and highlight these tiles with a slightly red hue
-				// the calculated tiles are part of a ArrayList variable that is created at create of the whole programm
-				// and gets cleared once we touchDragged the actor to a new position
+					return true;
+				}
 
-				// switch statement for deciding which
-				// Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
+				// function used for moving the actor around the screen - not the input, the actual movement
+				// drag overrides touchDragged manually and touchDragged overrides Scene2DUIs touchDragged
+				// for better performance and more control over the actual movement
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					// function called if the user is Dragging something
+					tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
 
-				// because the tileWidget doesn't save its Coordinates, we
-				// split String fileLocation into only the first part before _ and have our typeOfSoldier variable
+					// as long as the mouse is pressed down, the actor is moved to the mouse position
+					// we calculate the tiles it can move to and highlight these tiles with a slightly red hue
+					// the calculated tiles are part of a ArrayList variable that is created at create of the whole programm
+					// and gets cleared once we touchDragged the actor to a new position
 
-				String typeOfSoldier = fileLocation.split("_")[0];
+					// switch statement for deciding which
+					// Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
 
-				switch (typeOfSoldier){
-					case ("infantry"):
-						setAllowedTiles(Infantry.mathMove(X, Y ));
-						break;
-					case "general":
-						setAllowedTiles(General.mathMove(X, Y ));
-						break;
-					case "wardog":
-						setAllowedTiles(Wardog.mathMove(X, Y ));
-						break;
-					case "helicopter":
-						setAllowedTiles(Helicopter.mathMove(X, Y ));
-						break;
-					case "commando":
-						setAllowedTiles(Commando.mathMove(X, Y ));
-						break;
-					case "tank":
-						setAllowedTiles(Tank.mathMove(X, Y ));
-						break;
+					// because the tileWidget doesn't save its Coordinates, we
+					// split String fileLocation into only the first part before _ and have our typeOfSoldier variable
+
+					String typeOfSoldier = fileLocation.split("_")[0];
+
+					switch (typeOfSoldier) {
+						case ("infantry"):
+							setAllowedTiles(Infantry.mathMove(X, Y));
+							break;
+						case "general":
+							setAllowedTiles(General.mathMove(X, Y));
+							break;
+						case "wardog":
+							setAllowedTiles(Wardog.mathMove(X, Y));
+							break;
+						case "helicopter":
+							setAllowedTiles(Helicopter.mathMove(X, Y));
+							break;
+						case "commando":
+							setAllowedTiles(Commando.mathMove(X, Y));
+							break;
+						case "tank":
+							setAllowedTiles(Tank.mathMove(X, Y));
+							break;
+					}
+
+					// keep track of the pixelCoordinateX and pixelCoordinateY the actor is currently on
+					// and store them in the global variables pixelCoordinateX and pixelCoordinateY
+					Board.setLastDraggedCoordX((int) x);
+					Board.setLastDraggedCoordY((int) y);
 				}
 			}
-		});
+		};
+			 */
+
+			// new code
+			tileWidget.addListener(new DragListener() {
+				@Override
+				public void dragStart(InputEvent event, float x, float y, int pointer) {
+					// Code runs when dragging starts:
+
+					tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
+					// as long as the mouse is pressed down, the actor is moved to the mouse position
+					// we calculate the tiles it can move to and highlight these tiles with a slightly red hue
+					// the calculated tiles are part of a ArrayList variable that is created at create of the whole programm
+					// and gets cleared once we touchDragged the actor to a new position
+
+					// switch statement for deciding which
+					// Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
+
+					// because the tileWidget doesn't save its Coordinates, we
+					// split String fileLocation into only the first part before _ and have our typeOfSoldier variable
+
+					String typeOfSoldier = fileLocation.split("_")[0];
+
+					switch (typeOfSoldier) {
+						case ("infantry"):
+							setAllowedTiles(Infantry.mathMove(X, Y));
+							break;
+						case "general":
+							setAllowedTiles(General.mathMove(X, Y));
+							break;
+						case "wardog":
+							setAllowedTiles(Wardog.mathMove(X, Y));
+							break;
+						case "helicopter":
+							setAllowedTiles(Helicopter.mathMove(X, Y));
+							break;
+						case "commando":
+							setAllowedTiles(Commando.mathMove(X, Y));
+							break;
+						case "tank":
+							setAllowedTiles(Tank.mathMove(X, Y));
+							break;
+					}
+				}
+
+				@Override
+				public void drag(InputEvent event, float x, float y, int pointer) {
+					// Code here will run during the dragging
+					tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
+				}
+
+				@Override
+				public void dragStop(InputEvent event, float x, float y, int pointer) {
+					// Code here will run when the player lets go of the actor
+					System.out.println("Stopped dragging the actor!");
+
+					// Get the position of the tileWidget relative to the parent actor (the gameBoard)
+					Vector2 localCoords = new Vector2(x, y);
+					// Convert the position to stage (screen) coordinates
+					Vector2 screenCoords = tileWidget.localToStageCoordinates(localCoords);
+
+					System.out.println("Drag stopped at screen position: " + screenCoords.x + ", " + screenCoords.y);
+
+					Coordinates currentCoord = calculateTileByPX((int) screenCoords.x, (int) screenCoords.y);
+
+					// for loop through validMoveTiles, at each tile we check for equality of currentCoord with the Coordinate
+					// in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true, we set the
+					// validMove Variable to true, call on the update method of the Board class and break the for loop
+					// then clear the Board.
+
+					boolean needSetback = true;
+					ArrayList<Coordinates> validMoveTiles = Board.getValidMoveTiles();
+					for (Coordinates validMoveTile : validMoveTiles) {
+						if (currentCoord.checkEqual(validMoveTile)) {
+							// Board.update with oldX, oldY, newX, newY
+							Board.update(X, Y, currentCoord.getX(), currentCoord.getY());
+
+							// if Bot match, call createGameStage with Bot true
+							if(isBotMatch) {
+								BoomChess.createGameStage(true);
+							} else {
+								BoomChess.createGameStage(false);
+							}
+
+							legitTurn = true;
+							needSetback = false;
+							break;
+						}
+					}
+
+					if (needSetback) {
+						BoomChess.drawTheGameBoard();
+					}
+
+					// and the validMoveTiles are cleared
+					clearAllowedTiles(); // for turning off the Overlay
+					Board.emptyValidMoveTiles();
+
+				}
+			});
+
+		}
 		return tileWidget;
+	}
+
+	private static String getTurnColour() {
+		// if the current tileWidgets piece has the same Colour as the one that is in move, create a listener for it
+		if (isRedTurn) {
+			return"red";
+		} else {
+			return "green";
+		}
 	}
 
 	// method for setting the ArrayList of allowed tiles to move to and a method for clearing it to nothing
 	public static void setAllowedTiles (ArrayList<Coordinates> validMoveTiles) {
 
+		Board.setValidMoveTiles(validMoveTiles);
 		// renew the whole Stage inside possibleMovesOverlay to clear the old tiles
 		possibleMoveOverlay.clear();	// clear the old tiles
 
@@ -795,4 +962,39 @@ public class BoomChess extends ApplicationAdapter {
 		endRoot.row();
 
 	}
+
+	public static Coordinates calculateTileByPX(int pxCoordinateX, int pxCoordinateY) {
+		// method for checking which tile a pxCoordinateX and pxCoordinateY is in, creating the coordinates object
+		// of the respective tile and returning it
+		Coordinates iconTileCoordinate = new Coordinates();
+
+		// we calculate this by first getting the screen width and height
+		int screenWidth = Gdx.graphics.getWidth();
+		int screenHeight = Gdx.graphics.getHeight();
+
+		// we then calculate the upper left corner of the gameBoard by subtracting the screenWidth and screenHeight by
+		// the gameBoard width and height and then dividing it by 2
+		int upperLeftCornerX = (screenWidth - 720) / 2;
+		int upperLeftCornerY = (screenHeight - 640) / 2;
+
+		// Adjust the pxCoordinate by adding 1 to ensure boundary pixels are correctly classified.
+		int adjustedPxX = pxCoordinateX + 1;
+		int adjustedPxY = pxCoordinateY + 1;
+
+		// we then calculate the tileX and tileY by subtracting the upperLeftCornerX and upperLeftCornerY from the
+		// adjustedPxX and adjustedPxY and dividing it by the tile size
+		int tileX = (adjustedPxX - upperLeftCornerX) / 80;
+		int tileY = (adjustedPxY - upperLeftCornerY) / 80;
+
+		// we then set the tileX and tileY in the iconTileCoordinate object
+		iconTileCoordinate.setX(tileX);
+		iconTileCoordinate.setY(tileY);
+
+		return iconTileCoordinate;
+	}
+
+	public static void renewGameRender(){
+
+	}
+
 }

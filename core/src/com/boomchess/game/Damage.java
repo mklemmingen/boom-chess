@@ -16,7 +16,7 @@ public class Damage {
     The properties of each kind of BoomChess Piece can be individually changed in their respective files.
      */
 
-    public void checkSurroundings(int positionX, int positionY){
+    public static void checkSurroundings(int x, int y){
 
         Soldier[][] gameBoard = Board.getGameBoard();
         // this method checks the surroundings of the piece that is attacking. if there is an enemy piece in any,
@@ -28,8 +28,8 @@ public class Damage {
         // we put these information into different variables called:
         // String soldierAttack, String attackColor -> for attacker.
 
-        String soldierAttack = gameBoard[positionX][positionY].getSoldierType();
-        String attackColor = gameBoard[positionX][positionY].getTeamColor();
+        String soldierAttack = gameBoard[x][y].getSoldierType();
+        String attackColor = gameBoard[x][y].getTeamColor();
 
         // the following if statements check the surroundings of the attacking piece
         // the board has the size 8x8. to calculate the surrounding tiles position,
@@ -44,20 +44,21 @@ public class Damage {
 
         //   we need to check if the tile is occupied by anything before putting it in the array
 
-        for (int xOffset = -1; xOffset <= 1; xOffset++) {
-            for (int yOffset = -1; yOffset <= 1; yOffset++) {
+        int startX = Math.max(0, x - 1); // Ensures no out of bounds on the left/up side
+        int endX = Math.min(8, x + 1);   // Ensures no out of bounds on the right/down side
 
-                // We do not skip the case where xOffset and yOffset are both 0 (the current position), since
-                // it would take more computations doing that each loop that it takes to just check if the
-                // tile is occupied and of the same colour
+        int startY = Math.max(0, y - 1);
+        int endY = Math.min(7, y + 1);
 
-                int newX = positionX + xOffset;
-                int newY = positionY + yOffset;
-
-                if (gameBoard[newX][newY].getTaken()) {
-                    String hurtColor = gameBoard[newX][newY].getTeamColor();
+        for (int i = startX; i <= endX; i++) {
+            for (int j = startY; j <= endY; j++) {
+                if (i == x && j == y) {
+                    continue; // Skip the center tile (x, y) itself
+                }
+                if (gameBoard[i][j].getTaken()) {
+                    String hurtColor = gameBoard[i][j].getTeamColor();
                     if (!hurtColor.equals(attackColor)) {
-                        dealBigBoom(positionX, positionY, newX, newY);
+                        dealBigBoom(x, y, i, j);
                     }
                 }
             }
@@ -136,7 +137,7 @@ public class Damage {
     }
 
 
-    public void dealBigBoom(int positionAttX, int positionAttY, int positionDefX, int positionDefY) {
+    public static void dealBigBoom(int positionAttX, int positionAttY, int positionDefX, int positionDefY) {
         Soldier[][] gameBoard = Board.getGameBoard();
         int damage = 0;
         // switch statement on the type of piece taking damage
@@ -173,8 +174,8 @@ public class Damage {
         damagePiece(damage, positionAttX, positionAttY, positionDefX, positionDefY);
     }
 
-    public void damagePiece(int damage, int positionAttX, int positionAttY,
-                            int positionDefX, int positionDefY){
+    public static void damagePiece(int damage, int positionAttX, int positionAttY,
+                                   int positionDefX, int positionDefY){
         Soldier[][] gameBoard = Board.getGameBoard();
         // switch statement on the type of piece taking damage
         String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
@@ -216,7 +217,7 @@ public class Damage {
         }
     }
 
-    private void killPiece(int positionX, int positionY) {
+    private static void killPiece(int positionX, int positionY) {
         // this method is called when a soldier is killed
         // it empties the tile the soldier was standing on
         // and sets the taken boolean to false
