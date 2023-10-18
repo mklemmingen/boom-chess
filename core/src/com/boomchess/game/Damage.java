@@ -38,8 +38,6 @@ public class Damage {
         //              d  x   e
         //              f  g   h
 
-        // TODO UPDATE WITH COORDINATES CLASS
-
         // for loop that does -1 0 and +1 onto the x coordinate
         // for loop that does -1 0 and +1 onto the y coordinate
         // in total, we will have 9 iterations
@@ -66,6 +64,9 @@ public class Damage {
         }
 
         /*
+
+        // OLD CODE BELOW
+
         // turn positionX and positionY into a single String, then turn into integer position
         int position = Integer.parseInt(String.valueOf(positionX + positionY));
 
