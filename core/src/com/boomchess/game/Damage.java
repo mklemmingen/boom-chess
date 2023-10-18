@@ -38,8 +38,35 @@ public class Damage {
         //              d  x   e
         //              f  g   h
 
-        // turn positionX and positionY into a single String, then turn into integer position
+        // TODO UPDATE WITH COORDINATES CLASS
 
+        // for loop that does -1 0 and +1 onto the x coordinate
+        // for loop that does -1 0 and +1 onto the y coordinate
+        // in total, we will have 9 iterations
+
+        //   we need to check if the tile is occupied by anything before putting it in the array
+
+        for (int xOffset = -1; xOffset <= 1; xOffset++) {
+            for (int yOffset = -1; yOffset <= 1; yOffset++) {
+
+                // We do not skip the case where xOffset and yOffset are both 0 (the current position), since
+                // it would take more computations doing that each loop that it takes to just check if the
+                // tile is occupied and of the same colour
+
+                int newX = positionX + xOffset;
+                int newY = positionY + yOffset;
+
+                if (gameBoard[newX][newY].getTaken()) {
+                    String hurtColor = gameBoard[newX][newY].getTeamColor();
+                    if (!hurtColor.equals(attackColor)) {
+                        dealBigBoom(positionX, positionY, newX, newY);
+                    }
+                }
+            }
+        }
+
+        /*
+        // turn positionX and positionY into a single String, then turn into integer position
         int position = Integer.parseInt(String.valueOf(positionX + positionY));
 
         // the following if statements check the surroundings of the attacking piece
@@ -104,10 +131,12 @@ public class Damage {
                 }
             }
         }
+        */
     }
 
 
-    public void dealBigBoom(int positionAttX, int positionAttY, int positionDefX, int positionDefY, Soldier[][] gameBoard) {
+    public void dealBigBoom(int positionAttX, int positionAttY, int positionDefX, int positionDefY) {
+        Soldier[][] gameBoard = Board.getGameBoard();
         int damage = 0;
         // switch statement on the type of piece taking damage
         String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
@@ -140,11 +169,12 @@ public class Damage {
                 // for ending all background activity on Windows systems specifically
                 System.exit(0);
         }
-        damagePiece(damage, positionAttX, positionAttY, positionDefX, positionDefY, gameBoard);
+        damagePiece(damage, positionAttX, positionAttY, positionDefX, positionDefY);
     }
 
     public void damagePiece(int damage, int positionAttX, int positionAttY,
-                            int positionDefX, int positionDefY, Soldier[][] gameBoard){
+                            int positionDefX, int positionDefY){
+        Soldier[][] gameBoard = Board.getGameBoard();
         // switch statement on the type of piece taking damage
         String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
         String soldierDefend = gameBoard[positionDefX][positionDefY].getSoldierType();

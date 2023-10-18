@@ -681,22 +681,22 @@ public class BoomChess extends ApplicationAdapter {
 
 				switch (typeOfSoldier){
 					case ("infantry"):
-						setAllowedTiles(Infantry.mathMove(functionsBoard, X, Y ));
+						setAllowedTiles(Infantry.mathMove(X, Y ));
 						break;
 					case "general":
-						setAllowedTiles(General.mathMove(functionsBoard, X, Y ));
+						setAllowedTiles(General.mathMove(X, Y ));
 						break;
 					case "wardog":
-						setAllowedTiles(Wardog.mathMove(functionsBoard, X, Y ));
+						setAllowedTiles(Wardog.mathMove(X, Y ));
 						break;
 					case "helicopter":
-						setAllowedTiles(Helicopter.mathMove(functionsBoard, X, Y ));
+						setAllowedTiles(Helicopter.mathMove(X, Y ));
 						break;
 					case "commando":
-						setAllowedTiles(Commando.mathMove(functionsBoard, X, Y ));
+						setAllowedTiles(Commando.mathMove(X, Y ));
 						break;
 					case "tank":
-						setAllowedTiles(Tank.mathMove(functionsBoard, X, Y ));
+						setAllowedTiles(Tank.mathMove(X, Y ));
 						break;
 				}
 			}

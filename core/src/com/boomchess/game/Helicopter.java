@@ -33,7 +33,8 @@ public class Helicopter {
         return randomDamage;
     }
 
-    public static ArrayList<Coordinates> mathMove(Soldier[][] gameBoard, int positionX, int positionY) {
+    public static ArrayList<Coordinates> mathMove(int positionX, int positionY) {
+        Soldier[][] gameBoard = Board.getGameBoard();
         // this method returns a Coordinates array of all possible move-location for this soldier
         ArrayList<Coordinates> possibleMoves = new ArrayList<>();
 
