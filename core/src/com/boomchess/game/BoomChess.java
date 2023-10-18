@@ -38,9 +38,6 @@ public class BoomChess extends ApplicationAdapter {
 	private static Skin skin;
 	private static Skin progressBarSkin;
 	private static Stage currentStage;
-	// gameBoard
-	public static Soldier[][] gameBoard;
-	public static boolean gameInSession;
 
 	// for the tiled map
 	TiledMap tiledMap;
@@ -55,6 +52,8 @@ public class BoomChess extends ApplicationAdapter {
 
 	// for setting the current "Mover" of the game
 	public static boolean isRedTurn = true;
+
+	public static boolean legitTurn = false;
 
 	// for the x-marker overlay over the game-field
 	public static boolean renderOverlay = false;
@@ -109,6 +108,7 @@ public class BoomChess extends ApplicationAdapter {
 	public void render() {
 		ScreenUtils.clear(1, 0, 0, 1);
 		batch.begin();
+
 		batch.draw(background, 0, 0);
 		batch.end();
 
@@ -126,6 +126,39 @@ public class BoomChess extends ApplicationAdapter {
 		currentStage.act();
 		currentStage.draw();
 
+		// for the in-game loop for setting the turn
+		if (isRedTurn) {
+			// red team's turn
+				// draw Stage with Red Logo
+
+				// if red team move was legit (legitTurn true)
+				if (legitTurn) {
+					// update position
+					// calculate damage from all red pieces to all green pieces
+
+
+					// set variable of isRedTurn to false after all damage dealt
+					isRedTurn = false;
+					// set variable of legitTurn to false
+					legitTurn = false;
+				}
+		} else {
+			// Green team's turn
+				// draw Stage with Green logo
+
+				// if green team move was legit
+				if (legitTurn) {
+					// update position
+					// calculate damage from all green pieces to all red pieces
+
+
+					// set variable of isRedTurn to true after all damage dealt
+					isRedTurn = true;
+					// set variable of legitTurn to false
+					legitTurn = false;
+				}
+		}
+
 	}
 
 	@Override
@@ -141,11 +174,6 @@ public class BoomChess extends ApplicationAdapter {
 		currentStage.dispose();
 		currentStage = newStage;
 		Gdx.input.setInputProcessor(currentStage);
-	}
-
-	public static void addStageToStage(Stage newStage) {
-		// this method adds a new stage to the current stage
-		currentStage.addActor(newStage.getRoot());
 	}
 
 	private static Stage createMainMenuStage() {
@@ -349,12 +377,12 @@ public class BoomChess extends ApplicationAdapter {
 		//  combine the tiled map renderer with the stage renderer? Research: addressing individual .tmx tiles in code
 		//  - corresponding to the 2D Array Game Board, the pieces on it, their stats as clean health bars.
 		//  ----------------------------------------------------------------------------------------------
-		//  Actor-Images must be 80x80px. Add Exit-Button at the Bottom right corner of the screen
+		//  Actor-Images must be 80x80px. Add Exit-Button in the Bottom right corner of the screen
 		//  Actors should be able to be drag-droppable and snap to the grid. They can only move to tiles
 		//  their chess characteristics allow them to. This should be checked by the backend, and be send back as tile
 		//  coordinates, so the allowed tiles can temporarily be highlighted. If piece is dropped on an allowed tile,
 		//  update 2D Array with this new information. End turn.
-		//  Calculate Damage of all the current Players pieces onto enemy pieces. All hit pieces should be highlighted.
+		//  Calculate Damage from all the current Players pieces onto enemy pieces. All hit pieces should be highlighted.
 		//  If a piece is killed, remove it from the board and the 2D Array. If a piece is killed, check if that piece
 		//  was the general and end the game by saving who won (who killed the other general).
 		//  If not, switch to the next player.
@@ -545,8 +573,6 @@ public class BoomChess extends ApplicationAdapter {
 
 		// load the corresponding image
 		Image solPiece = new Image(new Texture(Gdx.files.internal(fileLocation)));
-		// load the x-image
-		final Image xMarker = new Image(new Texture(Gdx.files.internal("xMarker.png")));
 		// draw the image at the correct position
 		solPiece.setSize(80, 80);
 		solPiece.setScaling(Scaling.fit);

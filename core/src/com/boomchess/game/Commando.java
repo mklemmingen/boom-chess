@@ -15,12 +15,23 @@ public class Commando {
     }
 
     public static int calculateDamage(String soldierDefend) {
-        // TODO find fitting randomisation in java
-        // deals 1-30 damage
-        // deals +10 to attacking tanks
 
-        return 0;
+        // deals 5-30 damage
+        // deals +10 to attacking tanks
+        int minValue = 5;
+        int maxValue = 30;
+
+        // we achieve this randomisation using random.Math`s floor and random methods
+        // that generate a random number between 0 and 1 that we multiply
+        int randomDamage = (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
+
+        if(soldierDefend.equals("tank")){
+            randomDamage += 10;
+        }
+
+        return randomDamage;
     }
+
 
     public static ArrayList<Coordinates> mathMove(Soldier[][] gameBoard, int positionX, int positionY) {
         // this method returns a Coordinates array of all possible move-location for this soldier
@@ -196,10 +207,16 @@ public class Commando {
 
     public static int defendAndBleed(int damage, String soldierAttack) {
         // The Commando is very sneaky and rogue. His resistance is randomized.
-        // on a randomized 1-5 scale, he takes (<random number>/5)*100 percent less damage
+        // on a randomized 1-3 scale, he takes damage / factor(1-3) damage
 
-        // TODO find fitting randomisation in java
-        return damage;
+        int minValue = 1;
+        int maxValue = 3;
+
+        // we achieve this randomisation using random.Math`s floor and random methods
+        // that generate a random number between 0 and 1 that we multiply
+        int factor = (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
+
+        return damage / factor;
     }
 }
 

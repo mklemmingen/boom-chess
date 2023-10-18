@@ -91,11 +91,12 @@ public class Board {
         return board;
     }
 
-    public static boolean update(Soldier[][] gameBoard, int positionX, int positionY, int newpositionX, int newpositionY) {
+    public static boolean update(Soldier[][] gameBoard, int positionX, int positionY,
+                                 int newPositionX, int newPositionY) {
         // run this in a Try loop till it returns true to not allow the player to make a move until it is valid
         boolean validMove = false;
         // make a call to the Soldier object in gameBoard behind newPosition to check if it is taken
-        if (gameBoard[newpositionX][newpositionY].getTaken()) {
+        if (gameBoard[newPositionX][newPositionY].getTaken()) {
             // print out "invalid move"
             System.out.println("Invalid move. Position is already taken.");
         }
@@ -103,11 +104,11 @@ public class Board {
         // the old information
         else {
             validMove = true;
-            gameBoard[newpositionX][newpositionY].setTaken(true);
-            gameBoard[newpositionX][newpositionY].setTeamColor(gameBoard[positionX][positionY].getTeamColor());
-            gameBoard[newpositionX][newpositionY].setSoldierType(gameBoard[positionX][positionY].getSoldierType());
-            gameBoard[newpositionX][newpositionY].setPieceID(gameBoard[positionX][positionY].getPieceID());
-            gameBoard[newpositionX][newpositionY].setHealth(gameBoard[positionX][positionY].getHealth());
+            gameBoard[newPositionX][newPositionY].setTaken(true);
+            gameBoard[newPositionX][newPositionY].setTeamColor(gameBoard[positionX][positionY].getTeamColor());
+            gameBoard[newPositionX][newPositionY].setSoldierType(gameBoard[positionX][positionY].getSoldierType());
+            gameBoard[newPositionX][newPositionY].setPieceID(gameBoard[positionX][positionY].getPieceID());
+            gameBoard[newPositionX][newPositionY].setHealth(gameBoard[positionX][positionY].getHealth());
             gameBoard[positionX][positionY].setTaken(false);
             gameBoard[positionX][positionY].setTeamColor("none");
             gameBoard[positionX][positionY].setSoldierType("empty");
