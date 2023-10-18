@@ -32,7 +32,6 @@ public class Commando {
         return randomDamage;
     }
 
-
     public static ArrayList<Coordinates> mathMove(Soldier[][] gameBoard, int positionX, int positionY) {
         // this method returns a Coordinates array of all possible move-location for this soldier
         ArrayList<Coordinates> possibleMoves = new ArrayList<>();
@@ -59,13 +58,12 @@ public class Commando {
 
         // Loop to move upwards
         for (int yOffset = 1; yOffset <= 7; yOffset++) {
-            int newX = positionX;
             int newY = positionY + yOffset;
 
-            if (Board.isValidMove(newX, newY)) {
-                if (!gameBoard[newX][newY].getTaken()) {
+            if (Board.isValidMove(positionX, newY)) {
+                if (!gameBoard[positionX][newY].getTaken()) {
                     Coordinates coordinates = new Coordinates();
-                    coordinates.setCoordinates(newX, newY);
+                    coordinates.setCoordinates(positionX, newY);
                     possibleMoves.add(coordinates);
                 } else {
                     break; // Stop if the tile is not empty
@@ -77,13 +75,12 @@ public class Commando {
 
         // Loop to move downwards
         for (int yOffset = 1; yOffset <= 7; yOffset++) {
-            int newX = positionX;
             int newY = positionY - yOffset;
 
-            if (Board.isValidMove(newX, newY)) {
-                if (!gameBoard[newX][newY].getTaken()) {
+            if (Board.isValidMove(positionX, newY)) {
+                if (!gameBoard[positionX][newY].getTaken()) {
                     Coordinates coordinates = new Coordinates();
-                    coordinates.setCoordinates(newX, newY);
+                    coordinates.setCoordinates(positionX, newY);
                     possibleMoves.add(coordinates);
                 } else {
                     break; // Stop if the tile is not empty
@@ -96,12 +93,11 @@ public class Commando {
         // Loop to move to the right
         for (int xOffset = 1; xOffset <= 7; xOffset++) {
             int newX = positionX + xOffset;
-            int newY = positionY;
 
-            if (Board.isValidMove(newX, newY)) {
-                if (!gameBoard[newX][newY].getTaken()) {
+            if (Board.isValidMove(newX, positionY)) {
+                if (!gameBoard[newX][positionY].getTaken()) {
                     Coordinates coordinates = new Coordinates();
-                    coordinates.setCoordinates(newX, newY);
+                    coordinates.setCoordinates(newX, positionY);
                     possibleMoves.add(coordinates);
                 } else {
                     break; // Stop if the tile is not empty
@@ -114,12 +110,11 @@ public class Commando {
         // Loop to move to the left
         for (int xOffset = 1; xOffset <= 7; xOffset++) {
             int newX = positionX - xOffset;
-            int newY = positionY;
 
-            if (Board.isValidMove(newX, newY)) {
-                if (!gameBoard[newX][newY].getTaken()) {
+            if (Board.isValidMove(newX, positionY)) {
+                if (!gameBoard[newX][positionY].getTaken()) {
                     Coordinates coordinates = new Coordinates();
-                    coordinates.setCoordinates(newX, newY);
+                    coordinates.setCoordinates(newX, positionY);
                     possibleMoves.add(coordinates);
                 } else {
                     break; // Stop if the tile is not empty
@@ -204,7 +199,6 @@ public class Commando {
         return possibleMoves;
     }
 
-
     public static int defendAndBleed(int damage, String soldierAttack) {
         // The Commando is very sneaky and rogue. His resistance is randomized.
         // on a randomized 1-3 scale, he takes damage / factor(1-3) damage
@@ -216,6 +210,7 @@ public class Commando {
         // that generate a random number between 0 and 1 that we multiply
         int factor = (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
 
+        System.out.println("The " + soldierAttack + " has dealt " + damage + " damage to the Commando.");
         return damage / factor;
     }
 }

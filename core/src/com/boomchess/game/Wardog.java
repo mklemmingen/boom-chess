@@ -122,6 +122,8 @@ public class Wardog {
         if (soldierAttack.equals("infantry")){
             return damage - 5;
         }
+
+        System.out.println("Wardog defendAndBleed: " + damage);
         return damage;
     }
 }

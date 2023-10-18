@@ -121,6 +121,7 @@ public class Tank {
         if (soldierAttack.equals("wardog")){
             return damage - 5;
         }
+        System.out.println("The tank has been damaged for " + damage + " points by" + soldierAttack + ".");
         return damage;
     }
 }

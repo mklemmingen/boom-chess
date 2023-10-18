@@ -86,6 +86,8 @@ public class Infantry {
         if (soldierAttack.equals("commando")){
             return damage - 5;
         }
+
+        System.out.println("The Infantry has been damaged for " + damage + " points by" + soldierAttack + ".");
         return damage;
     }
 }

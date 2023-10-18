@@ -67,6 +67,8 @@ public class General {
 
     public static int defendAndBleed(int damage, String soldierAttack) {
         // The General is very resistant and only takes half damage to anything. He likes to chill in a Bunker
+
+        System.out.println("The General is in a Bunker and only takes half damage!");
         return damage/2;
     }
 }
