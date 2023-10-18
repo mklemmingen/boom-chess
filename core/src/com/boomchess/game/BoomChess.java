@@ -55,11 +55,14 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static boolean legitTurn = false;
 
+	public static boolean inGame = false;
+
 	// for the x-marker overlay over the game-field
 	public static boolean renderOverlay = false;
 	public static Stage possibleMoveOverlay;
 
-
+	// the gameBoard for the Game. Gets renewed each game
+	public static Soldier[][] gameBoard;
 
 	@Override
 	public void create() {
@@ -126,39 +129,51 @@ public class BoomChess extends ApplicationAdapter {
 		currentStage.act();
 		currentStage.draw();
 
+
+		// Image of the currentMover
+		Table currentMover = new Table();
+		currentMover.setSize(250, 125);
+		currentMover.setPosition(currentMover.getWidth()/6,
+				currentMover.getHeight()/2);
+
+
 		// for the in-game loop for setting the turn
-		if (isRedTurn) {
+		if (isRedTurn && inGame) {
 			// red team's turn
 				// draw Stage with Red Logo
+				Image redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
+				currentMover.add(redMove);
+			// if red team move was legit (legitTurn true)
+			if (legitTurn) {
+				// update position draw new gameBoard inside the update function
+				// drawTheGameBoard(gameBoard);
 
-				// if red team move was legit (legitTurn true)
-				if (legitTurn) {
-					// update position
-					// calculate damage from all red pieces to all green pieces
+				// calculate damage from all red pieces to all green pieces
+				// TODO link existing functions
 
-
-					// set variable of isRedTurn to false after all damage dealt
-					isRedTurn = false;
-					// set variable of legitTurn to false
-					legitTurn = false;
+				// set variable of isRedTurn to false after all damage dealt
+				isRedTurn = false;
+				// set variable of legitTurn to false
+				legitTurn = false;
 				}
 		} else {
 			// Green team's turn
-				// draw Stage with Green logo
+			// draw Stage with Green logo
+			Image greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
+			currentMover.add(greenMove);
+			// if green team move was legit
+			if (legitTurn) {
+				// update position draw new gameBoard inside the update function
+				// drawTheGameBoard(gameBoard);
+				// calculate damage from all green pieces to all red pieces
+				// TODO link existing functions
 
-				// if green team move was legit
-				if (legitTurn) {
-					// update position
-					// calculate damage from all green pieces to all red pieces
-
-
-					// set variable of isRedTurn to true after all damage dealt
-					isRedTurn = true;
-					// set variable of legitTurn to false
-					legitTurn = false;
-				}
+				// set variable of isRedTurn to true after all damage dealt
+				isRedTurn = true;
+				// set variable of legitTurn to false
+				legitTurn = false;
+			}
 		}
-
 	}
 
 	@Override
@@ -176,14 +191,15 @@ public class BoomChess extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(currentStage);
 	}
 
+	private static void addToStage(Table root) {
+		// this method adds a new stage to the currentStage
+		currentStage.addActor(root);
+	}
+
 	private static Stage createMainMenuStage() {
 
 		// setOverlay to false
 		renderOverlay = false;
-
-		// create a empty validMoveTiles to prevent .size null exception
-		// TODO REMOVE THIS VARIABLE IF CODE WORKING
-		// validMoveTiles = new ArrayList<Coordinates>();
 
 		Stage menuStage = new Stage();
 		Gdx.input.setInputProcessor(menuStage);
@@ -350,6 +366,8 @@ public class BoomChess extends ApplicationAdapter {
 
 	private static Stage createGameStage(boolean isBotMatch) {
 
+		inGame = true;
+
 		Stage gameStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
 		// xMarkerOverlay
@@ -359,19 +377,6 @@ public class BoomChess extends ApplicationAdapter {
 		menu_music.stop();
 		background_music.setLooping(true);
 		background_music.play();
-
-		// Begin of GameLayout - Root Table arranges content automatically and adaptively as ui-structure
-		Table root = new Table();
-
-		root.setSize(720, 640);
-		root.center(); // Center the gameBoard in the parent container (stage)
-		// refine the position of the root Table, since the orthoCamera is centered on a screen that may change size
-		root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
-				(Gdx.graphics.getHeight() - root.getHeight()) / 2f);
-
-		// root.setTouchable(Touchable.enabled);
-
-		gameStage.addActor(root);
 
 		// CHECKED try to implement the game board as a tiled map and the pieces as actors on top of it
 		//  combine the tiled map renderer with the stage renderer? Research: addressing individual .tmx tiles in code
@@ -413,7 +418,50 @@ public class BoomChess extends ApplicationAdapter {
 		// checking which type of piece at position and drawing the correct image there
 
 		// create the first gameBoard
-		Soldier[][] gameBoard = Board.initialise();
+		setGameBoard();
+
+		// add game board
+		gameStage.addActor(drawTheGameBoard(gameBoard));
+
+		// create another stage for the back to main menu button
+		Table backTable = new Table();
+		backTable.setSize(400, 80); // determines the frame size for the backTable (button: to main menu)
+		// bottom right the table in the parent container
+		backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 0);
+		gameStage.addActor(backTable); // Add the table to the stage
+
+		// Exit to Main Menu button to return to the main menu
+		TextButton menuButton = new TextButton("Return to Main Menu", skin);
+		menuButton.align(Align.bottomRight);
+		backTable.add(menuButton);
+		menuButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				switchToStage(createMainMenuStage());
+				// create a new gameBoard since game has ended
+				setGameBoard();
+			}
+		});
+
+		return gameStage;
+	}
+
+	private static void setGameBoard() {
+		gameBoard = Board.initialise();
+	}
+
+	private static Table drawTheGameBoard(Soldier[][] gameBoard) {
+
+		// Begin of GameLayout - Root Table arranges content automatically and adaptively as ui-structure
+		Table root = new Table();
+
+		root.setSize(720, 640);
+		root.center(); // Center the gameBoard in the parent container (stage)
+		// refine the position of the root Table, since the orthoCamera is centered on a screen that may change size
+		root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
+				(Gdx.graphics.getHeight() - root.getHeight()) / 2f);
+
+		// root.setTouchable(Touchable.enabled);
 
 		// for the size of the tiles
 		int tileSize = 80;
@@ -527,41 +575,7 @@ public class BoomChess extends ApplicationAdapter {
 				}
 			}
 		}
-
-		// create another stage for the back to main menu button
-		Table backTable = new Table();
-		backTable.setSize(400, 80); // determines the frame size for the backTable (button: to main menu)
-		// bottom right the table in the parent container
-		backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 0);
-		gameStage.addActor(backTable); // Add the table to the stage
-
-		// Image of the currentMover
-		Stack currentMover = new Stack();
-		currentMover.setSize(250, 125);
-		currentMover.setPosition(currentMover.getWidth()/6,
-				currentMover.getHeight()/2);
-		Image redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
-		Image greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
-		if (isRedTurn){
-			currentMover.add(greenMove);
-		} else {
-			currentMover.add(redMove);
-		}
-
-		gameStage.addActor(currentMover);
-
-		// Exit to Main Menu button to return to the main menu
-		TextButton menuButton = new TextButton("Return to Main Menu", skin);
-		menuButton.align(Align.bottomRight);
-		backTable.add(menuButton);
-		menuButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createMainMenuStage());
-			}
-		});
-
-		return gameStage;
+		return root;
 	}
 
 	private static Actor drawPiece(final String fileLocation, final int health,
@@ -688,7 +702,6 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	// method for setting the ArrayList of allowed tiles to move to and a method for clearing it to nothing
-
 	public static void setAllowedTiles (ArrayList<Coordinates> validMoveTiles) {
 
 		// renew the whole Stage inside possibleMovesOverlay to clear the old tiles
@@ -769,6 +782,8 @@ public class BoomChess extends ApplicationAdapter {
 			public void changed(ChangeEvent event, Actor actor) {
 				// refresh gameBoard to initial state by going to the mainMenu
 				switchToStage(createMainMenuStage());
+				// create a new gameBoard since the old one is still in memory
+				setGameBoard();
 			}
 		});
 		endRoot.row();
