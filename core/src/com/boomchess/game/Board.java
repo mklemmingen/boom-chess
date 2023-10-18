@@ -7,8 +7,12 @@ public class Board {
      * The method initialize creates the initial board with the correct pieces.
      * The method updateBoard updates the board after a move has been made.
      */
+
+    // Define the board as a 2D array
+    private static Soldier[][] board;
+
     public static Soldier[][] initialise() {
-        Soldier[][] board = new Soldier[9][8];
+        board = new Soldier[9][8];
         // initialize the board with the correct pieces
 
         // the tank is the tower,
@@ -91,12 +95,16 @@ public class Board {
         return board;
     }
 
-    public static boolean update(Soldier[][] gameBoard, int positionX, int positionY,
+    public static Soldier[][] getGameBoard(){
+        return board;
+    }
+
+    public static boolean update(int positionX, int positionY,
                                  int newPositionX, int newPositionY) {
         // run this in a Try loop till it returns true to not allow the player to make a move until it is valid
         boolean validMove = false;
-        // make a call to the Soldier object in gameBoard behind newPosition to check if it is taken
-        if (gameBoard[newPositionX][newPositionY].getTaken()) {
+        // make a call to the Soldier object in board behind newPosition to check if it is taken
+        if (board[newPositionX][newPositionY].getTaken()) {
             // print out "invalid move"
             System.out.println("Invalid move. Position is already taken.");
         }
@@ -104,16 +112,16 @@ public class Board {
         // the old information
         else {
             validMove = true;
-            gameBoard[newPositionX][newPositionY].setTaken(true);
-            gameBoard[newPositionX][newPositionY].setTeamColor(gameBoard[positionX][positionY].getTeamColor());
-            gameBoard[newPositionX][newPositionY].setSoldierType(gameBoard[positionX][positionY].getSoldierType());
-            gameBoard[newPositionX][newPositionY].setPieceID(gameBoard[positionX][positionY].getPieceID());
-            gameBoard[newPositionX][newPositionY].setHealth(gameBoard[positionX][positionY].getHealth());
-            gameBoard[positionX][positionY].setTaken(false);
-            gameBoard[positionX][positionY].setTeamColor("none");
-            gameBoard[positionX][positionY].setSoldierType("empty");
-            gameBoard[positionX][positionY].setPieceID(0);
-            gameBoard[positionX][positionY].setHealth(0);
+            board[newPositionX][newPositionY].setTaken(true);
+            board[newPositionX][newPositionY].setTeamColor(board[positionX][positionY].getTeamColor());
+            board[newPositionX][newPositionY].setSoldierType(board[positionX][positionY].getSoldierType());
+            board[newPositionX][newPositionY].setPieceID(board[positionX][positionY].getPieceID());
+            board[newPositionX][newPositionY].setHealth(board[positionX][positionY].getHealth());
+            board[positionX][positionY].setTaken(false);
+            board[positionX][positionY].setTeamColor("none");
+            board[positionX][positionY].setSoldierType("empty");
+            board[positionX][positionY].setPieceID(0);
+            board[positionX][positionY].setHealth(0);
         }
         return validMove;
     }

@@ -16,8 +16,9 @@ public class Damage {
     The properties of each kind of BoomChess Piece can be individually changed in their respective files.
      */
 
-    public void checkSurroundings(Soldier[][] gameBoard, int positionX, int positionY){
+    public void checkSurroundings(int positionX, int positionY){
 
+        Soldier[][] gameBoard = Board.getGameBoard();
         // this method checks the surroundings of the piece that is attacking. if there is an enemy piece in any,
         // it calls the makeBigBoom method to deal damage to it.
         // the method takes the gameBoard and the position of the attacking piece.
@@ -180,14 +181,16 @@ public class Damage {
                 System.exit(0);
         }
         if (currentHealth <= 0) {
-            killPiece(positionDefX, positionDefY, gameBoard);
+            killPiece(positionDefX, positionDefY);
         }
     }
 
-    private void killPiece(int positionX, int positionY, Soldier[][] gameBoard) {
+    private void killPiece(int positionX, int positionY) {
         // this method is called when a soldier is killed
         // it empties the tile the soldier was standing on
         // and sets the taken boolean to false
+
+        Soldier[][] gameBoard = Board.getGameBoard();
 
         // we use this int-array x and y position to set the tile to empty.
 

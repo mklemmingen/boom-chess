@@ -61,9 +61,6 @@ public class BoomChess extends ApplicationAdapter {
 	public static boolean renderOverlay = false;
 	public static Stage possibleMoveOverlay;
 
-	// the gameBoard for the Game. Gets renewed each game
-	public static Soldier[][] gameBoard;
-
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
@@ -102,6 +99,9 @@ public class BoomChess extends ApplicationAdapter {
 		skin = new Skin(Gdx.files.internal("menu.commodore64/uiskin.json"));
 		// skin (look) of the progress bar via a prearranged json file
 		progressBarSkin = new Skin(Gdx.files.internal("progressBarSkin/neon-ui.json"));
+
+		// create the big game Board as a object of the Board class
+		Board.initialise();
 
 		currentStage = createMainMenuStage();
 
@@ -421,7 +421,7 @@ public class BoomChess extends ApplicationAdapter {
 		setGameBoard();
 
 		// add game board
-		gameStage.addActor(drawTheGameBoard(gameBoard));
+		gameStage.addActor(drawTheGameBoard());
 
 		// create another stage for the back to main menu button
 		Table backTable = new Table();
@@ -447,10 +447,12 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	private static void setGameBoard() {
-		gameBoard = Board.initialise();
+		Board.initialise();
 	}
 
-	private static Table drawTheGameBoard(Soldier[][] gameBoard) {
+	private static Table drawTheGameBoard() {
+
+		Soldier[][] gameBoard = Board.getGameBoard();
 
 		// Begin of GameLayout - Root Table arranges content automatically and adaptively as ui-structure
 		Table root = new Table();
@@ -488,89 +490,89 @@ public class BoomChess extends ApplicationAdapter {
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("general_red_left.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("general_red_left.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("general_green_right.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("general_green_right.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						break;
 					case "infantry":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("infantry_red_left.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("infantry_red_left.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("infantry_green_right.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("infantry_green_right.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						break;
 					case "helicopter":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("helicopter_red_left.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("helicopter_red_left.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("helicopter_green_right.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("helicopter_green_right.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						break;
 					case "tank":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("tank_red_left.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("tank_red_left.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("tank_green_right.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("tank_green_right.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						break;
 					case "commando":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("commando_red_left.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("commando_red_left.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("commando_green_right.png", currentHealth,j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("commando_green_right.png", currentHealth,j, i
+							)).size(tileSize);
 						}
 						break;
 					case "wardog":
 						// if the piece is on the red team
 						if (gameBoard[j][i].getTeamColor().equals("red")) {
 							// load tile and draw image in it
-							root.add(drawPiece("war_dog_red_left.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("war_dog_red_left.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						// if the piece is on the green team
 						else {
 							// load tile and draw image in it
-							root.add(drawPiece("war_dog_green_right.png", currentHealth, j, i,
-									gameBoard)).size(tileSize);
+							root.add(drawPiece("war_dog_green_right.png", currentHealth, j, i
+							)).size(tileSize);
 						}
 						break;
 					case "empty":
 						// Empty box (no image)
-						root.add(drawPiece("empty.png", currentHealth, j, i, gameBoard)).size(tileSize);
+						root.add(drawPiece("empty.png", currentHealth, j, i)).size(tileSize);
 						break;
 				}
 			}
@@ -579,8 +581,9 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	private static Actor drawPiece(final String fileLocation, final int health,
-								   final int X, final int Y, final Soldier[][] functionsBoard) {
+								   final int X, final int Y) {
 
+		final Soldier[][] functionsBoard = Board.getGameBoard();
 		// if fileLocation is general_red_left.png or general_green_right.png, the animations for them are loaded
 
 		// TODO GENERAL ANIMATION
