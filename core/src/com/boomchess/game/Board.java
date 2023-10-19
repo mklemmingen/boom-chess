@@ -17,7 +17,11 @@ public class Board {
     public static ArrayList<Coordinates> validMoveTiles;
 
     public static void initialise() {
+
+        // declaring the board
+
         board = new Soldier[9][8];
+
         // initialize the board with the correct pieces
 
         // the tank is the tower,
@@ -40,6 +44,7 @@ public class Board {
         //  5 w  i                 i  w
         //  6 h  i                 i  h
         //  7 t  i                 i  t
+
 
         // start of the creation of the board
         // green team
@@ -93,11 +98,10 @@ public class Board {
         // Initialize the no-mans-land (empty space)
         for (int row = 2; row < 7; row++) {
             for (int col = 0; col <= 7; col++) {
-                board[row][col] = new Soldier(false, "empty", "none", 0, 0, row, col);
+                board[row][col] = new Soldier(false, "empty", "none", 0, -1, row, col);
             }
         }
-
-    }
+   }
 
     public static Soldier[][] getGameBoard(){
         return board;
@@ -105,6 +109,8 @@ public class Board {
 
     public static void update(int positionX, int positionY,
                                  int newPositionX, int newPositionY) {
+
+        System.out.println("\n Updating board " + positionX + "_" + positionY + " to " + newPositionX + "_" + newPositionY);
         board[newPositionX][newPositionY].setTaken(true);
         board[newPositionX][newPositionY].setTeamColor(board[positionX][positionY].getTeamColor());
         board[newPositionX][newPositionY].setSoldierType(board[positionX][positionY].getSoldierType());
@@ -114,7 +120,7 @@ public class Board {
         board[positionX][positionY].setTeamColor("none");
         board[positionX][positionY].setSoldierType("empty");
         board[positionX][positionY].setPieceID(0);
-        board[positionX][positionY].setHealth(0);
+        board[positionX][positionY].setHealth(-1);
     }
 
     // Helper method to check if the coordinates are within bounds

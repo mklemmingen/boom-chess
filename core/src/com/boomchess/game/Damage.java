@@ -28,7 +28,6 @@ public class Damage {
         // we put these information into different variables called:
         // String soldierAttack, String attackColor -> for attacker.
 
-        String soldierAttack = gameBoard[x][y].getSoldierType();
         String attackColor = gameBoard[x][y].getTeamColor();
 
         // the following if statements check the surroundings of the attacking piece
@@ -52,9 +51,6 @@ public class Damage {
 
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {
-                if (i == x && j == y) {
-                    continue; // Skip the center tile (x, y) itself
-                }
                 if (gameBoard[i][j].getTaken()) {
                     String hurtColor = gameBoard[i][j].getTeamColor();
                     if (!hurtColor.equals(attackColor)) {
@@ -63,77 +59,6 @@ public class Damage {
                 }
             }
         }
-
-        /*
-
-        // OLD CODE BELOW
-
-        // turn positionX and positionY into a single String, then turn into integer position
-        int position = Integer.parseInt(String.valueOf(positionX + positionY));
-
-        // the following if statements check the surroundings of the attacking piece
-
-        int a = position - 11;
-        if (a < 0) {
-            a = -1;
-        }
-        int b = position - 10;
-        if (b < 0) {
-            b = -1;
-        }
-        int c = position - 9;
-        if (c < 0) {
-            c = -1;
-        }
-        int d = position - 1;
-        if (d < 0) {
-            d = -1;
-        }
-        int e = position + 1;
-        if (e > 79) {
-            e = -1;
-        }
-        int f = position + 9;
-        if (f > 79) {
-            f = -1;
-        }
-        int g = position + 10;
-        if (g > 79) {
-            g = -1;
-        }
-        int h = position + 11;
-        if (h > 79) {
-            h = -1;
-        }
-
-        // we go through each of these position values by using a for loop and check if
-        // they are occupied by an enemy soldier.
-        // if yes, we collect the enemy soldiers information and call upon the Damage.makeBigBoom method
-        // to calculate and deal the damage to the enemy soldier.
-
-        int[] surrPositions = {a, b, c, d, e, f, g, h};
-
-        // for loop through surrPositions to turn each Position Value into String, split it into two variables,
-        // turn variables into int and then use both int variables into the gameBoard Array to check getTaken for True,
-        // then getTeamColor and if enemy team, get String soldierDefend, String hurtColor, int soldierDefTeamID,
-        // and call makeBigBoom with these variables.
-
-        for (int i = 0; i < surrPositions.length; i++) {
-            if (surrPositions[i] != -1) {
-                String positionString = String.valueOf(surrPositions[i]);
-                String positionXString = positionString.substring(0, 1);
-                String positionYString = positionString.substring(1, 2);
-                int positionXInt = Integer.parseInt(positionXString);
-                int positionYInt = Integer.parseInt(positionYString);
-                if (gameBoard[positionXInt][positionYInt].getTaken()) {
-                    String hurtColor = gameBoard[positionXInt][positionYInt].getTeamColor();
-                    if (!hurtColor.equals(attackColor)) {
-                        dealBigBoom(positionX, positionY, positionXInt, positionYInt, gameBoard);
-                    }
-                }
-            }
-        }
-        */
     }
 
 
@@ -212,9 +137,12 @@ public class Damage {
                 // for ending all background activity on Windows systems specifically
                 System.exit(0);
         }
+        // put currentHealth as new setHealth() onto the gameBoard Soldier object
+        gameBoard[positionDefX][positionDefY].setHealth(currentHealth);
         if (currentHealth <= 0) {
             killPiece(positionDefX, positionDefY);
         }
+
     }
 
     private static void killPiece(int positionX, int positionY) {
@@ -230,5 +158,6 @@ public class Damage {
         gameBoard[positionX][positionY].setSoldierType("empty");
         gameBoard[positionX][positionY].setTeamColor("none");
         gameBoard[positionX][positionY].setPieceID(0);
+        gameBoard[positionX][positionY].setHealth(-1);
     }
 }

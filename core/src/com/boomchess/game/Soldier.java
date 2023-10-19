@@ -41,7 +41,6 @@ public class Soldier {
     }
 
     public String getSoldierType() {
-        System.out.print(this.soldierType);
         return this.soldierType;
     }
 

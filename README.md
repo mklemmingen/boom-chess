@@ -137,6 +137,15 @@ Background-Music ingame:
 
 "epic-battle" by Lesiakower https://pixabay.com/music/video-games-epic-battle-153400/
 
+r and r, outside the colloseum
+https://bit-by-bit-sound.itch.io/16-bit-starter-pack
+
+safe zone
+https://hzsmith.itch.io/vol2
+
+downfall, thought soup, total dissonance, stray cat, coffee break, tonal resonance
+https://garoslaw.itch.io/monolith-ost
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 general backend setup:
 
