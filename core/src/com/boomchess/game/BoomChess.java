@@ -127,19 +127,38 @@ public class BoomChess extends ApplicationAdapter {
 		batch.draw(background, 0, 0);
 		batch.end();
 
-		// for the tiled map
-		tiledMapRenderer.setView(camera);
-		tiledMapRenderer.render();
+		if (showMove){
+
+			// for the tiled map
+			tiledMapRenderer.setView(camera);
+			tiledMapRenderer.render();
+			moveLogoStage.clear();
+
+
+			// this method adds a new stage to the currentStage
+			// Image of the currentMover
+			Table currentMover = new Table();
+			currentMover.setSize(250, 125);
+			currentMover.setPosition(currentMover.getWidth()/6,
+					currentMover.getHeight()/2);
+
+			if (currentState == GameState.RED_TURN) {
+				Image redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
+				currentMover.addActor(redMove);
+			} else if (currentState == GameState.GREEN_TURN) {
+				Image greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
+				currentMover.addActor(greenMove);
+			}
+			moveLogoStage.addActor(currentMover);
+
+			moveLogoStage.act();
+			moveLogoStage.draw();
+		}
 
 		// for the overlay of possible moves
 		if (renderOverlay) {
 			possibleMoveOverlay.act();
 			possibleMoveOverlay.draw();
-		}
-
-		if (showMove){
-			moveLogoStage.act();
-			moveLogoStage.draw();
 		}
 
 		// for the stages, displays only stage assigned as currentStage, see method switchToStage
@@ -203,14 +222,13 @@ public class BoomChess extends ApplicationAdapter {
 	private static void switchToStage(Stage newStage) {
 		// this method removes the currentStage and loads a new one
 		currentStage.clear();
-		currentStage.dispose();
 		currentStage = newStage;
 		Gdx.input.setInputProcessor(currentStage);
 	}
 
+	/*
 	private static void addLogo() {
 		moveLogoStage.clear();
-		moveLogoStage.dispose();
 		// this method adds a new stage to the currentStage
 		// Image of the currentMover
 		Table currentMover = new Table();
@@ -227,6 +245,7 @@ public class BoomChess extends ApplicationAdapter {
 		}
 		moveLogoStage.addActor(currentMover);
 	}
+	 */
 
 	private static Stage createMainMenuStage() {
 
@@ -429,7 +448,8 @@ public class BoomChess extends ApplicationAdapter {
 		}
 
 		showMove = true;
-		addLogo();
+
+		// addLogo(); TODO remove this variable long term
 		
 		Stage gameStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
@@ -677,6 +697,7 @@ public class BoomChess extends ApplicationAdapter {
 				if ((currentState == GameState.RED_TURN && !tileTeamColor.equals("red")) ||
 						(currentState == GameState.GREEN_TURN && !tileTeamColor.equals("green"))) {
 					event.cancel();
+					System.out.println("\n It's not your turn!");
 					reRenderGame();
 					return;
 				}
