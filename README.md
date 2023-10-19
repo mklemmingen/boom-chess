@@ -3,8 +3,8 @@ Idiocracied chess, with health, guns, obstacles, boom and stuff
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Instructions for running in intelllij:
-1. Click on Gradle on the right hand side bar
+Instructions for running in IntelliJ:
+1. Click on Gradle on the right hand sidebar
 2. Gradle -> desktop -> Tasks -> others -> run
 
 Game Assets in the folder /assets
@@ -28,7 +28,7 @@ Schematics for the Program
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-the front end framwork will be run my libGDX, which will help in things running smoothly and more easy to setup. 
+the front end framework will be run my libGDX, which will help in things running smoothly and easier to set up. 
 Gradle will be used to easily work with libraries (dependencies) and for smooth game starts.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -41,13 +41,10 @@ Starting Menu Layout:
 Boom-Chess
 
 1. HELP!
-   
-4. Start a 2-player-game
-5. Start a game against a bot
-
-6. Options
-
-7. Credits
+2. Start a 2-player-game
+3. Start a game against a bot
+4. Options
+5. Credits
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -55,19 +52,18 @@ Boom-Chess
 
    ......  explanation about the different figurines, their stats, their dis/advantages 
 
-5.1 Options about the game that will start
-  4.2 Choose your queens name
-  4.3 coin toss - winner decides board
+2.1 Options about the game that will start
+
   
-6.1  Options about the game that will start
-  6.2 Choose your queens name
-  6.3 Choose the Difficulty of your enemy
-  6.4 Choose the Layout of the board and obstacles
+3.1  Options about the game that will start
+
+  3.2 Choose the Difficulty of your enemy
+ 
   
 
-7.1 Options about the colours of the game-board, about colour-blindness
+4.1 Options about the colours of the game-board, about colour-blindness
 
-8.1 Let the credits and info about the game run down
+5.1 Let the credits and info about the game run down
    - display libGDX
    - display where code snippets have been taken from
    - display people that have worked on this project
@@ -76,10 +72,9 @@ Boom-Chess
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Quick intro:
-The game will be modernized using a different approach to chess. Each piece is a new piece resembling it only slightly in the way it can move. T
-he King will be a General. The Towers will be tanks. The Pawns Infantry. The Runners will be Dogs. The Horses will be Helicopters. The Queen will be a Commando. 
+The game will be modernized using a different approach to chess. Each piece is a new piece resembling it only slightly in the way it can move. The King will be a General. The Towers will be tanks. The Pawns Infantry. The Runners will be Dogs. The Horses will be Helicopters. The Queen will be a Commando. 
 
-The whole board will be 10x10. Each piece has a healthbar.  
+The whole board will be 10x10. Each piece has a healthcare.  
 
 The pieces have advantages and disadvantages for different kinds of enemies.  
 At the end of each chess-like turn, the current players pieces will all attack anyone they can. 
@@ -99,7 +94,7 @@ Commando(Queen) - int: 20        / health: int: 50  / damage: 1-30  / advantages
    The most powerful piece. It can move horizontally, vertically, diagonally, and in any direction for any number of squares.
    on a randomized 1-5 scale, he takes (<random number>/5)*100 percent less damage
    
-Tank(Rook) - int: 30             / health: int: 60  / damage: 10-20 / advantages: +5 to attacking infantry / disadavntages: deals -5 to wardogs
+Tank(Rook) - int: 30             / health: int: 60  / damage: 10-20 / advantages: +5 to attacking infantry / disadvantages: deals -5 to wardogs
 
    These are often represented as towers. They can move horizontally or vertically for any number of squares.
    high health. hard on other armour.
@@ -109,12 +104,12 @@ War Dogs(Bishop) - int: 40      / health: int: 40   / damage: 5-20  / advantages
 
    They move diagonally for any number of squares.
    is the end of faith for all infantry. easy target for helicopters
-   the war dogs fear them cause they go broom. 
+   the war dogs fear them because they go broom. 
  
 Helicopter(Knight) - int: 50    / health: int : 50  / damage: 10-20 / advantages: +5 to attacking tanks
 
    Knights move in an L-shape: two squares in one direction (either horizontally or vertically) and then one square in a perpendicular direction. Knights can jump over other pieces.
-   High movement. doesnt care about obstacles.
+   High movement. doesn't care about obstacles.
    high effectiveness against armour. 
 
 Infantry(Pawn) - int: 60        / health: int: 40  / damage: 01-20 / advantages: +5 to attacking helicopters / disadvantages: -5 to tank
@@ -137,10 +132,19 @@ Background-Music ingame:
 
 "epic-battle" by Lesiakower https://pixabay.com/music/video-games-epic-battle-153400/
 
+r and r, outside the colloseum
+https://bit-by-bit-sound.itch.io/16-bit-starter-pack
+
+safe zone
+https://hzsmith.itch.io/vol2
+
+downfall, thought soup, total dissonance, stray cat, coffee break, tonal resonance
+https://garoslaw.itch.io/monolith-ost
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 general backend setup:
 
-Soldier[][] gameBoard = new Soldier[9][8];
+Soldier[][] gameBoard = new Soldier 9 8;
 
 Tile will hold information as to if the tile has a :  - rock on it - a piece on it, which and which team, pieceID, Health 
 
@@ -148,10 +152,10 @@ Tile will hold information as to if the tile has a :  - rock on it - a piece on 
 
 gameStage-Explanation:
 
-the game Stage will be created by initialising the gameBoard. This gameBoard will hold the Soldiers.
-The gameStage will create the gameBoard by looping trough it and creating the Overlay-GameBoard depending on what Soldiers are on what tile.
+the game Stage will be created by initializing the gameBoard. This gameBoard will hold the Soldiers.
+The gameStage will create the gameBoard by looping through it and creating the Overlay-GameBoard depending on what Soldiers are on what tile.
 Each tile has a Listener on it that activated if the Widget is dragged - during dragging, its possible moves from its current Drag-Start location get calculated and 
-overlayd above the gameBoard-Stage. It ends when a click occurs.
+overlaid above the gameBoard-Stage. It ends when a click occurs.
 
 - game Loop Explanation //TODO 
 
@@ -192,7 +196,7 @@ Creation of the Background in LibreSprite https://github.com/LibreSprite/LibreSp
 
 ![Background Creation](https://github.com/mklemmingen/The-Boom-Chess/blob/master/readme_assets/backgroundCreation.png?raw=true)
 
-creating better PixelArt Icons for the Soldier Pieces using bings ai creation powered by Dall-E 3
+creating better PixelArt Icons for the Soldier Pieces using bings AI creation powered by Dall-E 3
 
 ![Icon Creation using DallE3](https://github.com/mklemmingen/The-Boom-Chess/blob/master/readme_assets/creatingBetterPixelArtIconsWithDallE3.png?raw=true)
 
@@ -216,9 +220,9 @@ Creation of the Schematics USING inkscape https://inkscape.org
 
 ![Schematics Creation in inkscape](https://github.com/mklemmingen/The-Boom-Chess/blob/master/readme_assets/schematicsCreation.png?raw=true)
 
-Creation of the underlaying .tmx tiled map using TILED https://www.mapeditor.org/
+Creation of the underlying .tmx tiled map using TILED https://www.mapeditor.org/
 
-![Creation of the underlaying .tmx tiled map using TILED](https://github.com/mklemmingen/The-Boom-Chess/blob/master/readme_assets/TiledUsage.png?raw=true)
+![Creation of the underlying .tmx tiled map using TILED](https://github.com/mklemmingen/The-Boom-Chess/blob/master/readme_assets/TiledUsage.png?raw=true)
 
 Using Inkscape for refining Icons
 

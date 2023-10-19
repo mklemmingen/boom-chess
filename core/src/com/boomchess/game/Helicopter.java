@@ -91,10 +91,10 @@ public class Helicopter {
         for (int offset = -1; offset < 2; offset += 2) {
             int newY = positionY - offset;
 
-            if (Board.isValidMove(rightsideX, newY)) {
-                if (!gameBoard[rightsideX][newY].getTaken()) {
+            if (Board.isValidMove(leftsideX, newY)) {
+                if (!gameBoard[leftsideX][newY].getTaken()) {
                     Coordinates coordinates = new Coordinates();
-                    coordinates.setCoordinates(rightsideX, newY);
+                    coordinates.setCoordinates(leftsideX, newY);
                     possibleMoves.add(coordinates);
                 }
             }
@@ -109,7 +109,7 @@ public class Helicopter {
             return damage - 5;
         }
 
-        System.out.println("Helicopter has been attacked for" + damage + "damage by" + soldierAttack);
+        System.out.println("Helicopter has been attacked for" + damage + "damage by " + soldierAttack);
         return damage;
     }
 }

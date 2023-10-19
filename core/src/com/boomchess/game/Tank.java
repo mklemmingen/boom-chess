@@ -45,13 +45,12 @@ public class Tank {
 
         // Loop to move upwards
         for (int yOffset = 1; yOffset <= 7; yOffset++) {
-            int newX = positionX;
             int newY = positionY + yOffset;
 
-            if (Board.isValidMove(newX, newY)) {
-                if (!gameBoard[newX][newY].getTaken()) {
+            if (Board.isValidMove(positionX, newY)) {
+                if (!gameBoard[positionX][newY].getTaken()) {
                     Coordinates coordinates = new Coordinates();
-                    coordinates.setCoordinates(newX, newY);
+                    coordinates.setCoordinates(positionX, newY);
                     possibleMoves.add(coordinates);
                 } else {
                     break; // Stop if the tile is not empty
@@ -63,13 +62,12 @@ public class Tank {
 
         // Loop to move downwards
         for (int yOffset = 1; yOffset <= 7; yOffset++) {
-            int newX = positionX;
             int newY = positionY - yOffset;
 
-            if (Board.isValidMove(newX, newY)) {
-                if (!gameBoard[newX][newY].getTaken()) {
+            if (Board.isValidMove(positionX, newY)) {
+                if (!gameBoard[positionX][newY].getTaken()) {
                     Coordinates coordinates = new Coordinates();
-                    coordinates.setCoordinates(newX, newY);
+                    coordinates.setCoordinates(positionX, newY);
                     possibleMoves.add(coordinates);
                 } else {
                     break; // Stop if the tile is not empty
@@ -82,12 +80,11 @@ public class Tank {
         // Loop to move to the right
         for (int xOffset = 1; xOffset <= 7; xOffset++) {
             int newX = positionX + xOffset;
-            int newY = positionY;
 
-            if (Board.isValidMove(newX, newY)) {
-                if (!gameBoard[newX][newY].getTaken()) {
+            if (Board.isValidMove(newX, positionY)) {
+                if (!gameBoard[newX][positionY].getTaken()) {
                     Coordinates coordinates = new Coordinates();
-                    coordinates.setCoordinates(newX, newY);
+                    coordinates.setCoordinates(newX, positionY);
                     possibleMoves.add(coordinates);
                 } else {
                     break; // Stop if the tile is not empty
@@ -100,12 +97,11 @@ public class Tank {
         // Loop to move to the left
         for (int xOffset = 1; xOffset <= 7; xOffset++) {
             int newX = positionX - xOffset;
-            int newY = positionY;
 
-            if (Board.isValidMove(newX, newY)) {
-                if (!gameBoard[newX][newY].getTaken()) {
+            if (Board.isValidMove(newX, positionY)) {
+                if (!gameBoard[newX][positionY].getTaken()) {
                     Coordinates coordinates = new Coordinates();
-                    coordinates.setCoordinates(newX, newY);
+                    coordinates.setCoordinates(newX, positionY);
                     possibleMoves.add(coordinates);
                 } else {
                     break; // Stop if the tile is not empty
@@ -122,7 +118,7 @@ public class Tank {
         if (soldierAttack.equals("wardog")){
             return damage - 5;
         }
-        System.out.println("The tank has been damaged for " + damage + " points by" + soldierAttack + ".");
+        System.out.println("The tank has been damaged for " + damage + " points by " + soldierAttack + ".");
         return damage;
     }
 }
