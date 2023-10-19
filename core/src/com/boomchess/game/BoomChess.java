@@ -41,6 +41,10 @@ public class BoomChess extends ApplicationAdapter {
 	private static Skin progressBarSkin;
 	private static Stage currentStage;
 
+	// for the Move Overlay
+	private static boolean showMove = false;
+	private static Stage  moveLogoStage;
+
 	// for the tiled map
 	TiledMap tiledMap;
 	TiledMapRenderer tiledMapRenderer;
@@ -100,6 +104,9 @@ public class BoomChess extends ApplicationAdapter {
 		// ensures game starts in menu
 		currentStage = createMainMenuStage();
 
+		// for the Move Logo Overlay
+		moveLogoStage = new Stage();
+
 		// creation of empty Board.validMoveTiles for null-pointer exception avoidance
 		Board.validMoveTiles = new ArrayList<>();
 	}
@@ -130,6 +137,11 @@ public class BoomChess extends ApplicationAdapter {
 			possibleMoveOverlay.draw();
 		}
 
+		if (showMove){
+			moveLogoStage.act();
+			moveLogoStage.draw();
+		}
+
 		// for the stages, displays only stage assigned as currentStage, see method switchToStage
 		currentStage.act();
 		currentStage.draw();
@@ -141,14 +153,12 @@ public class BoomChess extends ApplicationAdapter {
 
 	private void processTurn() {
 		if (currentState == GameState.RED_TURN) {
-			addLogo();
 			if (legitTurn) {
 				calculateDamage("red");
 				switchTurn(currentState);
 				legitTurn = false;
 			}
 		} else if (currentState == GameState.GREEN_TURN) {
-			addLogo();
 			if (legitTurn) {
 				calculateDamage("green");
 				switchTurn(currentState);
@@ -187,6 +197,7 @@ public class BoomChess extends ApplicationAdapter {
 		skin.dispose();
 		currentStage.dispose();
 		possibleMoveOverlay.dispose();
+		moveLogoStage.dispose();
 	}
 
 	private static void switchToStage(Stage newStage) {
@@ -198,6 +209,8 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	private static void addLogo() {
+		moveLogoStage.clear();
+		moveLogoStage.dispose();
 		// this method adds a new stage to the currentStage
 		// Image of the currentMover
 		Table currentMover = new Table();
@@ -212,10 +225,12 @@ public class BoomChess extends ApplicationAdapter {
 			Image greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
 			currentMover.addActor(greenMove);
 		}
-		currentStage.addActor(currentMover);
+		moveLogoStage.addActor(currentMover);
 	}
 
 	private static Stage createMainMenuStage() {
+
+		showMove = false;
 
 		// setOverlay to false
 		renderOverlay = false;
@@ -412,6 +427,9 @@ public class BoomChess extends ApplicationAdapter {
 			System.out.println("Bot Match");
 			// TODO CREATE MULTIPLE BOT DIFFICULTIES
 		}
+
+		showMove = true;
+		addLogo();
 		
 		Stage gameStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
