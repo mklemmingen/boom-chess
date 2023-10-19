@@ -13,9 +13,8 @@ public class Soldier {
     private String teamColor;
     private int pieceID;
     private int health;
-    private final Coordinates coordinates;
 
-    public Soldier(boolean taken, String type, String Color, int ID, int health, int X, int Y) {;
+    public Soldier(boolean taken, String type, String Color, int ID, int health, int X, int Y) {
         this.isTaken = taken;
         this.soldierType = type;
         this.teamColor = Color;
@@ -23,17 +22,6 @@ public class Soldier {
         this.health = health;
         Coordinates coordinates = new Coordinates();
         coordinates.setCoordinates(X, Y);
-        this.coordinates = coordinates;
-    }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public Coordinates setCoordinates(int x, int y) {
-        Coordinates coordinates = new Coordinates();
-        coordinates.setCoordinates(x, y);
-        return this.coordinates;
     }
 
     public boolean getTaken() {

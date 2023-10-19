@@ -94,14 +94,14 @@ public class BoomChess extends ApplicationAdapter {
 		// skin (look) of the progress bar via a prearranged json file
 		progressBarSkin = new Skin(Gdx.files.internal("progressBarSkin/neon-ui.json"));
 
-		// create the big game Board as a object of the Board class
+		// create the big game Board as an object of the Board class
 		Board.initialise();
 
 		// ensures game starts in menu
 		currentStage = createMainMenuStage();
 
 		// creation of empty Board.validMoveTiles for null-pointer exception avoidance
-		Board.validMoveTiles = new ArrayList<Coordinates>();
+		Board.validMoveTiles = new ArrayList<>();
 	}
 
 
@@ -407,6 +407,11 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	private static Stage createGameStage(boolean isBotMatch) {
+
+		if (isBotMatch){
+			System.out.println("Bot Match");
+			// TODO CREATE MULTIPLE BOT DIFFICULTIES
+		}
 		
 		Stage gameStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
@@ -419,7 +424,7 @@ public class BoomChess extends ApplicationAdapter {
 		//  ----------------------------------------------------------------------------------------------
 		//  Actor-Images must be 80x80px. Add Exit-Button in the Bottom right corner of the screen
 		//  Actors should be able to be drag-droppable and snap to the grid. They can only move to tiles
-		//  their chess characteristics allow them to. This should be checked by the backend, and be send back as tile
+		//  their chess characteristics allow them to. This should be checked by the backend, and be sent back as tile
 		//  coordinates, so the allowed tiles can temporarily be highlighted. If piece is dropped on an allowed tile,
 		//  update 2D Array with this new information. End turn.
 		//  Calculate Damage from all the current Players pieces onto enemy pieces. All hit pieces should be highlighted.
@@ -625,7 +630,7 @@ public class BoomChess extends ApplicationAdapter {
 			// hide the health bar by default
 			healthBar.setVisible(false);
 
-			// the tileWidget Listener checks if the mouse if over the tile and if yes, displays healthBar
+			// the tileWidget Listener checks if the mouse is over the tile and if yes, displays healthBar
 			tileWidget.addListener(new InputListener() {
 				@Override
 				public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -754,7 +759,7 @@ public class BoomChess extends ApplicationAdapter {
 		// renew the whole Stage inside possibleMovesOverlay to clear the old tiles
 		possibleMoveOverlay.clear();	// clear the old tiles
 
-		// start of overlay creation, works similiar to the tileWidget creation
+		// start of overlay creation, works similar to the tileWidget creation
 
 		Table root = new Table();
 
@@ -841,7 +846,7 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static Coordinates calculateTileByPX(int pxCoordinateX, int pxCoordinateY) {
 
-		// BUGFIX! In LibGDX, the origin of the screen is the top left! i traditonal, its bottom left!
+		// BUGFIX! In LibGDX, the origin of the screen is the top left! i traditional, its bottom left!
 
 		// method for checking which tile a pxCoordinateX and pxCoordinateY is in, creating the coordinates object
 		// of the respective tile and returning it

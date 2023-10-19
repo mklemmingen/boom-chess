@@ -43,8 +43,8 @@ public class Damage {
 
         //   we need to check if the tile is occupied by anything before putting it in the array
 
-        int startX = Math.max(0, x - 1); // Ensures no out of bounds on the left/up side
-        int endX = Math.min(8, x + 1);   // Ensures no out of bounds on the right/down side
+        int startX = Math.max(0, x - 1); // Ensures no out of bounds on the left/upside
+        int endX = Math.min(8, x + 1);   // Ensures no out of bounds on the right/downside
 
         int startY = Math.max(0, y - 1);
         int endY = Math.min(7, y + 1);
