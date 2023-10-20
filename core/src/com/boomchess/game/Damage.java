@@ -105,6 +105,7 @@ public class Damage {
 
         // drawing the dotted line from the attacking piece to the defending piece
         BoomChess.addDottedLine((float) positionAttX, (float) positionAttY, (float) positionDefX, (float) positionDefY);
+        System.out.println("\nThe dotted line has been drawn");
 
         // switch statement on the type of piece taking damage
         String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
@@ -156,6 +157,13 @@ public class Damage {
 
         Soldier[][] gameBoard = Board.getGameBoard();
 
+        // play the boom sound when a piece dies
+        BoomChess.boom.play();
+        System.out.println("\nBoom! A piece has died");
+
+        BoomChess.addDeathAnimation(positionX, positionY);
+        System.out.print("\nDeath animation has been added on the corpse! Oh no!");
+
         // we use this int-array x and y position to set the tile to empty.
 
         gameBoard[positionX][positionY].setTaken(false);
@@ -163,5 +171,8 @@ public class Damage {
         gameBoard[positionX][positionY].setTeamColor("none");
         gameBoard[positionX][positionY].setPieceID(0);
         gameBoard[positionX][positionY].setHealth(-1);
+
+        // TODO FIND LESS INVASIVE METHOD OF REFRESHING THE PIECE DRAWINGS
+        BoomChess.reRenderGame();
     }
 }

@@ -19,7 +19,7 @@ public class DottedLineActor extends Actor {
     // this is the time that the dotted line has been on the screen
     private float elapsed;
     // this is the maximum duration that the dotted line will be on the screen
-    private static final float MAX_DURATION = 2.0f;
+    private static final float MAX_DURATION = 1.0f;
     // this is the shapeRenderer that will be used to draw the dotted line
     private final ShapeRenderer shapeRenderer;
 
@@ -87,8 +87,6 @@ public class DottedLineActor extends Actor {
 
             shapeRenderer.rectLine(x, y, endX, endY, 5);  // 5 is the thickness of the line
         }
-
-        System.out.println("\nThe dotted line has been drawn");
 
         // logic for drawing the dottedLine stops here ------------------------------------------
 

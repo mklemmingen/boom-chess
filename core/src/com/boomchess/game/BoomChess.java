@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -31,12 +33,12 @@ import java.util.ArrayList;
 public class BoomChess extends ApplicationAdapter {
 
 	// used for essential resolution and drawing matters -------------------------------------------------------
-	private SpriteBatch batch;
+	private static SpriteBatch batch;
 	private OrthographicCamera camera;
 	// loading of essential background images -------------------------------------------------------------
 	private Texture background;
 	// start of asset loading Sound and Music ----------------------------------------------------------
-	public Sound boom;
+	public static Sound boom;
 	public static Music background_music;
 	public static Music menu_music;
 	// usage for Scene2DUI-skins and stages -------------------------------------------------------
@@ -67,6 +69,8 @@ public class BoomChess extends ApplicationAdapter {
 	private static ShapeRenderer shapeRenderer;
 	// stage we render the shapes on
 	private static Stage dottedLineStage;
+	// used for the deathExplosion ---------------------------------------------
+	private static Stage deathExplosionStage;
 
 	@Override
 	public void create() {
@@ -85,14 +89,24 @@ public class BoomChess extends ApplicationAdapter {
 		shapeRenderer = new ShapeRenderer();
 		dottedLineStage = new Stage(new ScreenViewport());
 
+		// for the deathExplosion
+		deathExplosionStage = new Stage(new ScreenViewport());
+
 		// load the boom sound effect and background music
 		boom = Gdx.audio.newSound(Gdx.files.internal("sounds/boom.ogg"));
 
-		background_music = Gdx.audio.newMusic(Gdx.files.internal("music/retro-wave.wav"));
+		background_music = Gdx.audio.newMusic(Gdx.files.internal("music/05 Thought Soup.ogg"));
+		Music game_music2 = Gdx.audio.newMusic(Gdx.files.internal("music/06 Tonal Dissonance.ogg"));
+		Music game_music3 = Gdx.audio.newMusic(Gdx.files.internal("music/24 Stray Cat.ogg"));
+		Music game_music4 = Gdx.audio.newMusic(Gdx.files.internal("music/27 Coffee Break.ogg"));
+		Music game_music5 = Gdx.audio.newMusic(Gdx.files.internal("music/36 Tonal Resonance.ogg"));
+		Music game_music6 = Gdx.audio.newMusic(Gdx.files.internal("music/epic-battle.mp3"));
+		Music game_music7 = Gdx.audio.newMusic(Gdx.files.internal("music/Outside the Colosseum.ogg"));
 
 		// load the menu music
 
-		menu_music = Gdx.audio.newMusic(Gdx.files.internal("music/victory-screen.mp3"));
+		menu_music = Gdx.audio.newMusic(Gdx.files.internal("music/(LOOP-READY) Track 1 - Safe Zone No Intro.mp3"));
+		Music menu_music2 = Gdx.audio.newMusic(Gdx.files.internal("music/A Little R & R.ogg"));
 
 		// for the tiled map used as the chess board
 
@@ -190,6 +204,12 @@ public class BoomChess extends ApplicationAdapter {
 		dottedLineStage.act(Gdx.graphics.getDeltaTime());
 		dottedLineStage.draw();
 
+		// for the deathExplosion --------------------------------------------------------------
+		// Render the deathExplosionStage
+		deathExplosionStage.getViewport().apply();
+		deathExplosionStage.act(Gdx.graphics.getDeltaTime());
+		deathExplosionStage.draw();
+
 		processTurn();
 
 
@@ -244,6 +264,7 @@ public class BoomChess extends ApplicationAdapter {
 		moveLogoStage.dispose();
 		shapeRenderer.dispose();
 		dottedLineStage.dispose();
+		deathExplosionStage.dispose();
 	}
 
 	private static void switchToStage(Stage newStage) {
@@ -483,6 +504,7 @@ public class BoomChess extends ApplicationAdapter {
 		// add game board
 		gameStage.addActor(drawTheGameBoard());
 
+
 		// create another stage for the back to main menu button
 		Table backTable = new Table();
 		backTable.setSize(400, 80); // determines the frame size for the backTable (button: to main menu)
@@ -524,12 +546,13 @@ public class BoomChess extends ApplicationAdapter {
 		root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
 				(Gdx.graphics.getHeight() - root.getHeight()) / 2f);
 
-		// root.setTouchable(Touchable.enabled);
 
 		// for the size of the tiles
 		int tileSize = 80;
 		int numRows = 8;
 		int numColumns = 9;
+
+		batch.begin();
 
 		for (int i = 0; i < numRows; i++) {
 			// add a new stage Table row after each row of the gameBoard
@@ -632,6 +655,7 @@ public class BoomChess extends ApplicationAdapter {
 			}
 		}
 		System.out.println("\n New Board has been rendered.");
+		batch.end();
 		return root;
 	}
 
@@ -974,5 +998,45 @@ public class BoomChess extends ApplicationAdapter {
 	public void resize(int width, int height) {
 		currentStage.getViewport().update(width, height, true);
 		dottedLineStage.getViewport().update(width, height, true);
+		deathExplosionStage.getViewport().update(width, height, true);
+	}
+
+	// --------------------------------------------------------------------------------------------------------------
+	// ------------------------------------------- deathAnimation METHODS -------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
+	public static Coordinates calculatePXbyTileNonGDX(int tilePositionX, int tilePositionY){
+		Coordinates pxCoords = new Coordinates();
+		int tileWidth = 80, tileHeight = 80;
+
+		// we calculate the board dimensions based on tile dimensions and the number of tiles
+		float boardWidth = 9 * tileWidth;
+		float boardHeight = 8 * tileHeight;
+
+		// we use the same way as in calculateTileByPX to get the Screen Parameters
+		int screenWidth = Gdx.graphics.getWidth();
+		int screenHeight = Gdx.graphics.getHeight();
+
+		// we calculate the top left corner pixel coordinate of the board, which we use for the calculation
+		float boardStartX = (screenWidth - boardWidth) / 2;
+		float boardStartY = (screenHeight - boardHeight) / 2;
+
+		// Invert the tilePositionY for libGDX coordinate System compliance
+		int invertedTilePositionY = 7 - tilePositionY;
+
+		// we calculate the pixel coordinates of any tile
+		float tilePixelX = boardStartX + tilePositionX * tileWidth;
+		float tilePixelY = boardStartY + invertedTilePositionY * tileHeight;
+
+
+
+		// we set the calculated px coords into a Coordinates object
+		pxCoords.setCoordinates((int) tilePixelX, (int) tilePixelY);
+
+		return pxCoords;
+	}
+	public static void addDeathAnimation(int x, int y) {
+		DeathExplosionActor deathActor = new DeathExplosionActor(x, y);
+		deathExplosionStage.addActor(deathActor);
+		System.out.println("Exploded someone at position "+ x + "-" + y);
 	}
 }
