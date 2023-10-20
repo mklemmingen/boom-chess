@@ -102,6 +102,10 @@ public class Damage {
     public static void damagePiece(int damage, int positionAttX, int positionAttY,
                                    int positionDefX, int positionDefY){
         Soldier[][] gameBoard = Board.getGameBoard();
+
+        // drawing the dotted line from the attacking piece to the defending piece
+        BoomChess.addDottedLine((float) positionAttX, (float) positionAttY, (float) positionDefX, (float) positionDefY);
+
         // switch statement on the type of piece taking damage
         String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
         String soldierDefend = gameBoard[positionDefX][positionDefY].getSoldierType();

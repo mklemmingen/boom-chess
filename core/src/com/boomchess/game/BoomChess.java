@@ -5,9 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -21,43 +23,50 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
 
 public class BoomChess extends ApplicationAdapter {
 
-	// used for essential resolution and drawing matters
+	// used for essential resolution and drawing matters -------------------------------------------------------
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	// loading of essential background images
+	// loading of essential background images -------------------------------------------------------------
 	private Texture background;
-	// start of asset loading Sound and Music
+	// start of asset loading Sound and Music ----------------------------------------------------------
 	public Sound boom;
 	public static Music background_music;
 	public static Music menu_music;
-	// usage for Scene2DUI-skins and stages
+	// usage for Scene2DUI-skins and stages -------------------------------------------------------
 	private static Skin skin;
 	private static Skin progressBarSkin;
 	private static Stage currentStage;
 
-	// for the Move Overlay
+	// for the Move Overlay ------------------------------------------------------
 	private static boolean showMove = false;
 	private static Stage  moveLogoStage;
 
-	// for the tiled map
+	// for the tiled map -----------------------------------------
 	TiledMap tiledMap;
 	TiledMapRenderer tiledMapRenderer;
 
-	// for setting the current "Mover" of the game / if a Move has been valid
+	// for setting the current "Mover" of the game / if a Move has been valid ------------------------------
 	public static boolean legitTurn = false;
 
-	// for the x-marker overlay over the game-field
+	// for the x-marker overlay over the game-field -----------------------------------------------
 	public static boolean renderOverlay = false;
 	public static Stage possibleMoveOverlay;
 
-	// for bot matching
+	// for bot matching -----------------------------------------------
 	public static boolean isBotMatch;
+
+	// used for the dotted line when damage occurs -----------------------------------------------
+	// Shape Renderer for easy drawing of lines
+	private static ShapeRenderer shapeRenderer;
+	// stage we render the shapes on
+	private static Stage dottedLineStage;
 
 	@Override
 	public void create() {
@@ -72,6 +81,9 @@ public class BoomChess extends ApplicationAdapter {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1536, 880);
 
+		// for the dotted Line when damage occurd
+		shapeRenderer = new ShapeRenderer();
+		dottedLineStage = new Stage(new ScreenViewport());
 
 		// load the boom sound effect and background music
 		boom = Gdx.audio.newSound(Gdx.files.internal("sounds/boom.ogg"));
@@ -122,11 +134,17 @@ public class BoomChess extends ApplicationAdapter {
 	@Override
 	public void render() {
 		ScreenUtils.clear(1, 0, 0, 1);
+		// used for the dotted line when damage occurs (clears screen)  ------------------------
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		batch.begin();
 
+		// this draws the background image -------------------------------------------
 		batch.draw(background, 0, 0);
 		batch.end();
 
+		// start of the turn based system ----------------------------
 		if (showMove){
 
 			// for the tiled map
@@ -162,8 +180,15 @@ public class BoomChess extends ApplicationAdapter {
 		}
 
 		// for the stages, displays only stage assigned as currentStage, see method switchToStage
+		currentStage.getViewport().apply();
 		currentStage.act();
 		currentStage.draw();
+
+		// for the dotted line when damage occurs -----------------------------------------------
+		// Render the dottedLineStage
+		dottedLineStage.getViewport().apply();
+		dottedLineStage.act(Gdx.graphics.getDeltaTime());
+		dottedLineStage.draw();
 
 		processTurn();
 
@@ -217,6 +242,8 @@ public class BoomChess extends ApplicationAdapter {
 		currentStage.dispose();
 		possibleMoveOverlay.dispose();
 		moveLogoStage.dispose();
+		shapeRenderer.dispose();
+		dottedLineStage.dispose();
 	}
 
 	private static void switchToStage(Stage newStage) {
@@ -225,27 +252,6 @@ public class BoomChess extends ApplicationAdapter {
 		currentStage = newStage;
 		Gdx.input.setInputProcessor(currentStage);
 	}
-
-	/*
-	private static void addLogo() {
-		moveLogoStage.clear();
-		// this method adds a new stage to the currentStage
-		// Image of the currentMover
-		Table currentMover = new Table();
-		currentMover.setSize(250, 125);
-		currentMover.setPosition(currentMover.getWidth()/6,
-				currentMover.getHeight()/2);
-
-		if (currentState == GameState.RED_TURN) {
-			Image redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
-			currentMover.addActor(redMove);
-		} else if (currentState == GameState.GREEN_TURN) {
-			Image greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
-			currentMover.addActor(greenMove);
-		}
-		moveLogoStage.addActor(currentMover);
-	}
-	 */
 
 	private static Stage createMainMenuStage() {
 
@@ -919,4 +925,54 @@ public class BoomChess extends ApplicationAdapter {
 		return iconTileCoordinate;
 	}
 
+
+	// --------------------------------------------------------------------------------------------------------------
+	// ------------------------------------------- DAMAGE ANIMATION METHODS -----------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
+
+	// in this first method, the pixel coordinates of the center of a tile is calculated
+	// this will be used afterwards to create a dotted Line Animation from an attacker to a defender tile
+	public static Coordinates calculatePXbyTile(int tilePositionX, int tilePositionY){
+		Coordinates pxCoords = new Coordinates();
+		int tileWidth = 80, tileHeight = 80;
+
+		// we calculate the board dimensions based on tile dimensions and the number of tiles
+		float boardWidth = 9 * tileWidth;
+		float boardHeight = 8 * tileHeight;
+
+		// we use the same way as in calculateTileByPX to get the Screen Parameters
+		int screenWidth = Gdx.graphics.getWidth();
+		int screenHeight = Gdx.graphics.getHeight();
+
+		// we calculate the top left corner pixel coordinate of the board, which we use for the calculation
+		float boardStartX = (screenWidth - boardWidth) / 2;
+		float boardStartY = (screenHeight - boardHeight) / 2;
+
+		// Invert the tilePositionY for libGDX coordinate System compliance
+		int invertedTilePositionY = 7 - tilePositionY;
+
+		// we calculate the pixel coordinates of any tile
+		float tilePixelX = boardStartX + tilePositionX * tileWidth + ((float) tileWidth / 2);
+		float tilePixelY = boardStartY + invertedTilePositionY * tileHeight + ((float) tileHeight / 2);
+
+
+
+		// we set the calculated px coords into a Coordinates object
+		pxCoords.setCoordinates((int) tilePixelX, (int) tilePixelY);
+
+		return pxCoords;
+	}
+
+	// for adding a DottedLine to the dottedLineStage
+	public static void addDottedLine(float x1, float y1, float x2, float y2) {
+		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer);
+		dottedLineStage.addActor(lineActor);
+	}
+
+	// for the fitted viewport once the screen gets resized
+	@Override
+	public void resize(int width, int height) {
+		currentStage.getViewport().update(width, height, true);
+		dottedLineStage.getViewport().update(width, height, true);
+	}
 }
