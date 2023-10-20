@@ -19,7 +19,7 @@ public class DottedLineActor extends Actor {
     // this is the time that the dotted line has been on the screen
     private float elapsed;
     // this is the maximum duration that the dotted line will be on the screen
-    private static final float MAX_DURATION = 1.0f;
+    private static final float MAX_DURATION = 1.5f;
     // this is the shapeRenderer that will be used to draw the dotted line
     private final ShapeRenderer shapeRenderer;
 

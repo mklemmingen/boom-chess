@@ -34,7 +34,6 @@ public class BoomChess extends ApplicationAdapter {
 
 	// used for essential resolution and drawing matters -------------------------------------------------------
 	private static SpriteBatch batch;
-	private OrthographicCamera camera;
 	// loading of essential background images -------------------------------------------------------------
 	private Texture background;
 	// start of asset loading Sound and Music ----------------------------------------------------------
@@ -74,24 +73,24 @@ public class BoomChess extends ApplicationAdapter {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		background = new Texture("background_3.png");
+		background = new Texture("background_4.png");
 
 		// creation of the batch for drawing the images
 		batch = new SpriteBatch();
 
 		// creation of the camera fitting to the set resolution in DesktopLauncher
 
-		camera = new OrthographicCamera();
+		OrthographicCamera camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1536, 880);
 
-		// for the dotted Line when damage occurd
+		// for the dotted Line when damage occurs -----------------------------------------------
 		shapeRenderer = new ShapeRenderer();
 		dottedLineStage = new Stage(new ScreenViewport());
 
-		// for the deathExplosion
+		// for the deathExplosion ---------------------------------------------------------------
 		deathExplosionStage = new Stage(new ScreenViewport());
 
-		// load the boom sound effect and background music
+		// load the boom sound effect and background music --------------------------------------
 		boom = Gdx.audio.newSound(Gdx.files.internal("sounds/boom.ogg"));
 
 		background_music = Gdx.audio.newMusic(Gdx.files.internal("music/05 Thought Soup.ogg"));
@@ -110,11 +109,17 @@ public class BoomChess extends ApplicationAdapter {
 		// for the  map used as the chess board -----------------------------------------
 
 		mapStage = new Stage(new ScreenViewport());
-		// loading Texture of the map
-		Image map = new Image(new Texture(Gdx.files.internal("map2/game_map4.png")));
-		// center the map on the screen
+
+		// Loading Texture of the map
+		Image map = new Image(new Texture(Gdx.files.internal("map2/game_map7.png")));
+
+		// Center the map on the screen
 		map.setPosition((float) Gdx.graphics.getWidth() /2 - map.getWidth()/2,
 				(float) Gdx.graphics.getHeight() /2 - map.getHeight()/2);
+
+		// Add a gray hue to the map
+		map.setColor(0.5f, 0.5f, 0.5f, 1f);  // apply a grey tint to the map
+
 		mapStage.addActor(map);
 
 		// -----------------------------------------------------------------------------
@@ -158,10 +163,9 @@ public class BoomChess extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-
-		// this draws the background image -------------------------------------------
 		batch.draw(background, 0, 0);
 		batch.end();
+
 
 		// start of the turn based system ----------------------------
 		if (showMove){
@@ -176,9 +180,8 @@ public class BoomChess extends ApplicationAdapter {
 			// Image of the currentMover
 			Table currentMover = new Table();
 			currentMover.setSize(250, 125);
-			// set position to the middle and top of the screen
-			currentMover.setPosition((float) Gdx.graphics.getWidth() /2 - currentMover.getWidth()/2,
-					(float) Gdx.graphics.getHeight() - 85);
+			// set position to the upper far left corner of the screen
+			currentMover.setPosition(30, Gdx.graphics.getHeight() - 150);
 
 			if (currentState == GameState.RED_TURN) {
 				Image redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
