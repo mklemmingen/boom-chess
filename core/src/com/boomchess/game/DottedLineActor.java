@@ -12,13 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 */
 public class DottedLineActor extends Actor {
     // these values are the beginning and the end of the dotted Line
-    private float startX, startY, endX, endY;
+    private final float startX;
+    private final float startY;
+    private final float endX;
+    private final float endY;
     // this is the time that the dotted line has been on the screen
     private float elapsed;
     // this is the maximum duration that the dotted line will be on the screen
     private static final float MAX_DURATION = 2.0f;
     // this is the shapeRenderer that will be used to draw the dotted line
-    private ShapeRenderer shapeRenderer;
+    private final ShapeRenderer shapeRenderer;
 
     public DottedLineActor(float startX, float startY, float endX, float endY, ShapeRenderer shapeRenderer) {
         /*
