@@ -300,7 +300,7 @@ public class BoomChess extends ApplicationAdapter {
 		root.setFillParent(true);
 		menuStage.addActor(root);
 
-		final Image title = new Image(new Texture("BoomLogo.png"));
+		final Image title = new Image(new Texture("logo/Logo1.png"));
 		root.add(title).top().padBottom(20);
 		root.row();
 
