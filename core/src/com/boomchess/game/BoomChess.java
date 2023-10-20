@@ -50,9 +50,8 @@ public class BoomChess extends ApplicationAdapter {
 	private static boolean showMove = false;
 	private static Stage  moveLogoStage;
 
-	// for the tiled map -----------------------------------------
-	TiledMap tiledMap;
-	TiledMapRenderer tiledMapRenderer;
+	// for the  map -----------------------------------------
+	Stage mapStage;
 
 	// for setting the current "Mover" of the game / if a Move has been valid ------------------------------
 	public static boolean legitTurn = false;
@@ -75,7 +74,7 @@ public class BoomChess extends ApplicationAdapter {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		background = new Texture("background.png");
+		background = new Texture("background_3.png");
 
 		// creation of the batch for drawing the images
 		batch = new SpriteBatch();
@@ -108,11 +107,17 @@ public class BoomChess extends ApplicationAdapter {
 		menu_music = Gdx.audio.newMusic(Gdx.files.internal("music/(LOOP-READY) Track 1 - Safe Zone No Intro.mp3"));
 		Music menu_music2 = Gdx.audio.newMusic(Gdx.files.internal("music/A Little R & R.ogg"));
 
-		// for the tiled map used as the chess board
+		// for the  map used as the chess board -----------------------------------------
 
-		tiledMap = new TmxMapLoader().load("map/map.tmx");
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+		mapStage = new Stage(new ScreenViewport());
+		// loading Texture of the map
+		Image map = new Image(new Texture(Gdx.files.internal("map2/game_map4.png")));
+		// center the map on the screen
+		map.setPosition((float) Gdx.graphics.getWidth() /2 - map.getWidth()/2,
+				(float) Gdx.graphics.getHeight() /2 - map.getHeight()/2);
+		mapStage.addActor(map);
 
+		// -----------------------------------------------------------------------------
 		/*
 		 * creation of the stages for the menu - this allows the Scene2D.ui to be used for quick swapping of screens
 		 * and the usage of the buttons/ui-elements/so-called actors and child actors to be used
@@ -161,9 +166,9 @@ public class BoomChess extends ApplicationAdapter {
 		// start of the turn based system ----------------------------
 		if (showMove){
 
-			// for the tiled map
-			tiledMapRenderer.setView(camera);
-			tiledMapRenderer.render();
+			// for the map
+			mapStage.act();
+			mapStage.draw();
 			moveLogoStage.clear();
 
 
@@ -171,8 +176,9 @@ public class BoomChess extends ApplicationAdapter {
 			// Image of the currentMover
 			Table currentMover = new Table();
 			currentMover.setSize(250, 125);
-			currentMover.setPosition(currentMover.getWidth()/6,
-					currentMover.getHeight()/2);
+			// set position to the middle and top of the screen
+			currentMover.setPosition((float) Gdx.graphics.getWidth() /2 - currentMover.getWidth()/2,
+					(float) Gdx.graphics.getHeight() - 85);
 
 			if (currentState == GameState.RED_TURN) {
 				Image redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
