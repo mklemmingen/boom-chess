@@ -43,14 +43,19 @@ public class Damage {
 
         //   we need to check if the tile is occupied by anything before putting it in the array
 
-        int startX = Math.max(0, x - 1); // Ensures no out of bounds on the left/upside
-        int endX = Math.min(8, x + 1);   // Ensures no out of bounds on the right/downside
+        // if the piece is an artillery however, we check the 3 tiles surrounding it in each direction instead
+        // this is done in the distance variable that gets changed from 1 to 3 if an artillery is checked
+        int distance = gameBoard[x][y].getSoldierType().equals("artillery") ? 3 : 1;
 
-        int startY = Math.max(0, y - 1);
-        int endY = Math.min(7, y + 1);
+        int startX = Math.max(0, x - distance);
+        int endX = Math.min(7, x + distance);
+
+        int startY = Math.max(0, y - distance);
+        int endY = Math.min(7, y + distance);
 
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {
+                if (i == x && j == y) continue; // Skip on checking the original piece
                 if (gameBoard[i][j].getTaken()) {
                     String hurtColor = gameBoard[i][j].getTeamColor();
                     if (!hurtColor.equals(attackColor)) {
@@ -60,7 +65,6 @@ public class Damage {
             }
         }
     }
-
 
     public static void dealBigBoom(int positionAttX, int positionAttY, int positionDefX, int positionDefY) {
         Soldier[][] gameBoard = Board.getGameBoard();
@@ -80,6 +84,9 @@ public class Damage {
                 break;
             case "wardog":
                 damage = Wardog.calculateDamage(soldierDefend);
+                break;
+            case "artillery":
+                damage = Artillery.calculateDamage(soldierDefend);
                 break;
             case "helicopter":
                 damage = Helicopter.calculateDamage(soldierDefend);
@@ -133,6 +140,9 @@ public class Damage {
                 break;
             case "commando":
                 currentHealth -= Commando.defendAndBleed(damage, soldierAttack);
+                break;
+            case "artillery":
+                currentHealth -= Artillery.defendAndBleed(damage, soldierAttack);
                 break;
             default:
                 System.out.println("Error: Invalid soldier type. Bug in Damage.hurtPiece\n" +

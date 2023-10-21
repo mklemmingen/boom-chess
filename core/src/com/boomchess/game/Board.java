@@ -38,10 +38,10 @@ public class Board {
         //    0  1  2  3  4  5  6  7  8
         //  0 t  i                 i  t
         //  1 h  i                 i  h
-        //  2 w  i                 i  w
+        //  2 a  w                 w  a
         //  3 g  i                 i  g
         //  4 c  i                 i  c
-        //  5 w  i                 i  w
+        //  5 w  w                 w  a
         //  6 h  i                 i  h
         //  7 t  i                 i  t
 
@@ -56,9 +56,12 @@ public class Board {
                 Helicopter.getHealth(), 0, 1);
         board[0][6] = new Soldier(true,"helicopter", "green", 2,
                 Helicopter.getHealth(), 0, 6);
+        // artillery
+        board[0][2] = new Soldier(true,"artillery", "green", 1, Artillery.getHealth(), 0, 2);
+        board[0][5] = new Soldier(true,"artillery", "green", 2, Artillery.getHealth(), 0, 5);
         // wardog
-        board[0][2] = new Soldier(true,"wardog", "green", 1, Wardog.getHealth(), 0, 2);
-        board[0][5] = new Soldier(true,"wardog", "green", 2, Wardog.getHealth(), 0, 5);
+        board[1][2] = new Soldier(true,"wardog", "green", 1, Wardog.getHealth(), 1, 2);
+        board[1][5] = new Soldier(true,"wardog", "green", 2, Wardog.getHealth(), 1, 5);
         // general
         board[0][3] = new Soldier(true,"general", "green", 1, General.getHealth(), 0, 3);
         // commando
@@ -67,6 +70,9 @@ public class Board {
         int i = 1;
         for (int j = 0; j < 8; j++) {
             int ID = j + 1;
+            if(j == 2 || j == 5){
+                continue;
+            }
             board[i][j] = new Soldier(true,"infantry", "green", ID, Infantry.getHealth(), i, j);
         }
 
@@ -80,9 +86,12 @@ public class Board {
                 Helicopter.getHealth(), 8, 1);
         board[8][6] = new Soldier(true,"helicopter", "red", 2,
                 Helicopter.getHealth(), 8, 6);
+        // artillery
+        board[8][2] = new Soldier(true,"artillery", "red", 1, Artillery.getHealth(), 8, 2);
+        board[8][5] = new Soldier(true,"artillery", "red", 2, Artillery.getHealth(), 8, 5);
         // wardog
-        board[8][2] = new Soldier(true,"wardog", "red", 1, Wardog.getHealth(), 8, 2);
-        board[8][5] = new Soldier(true,"wardog", "red", 2, Wardog.getHealth(), 8, 5);
+        board[7][2] = new Soldier(true,"wardog", "red", 1, Wardog.getHealth(), 7, 2);
+        board[7][5] = new Soldier(true,"wardog", "red", 2, Wardog.getHealth(), 7, 5);
         // general
         board[8][3] = new Soldier(true,"general", "red", 1, General.getHealth(), 8, 3);
         // commando
@@ -91,6 +100,9 @@ public class Board {
         int x = 7;
         for (int j = 0; j < 8; j++) {
             int ID = j + 1;
+            if(j == 2 || j == 5){
+                continue;
+            }
             board[x][j] = new Soldier(true,"infantry", "red", ID, Infantry.getHealth(), x, j);
         }
 
