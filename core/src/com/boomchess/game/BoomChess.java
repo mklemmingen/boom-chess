@@ -477,6 +477,10 @@ public class BoomChess extends ApplicationAdapter {
 				System.exit(0);
 			}
 		});
+
+		// TODO ADD MUTE MUSIC BUTTON
+
+
 		root.row();
 
 		// End of first menu-layer Layout
@@ -519,6 +523,8 @@ public class BoomChess extends ApplicationAdapter {
 
 		// TODO add buttons that change the volume of the music and sound effects as well as
 		//  yet to be decided variables in the backend like NIKI Difficulty etc
+
+		// TODO CHANGE FROM GREEN AND RED TO BLUE AND RED BY CHANGING THE TEXTURE VARIABLES FROM GREEN PNGS TO BLUE
 
 		// back button to return to the main menu
 		TextButton backButton = new TextButton("Back", skin);

@@ -182,7 +182,6 @@ public class Damage {
         gameBoard[positionX][positionY].setPieceID(0);
         gameBoard[positionX][positionY].setHealth(-1);
 
-        // TODO FIND LESS INVASIVE METHOD OF REFRESHING THE PIECE DRAWINGS
         BoomChess.reRenderGame();
     }
 }
