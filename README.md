@@ -141,6 +141,13 @@ https://hzsmith.itch.io/vol2
 downfall, thought soup, total dissonance, stray cat, coffee break, tonal resonance
 https://garoslaw.itch.io/monolith-ost
 
+https://pixabay.com/sound-effects/autocannon-20mm-143113/
+https://pixabay.com/sound-effects/sniper-rifle-129927/
+https://pixabay.com/sound-effects/helicopter-rotor-loop-105796/
+https://pixabay.com/sound-effects/cannonball-89596/
+https://pixabay.com/sound-effects/dog-barking-6296/
+https://pixabay.com/sound-effects/desert-eagle-gunshot-14622/
+https://pixabay.com/sound-effects/driving-tank-engine-88503/
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 general backend setup:
 

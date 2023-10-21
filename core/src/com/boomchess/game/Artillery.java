@@ -17,11 +17,11 @@ public class Artillery {
 
     public static int calculateDamage(String soldierDefend) {
 
-        // deals 1-10 damage
+        // deals 1-5 damage
         // advantages: deals +5 to infantry
 
         int minValue = 1;
-        int maxValue = 10;
+        int maxValue = 5;
 
         // we achieve this randomisation using random.Math`s floor and random methods
         // that generate a random number between 0 and 1 that we multiply
@@ -30,6 +30,8 @@ public class Artillery {
         if (soldierDefend.equals("infantry")) {
             randomDamage += 5;
         }
+
+        BoomChess.artillerySound.play();
 
         return randomDamage;
 

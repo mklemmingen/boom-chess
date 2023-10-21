@@ -30,6 +30,8 @@ public class Helicopter {
             randomDamage += 5;
         }
 
+        BoomChess.helicopterSound.play();
+
         return randomDamage;
     }
 

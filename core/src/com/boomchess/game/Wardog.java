@@ -33,6 +33,8 @@ public class Wardog {
             randomDamage += 5;
         }
 
+        BoomChess.wardogSound.play();
+
         return randomDamage;
     }
 

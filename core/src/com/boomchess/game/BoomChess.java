@@ -90,11 +90,21 @@ public class BoomChess extends ApplicationAdapter {
 	private static Texture empty;
 	private static Texture hill;
 
-	// loading Sound and Music
+	// loading Sounds
 
 	public static Sound boom;
+	public static Sound generalSound;
+	public static Sound infantrySound;
+	public static Sound helicopterSound;
+	public static Sound artillerySound;
+	public static Sound wardogSound;
+	public static Sound commandoSound;
+	public static Sound tankSound;
+
+	// music
 	public static Music background_music;
 	public static Music menu_music;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -142,6 +152,13 @@ public class BoomChess extends ApplicationAdapter {
 
 		// load the boom sound effect and background music --------------------------------------
 		boom = Gdx.audio.newSound(Gdx.files.internal("sounds/boom.ogg"));
+		generalSound = Gdx.audio.newSound(Gdx.files.internal("sounds/autocannon-20mm.mp3"));
+		infantrySound = Gdx.audio.newSound(Gdx.files.internal("sounds/desert-eagle-gunshot.mp3"));
+		helicopterSound = Gdx.audio.newSound(Gdx.files.internal("sounds/helicopter-rotor-loop.mp3"));
+		artillerySound = Gdx.audio.newSound(Gdx.files.internal("sounds/cannonball.mp3"));
+		wardogSound = Gdx.audio.newSound(Gdx.files.internal("sounds/dog_barking.mp3"));
+		commandoSound = Gdx.audio.newSound(Gdx.files.internal("sounds/sniper-rifle.mp3"));
+		tankSound = Gdx.audio.newSound(Gdx.files.internal("sounds/tank-engine.mp3"));
 
 		background_music = Gdx.audio.newMusic(Gdx.files.internal("music/05 Thought Soup.ogg"));
 		Music game_music2 = Gdx.audio.newMusic(Gdx.files.internal("music/06 Tonal Dissonance.ogg"));
@@ -632,8 +649,6 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	public static Table drawTheGameBoard() {
-
-		Soldier[][] gameBoard = Board.getGameBoard();
 
 		// Begin of GameLayout - Root Table arranges content automatically and adaptively as ui-structure
 		Table root = new Table();

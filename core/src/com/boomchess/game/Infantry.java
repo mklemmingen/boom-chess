@@ -29,6 +29,8 @@ public class Infantry {
             randomDamage += 5;
         }
 
+        BoomChess.infantrySound.play();
+
         return randomDamage;
 
     }
