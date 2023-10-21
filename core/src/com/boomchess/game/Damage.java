@@ -43,14 +43,19 @@ public class Damage {
 
         //   we need to check if the tile is occupied by anything before putting it in the array
 
-        int startX = Math.max(0, x - 1); // Ensures no out of bounds on the left/upside
-        int endX = Math.min(8, x + 1);   // Ensures no out of bounds on the right/downside
+        // if the piece is an artillery however, we check the 3 tiles surrounding it in each direction instead
+        // this is done in the distance variable that gets changed from 1 to 3 if an artillery is checked
+        int distance = gameBoard[x][y].getSoldierType().equals("artillery") ? 3 : 1;
 
-        int startY = Math.max(0, y - 1);
-        int endY = Math.min(7, y + 1);
+        int startX = Math.max(0, x - distance);
+        int endX = Math.min(7, x + distance);
+
+        int startY = Math.max(0, y - distance);
+        int endY = Math.min(7, y + distance);
 
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {
+                if (i == x && j == y) continue; // Skip on checking the original piece
                 if (gameBoard[i][j].getTaken()) {
                     String hurtColor = gameBoard[i][j].getTeamColor();
                     if (!hurtColor.equals(attackColor)) {
@@ -60,7 +65,6 @@ public class Damage {
             }
         }
     }
-
 
     public static void dealBigBoom(int positionAttX, int positionAttY, int positionDefX, int positionDefY) {
         Soldier[][] gameBoard = Board.getGameBoard();
@@ -80,6 +84,9 @@ public class Damage {
                 break;
             case "wardog":
                 damage = Wardog.calculateDamage(soldierDefend);
+                break;
+            case "artillery":
+                damage = Artillery.calculateDamage(soldierDefend);
                 break;
             case "helicopter":
                 damage = Helicopter.calculateDamage(soldierDefend);
@@ -102,6 +109,11 @@ public class Damage {
     public static void damagePiece(int damage, int positionAttX, int positionAttY,
                                    int positionDefX, int positionDefY){
         Soldier[][] gameBoard = Board.getGameBoard();
+
+        // drawing the dotted line from the attacking piece to the defending piece
+        BoomChess.addDottedLine((float) positionAttX, (float) positionAttY, (float) positionDefX, (float) positionDefY);
+        System.out.println("\nThe dotted line has been drawn");
+
         // switch statement on the type of piece taking damage
         String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
         String soldierDefend = gameBoard[positionDefX][positionDefY].getSoldierType();
@@ -129,6 +141,9 @@ public class Damage {
             case "commando":
                 currentHealth -= Commando.defendAndBleed(damage, soldierAttack);
                 break;
+            case "artillery":
+                currentHealth -= Artillery.defendAndBleed(damage, soldierAttack);
+                break;
             default:
                 System.out.println("Error: Invalid soldier type. Bug in Damage.hurtPiece\n" +
                         "check if a soldiers name was written incorrectly like 'Infantry' instead of 'infantry'");
@@ -152,6 +167,13 @@ public class Damage {
 
         Soldier[][] gameBoard = Board.getGameBoard();
 
+        // play the boom sound when a piece dies
+        BoomChess.boom.play();
+        System.out.println("\nBoom! A piece has died");
+
+        BoomChess.addDeathAnimation(positionX, positionY);
+        System.out.print("\nDeath animation has been added on the corpse! Oh no!");
+
         // we use this int-array x and y position to set the tile to empty.
 
         gameBoard[positionX][positionY].setTaken(false);
@@ -159,5 +181,7 @@ public class Damage {
         gameBoard[positionX][positionY].setTeamColor("none");
         gameBoard[positionX][positionY].setPieceID(0);
         gameBoard[positionX][positionY].setHealth(-1);
+
+        BoomChess.reRenderGame();
     }
 }

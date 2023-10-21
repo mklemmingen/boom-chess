@@ -188,6 +188,11 @@ source skins for Scene2DUI
 https://github.com/czyzby/gdx-skins//master/flat
 https://github.com/czyzby/gdx-skins/tree/master/commodore64
 
+-----------
+source for animation (Sprite Sheets)
+Explosion
+https://www.seekpng.com/idown/u2q8t4i1o0t4a9u2_drawn-explosions-sprite-explosion-sprite-sheet-doom/
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Documentation:
