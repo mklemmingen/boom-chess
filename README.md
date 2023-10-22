@@ -25,13 +25,13 @@ Schematics for the Program
 
 ![Schematics for the Program. frontend on top, backend on bottom. the frontend is libGDX based and the backend is a 2D Array of a Soldier class, a Damage class, a Board Class and a couple of Classes for pieces. It is not a much-more-indepth diagram](https://github.com/mklemmingen/boom-chess/blob/master/readme_assets/Schematics_ProgrammierprojectHD.png?raw=true)
 
-
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 the front end framework will be run my libGDX, which will help in things running smoothly and easier to set up. 
 Gradle will be used to easily work with libraries (dependencies) and for smooth game starts.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 Board Size: 9x8
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -118,6 +118,10 @@ Infantry(Pawn) - int: 60        / health: int: 40  / damage: 01-20 / advantages:
    the simple pawn
    Has a bonus on attacking helicopters. an easy target for war dogs.
 
+Artillery - int: 40 / damage 01-10 
+
+ Artillery can move in any direction one tile. It can hit targets 3 tiles away
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 main-menu title:
@@ -142,13 +146,21 @@ downfall, thought soup, total dissonance, stray cat, coffee break, tonal resonan
 https://garoslaw.itch.io/monolith-ost
 
 https://pixabay.com/sound-effects/autocannon-20mm-143113/
+
 https://pixabay.com/sound-effects/sniper-rifle-129927/
+
 https://pixabay.com/sound-effects/helicopter-rotor-loop-105796/
+
 https://pixabay.com/sound-effects/cannonball-89596/
+
 https://pixabay.com/sound-effects/dog-barking-6296/
+
 https://pixabay.com/sound-effects/desert-eagle-gunshot-14622/
+
 https://pixabay.com/sound-effects/driving-tank-engine-88503/
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 general backend setup:
 
 Soldier[][] gameBoard = new Soldier 9 8;
