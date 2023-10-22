@@ -20,8 +20,9 @@ jobs:
       - name: Push to GitLab
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-          GITLAB_REPO: https://oauth2:${{ secrets.GITLAB_TOKEN }}@https://gitlab.reutlingen-university.de/lauterba/boom-chess
+          GITLAB_REPO: https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.reutlingen-university.de/lauterba/boom-chess.git
         run: |
-          git remote add gitlab $https://gitlab.reutlingen-university.de/lauterba/boom-chess
-          git push gitlab HEAD:main
+          git remote add gitlab $GITLAB_REPO
+          git push gitlab HEAD:master
+
 
