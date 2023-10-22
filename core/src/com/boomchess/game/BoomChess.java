@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -105,6 +106,33 @@ public class BoomChess extends ApplicationAdapter {
 	public static Music background_music;
 	public static Music menu_music;
 
+	// universal Buttons -- here for music and sound control
+
+	public static Button playButton;
+
+	public static Button muteButton;
+
+	// for the volume slider
+
+	public static Slider volumeSlider;
+	public static Slider soundVolumeSlider;
+
+	// volume of Sounds
+
+	public static float volume = 0.1f;  // variable to store the current MUSIC volume level
+
+	public static float soundVolume = 1.0f;  // variable to store the current SOUND volume level
+
+	// for the labels
+
+	public static Label volumeLabel;
+
+	public static Label soundVolumeLabel;
+
+	// audio table
+
+	public static Table audioTable;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -113,9 +141,13 @@ public class BoomChess extends ApplicationAdapter {
 		// creation of the batch for drawing the images
 		batch = new SpriteBatch();
 
-		// loading all assests -----------------------------------------------------------------------------------
+		// skin of the UI --------------------
+		// skin (look) of the buttons via a prearranged json file
+		skin = new Skin(Gdx.files.internal("menu.commodore64/uiskin.json"));
 
-		background = new Texture(Gdx.files.internal("background_4.png"));
+		// loading all assets -----------------------------------------------------------------------------------
+
+		background = new Texture(Gdx.files.internal("background_5.png"));
 
 		greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
 		redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
@@ -173,6 +205,117 @@ public class BoomChess extends ApplicationAdapter {
 		menu_music = Gdx.audio.newMusic(Gdx.files.internal("music/(LOOP-READY) Track 1 - Safe Zone No Intro.mp3"));
 		Music menu_music2 = Gdx.audio.newMusic(Gdx.files.internal("music/A Little R & R.ogg"));
 
+		// ---------------------------- universal Buttons for adding to stages
+
+		playButton = new Button(skin, "music");
+
+		muteButton = new Button(skin, "sound");
+
+		// for the style out of the Commodore64 json file - REFERENCE:
+
+		// com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+		//	default: { up: button, down: button-down },
+		//	music: { up: music-off, down: music, checked: music },
+		//	sound: { up: sound-off, down: sound, checked: sound },
+		//	toggle: { up: button, down: button-down, checked: button-down }
+
+		// com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+		//	default-vertical: { background: slider, knob: slider-knob },
+		//	default-horizontal: { background: slider, knob: slider-knob }
+
+		playButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// if in game state - play background_music
+				if (currentState != GameState.NOT_IN_GAME) {
+					if(background_music.isPlaying()) {
+						background_music.stop();
+						background_music.setVolume(0);
+					} else {
+						background_music.play();
+						background_music.setVolume(volume);
+					}
+				} else {
+					if(menu_music.isPlaying()) {
+						menu_music.stop();
+						menu_music.setVolume(0);
+					} else {
+						menu_music.play();
+						menu_music.setVolume(volume);
+					}
+				}
+			}
+		});
+
+		muteButton.addListener(new ClickListener() {
+		   @Override
+		   public void clicked(InputEvent event, float x, float y) {
+			   // if in game state - play background_music
+			   if (volume == 0) {
+				   volume = 0.1f;
+				   soundVolume = 1.0f;
+				   volumeSlider.setValue(0.1f);
+				   soundVolumeSlider.setValue(1.0f);
+				   if (currentState != GameState.NOT_IN_GAME) {
+					   background_music.setVolume(volume);
+				   } else {
+					   menu_music.setVolume(volume);
+				   }
+			   } else {
+				   volume = 0;
+				   soundVolume = 0;
+				   volumeSlider.setValue(0);
+				   soundVolumeSlider.setValue(0);
+				   if (currentState != GameState.NOT_IN_GAME) {
+					   background_music.setVolume(volume);
+				   } else {
+					   menu_music.setVolume(volume);
+				   }
+			   }
+		   }
+		});
+
+		// universal volume sliders
+
+		volumeSlider = new Slider(0, 0.4f, 0.01f, false, skin);
+		volumeSlider.setValue(0.1f);
+		volumeSlider.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				volume = volumeSlider.getValue();
+				if (currentState != GameState.NOT_IN_GAME) {
+					background_music.setVolume(volume);
+				} else {
+					menu_music.setVolume(volume);
+				}
+			}
+		});
+
+		soundVolumeSlider = new Slider(0, 1f, 0.1f, false, skin);
+		soundVolumeSlider.setValue(1.0f);
+
+		soundVolumeSlider.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				soundVolume = soundVolumeSlider.getValue();
+				boom.setVolume(0, soundVolume);
+				generalSound.setVolume(0, soundVolume);
+				infantrySound.setVolume(0, soundVolume);
+				helicopterSound.setVolume(0, soundVolume);
+				artillerySound.setVolume(0, soundVolume);
+				wardogSound.setVolume(0, soundVolume);
+				commandoSound.setVolume(0, soundVolume);
+				tankSound.setVolume(0, soundVolume);
+			}
+		});
+
+		// their labels
+
+		volumeLabel = new Label("Music", skin);
+		soundVolumeLabel = new Label("Sound", skin);
+
+		// ----------------------------
+
 		// adding mapStage
 		// for the  map used as the chess board
 
@@ -202,6 +345,30 @@ public class BoomChess extends ApplicationAdapter {
 		// for the deathExplosion ---------------------------------------------------------------
 		deathExplosionStage = new Stage(new ScreenViewport());
 
+		// --------- Audio Table , later added to menu Stage and game Stage in their methods ------------
+
+		audioTable = new Table();
+		audioTable.setPosition(125, 150);
+
+		// Buttons
+		audioTable.add(playButton);
+		audioTable.add(muteButton);
+		audioTable.row();
+
+		// Volume Slider
+		// Label colour #4242E7
+		volumeLabel.setColor(Color.valueOf("#4242E7"));
+		audioTable.add(volumeLabel).size(50, 20).padRight(40);
+		audioTable.add(volumeSlider);
+		audioTable.row();
+
+		// Sound Volume Slider
+		// Label colour #4242E7
+		soundVolumeLabel.setColor(Color.valueOf("#4242E7"));
+		audioTable.add(soundVolumeLabel).size(50, 20).padRight(40);
+		audioTable.add(soundVolumeSlider);
+		audioTable.row();
+
 		// -----------------------------------------------------------------------------
 		/*
 		 * creation of the stages for the menu - this allows the Scene2D.ui to be used for quick swapping of screens
@@ -209,8 +376,6 @@ public class BoomChess extends ApplicationAdapter {
 		 * stages will be the way we display all menus and the game itself
 		 */
 
-		// skin (look) of the buttons via a prearranged json file
-		skin = new Skin(Gdx.files.internal("menu.commodore64/uiskin.json"));
 		// skin (look) of the progress bar via a prearranged json file
 		progressBarSkin = new Skin(Gdx.files.internal("progressBarSkin/neon-ui.json"));
 
@@ -391,6 +556,7 @@ public class BoomChess extends ApplicationAdapter {
 		background_music.stop();
 		menu_music.setLooping(true);
 		menu_music.play();
+		menu_music.setVolume(volume);
 
 		// Begin of Main Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
 		final Table root = new Table();
@@ -425,6 +591,7 @@ public class BoomChess extends ApplicationAdapter {
 				menu_music.stop();
 				background_music.setLooping(true);
 				background_music.play();
+				background_music.setVolume(volume);
 
 				currentState = GameState.RED_TURN;
 				
@@ -450,6 +617,7 @@ public class BoomChess extends ApplicationAdapter {
 				menu_music.stop();
 				background_music.setLooping(true);
 				background_music.play();
+				background_music.setVolume(volume);
 
 				currentState = GameState.RED_TURN;
 				
@@ -484,7 +652,7 @@ public class BoomChess extends ApplicationAdapter {
 		root.row();
 
 		TextButton exitButton = new TextButton("Exit", skin);
-		root.add(exitButton).padBottom(20);
+		root.add(exitButton).padBottom(20).padRight(2);
 		exitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -494,11 +662,11 @@ public class BoomChess extends ApplicationAdapter {
 				System.exit(0);
 			}
 		});
-
-		// TODO ADD MUTE MUSIC BUTTON
-
-
 		root.row();
+
+		// add the audio table to be positioned on the right side and to overgo all padding of other tables
+
+		menuStage.addActor(audioTable);
 
 		// End of first menu-layer Layout
 		return menuStage;
@@ -640,6 +808,10 @@ public class BoomChess extends ApplicationAdapter {
 				setGameBoard();
 			}
 		});
+
+		// add the audio table to gameStage as Actor and position on the far right of the Screen
+
+		gameStage.addActor(audioTable);
 
 		return gameStage;
 	}
