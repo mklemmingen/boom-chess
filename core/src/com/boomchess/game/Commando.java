@@ -29,7 +29,7 @@ public class Commando {
             randomDamage += 10;
         }
 
-        BoomChess.commandoSound.play();
+        BoomChess.commandoSound.play(BoomChess.soundVolume);
 
         return randomDamage;
     }

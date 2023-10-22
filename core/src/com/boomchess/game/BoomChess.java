@@ -345,7 +345,7 @@ public class BoomChess extends ApplicationAdapter {
 		// for the deathExplosion ---------------------------------------------------------------
 		deathExplosionStage = new Stage(new ScreenViewport());
 
-		// --------- Audio Table , later added to menu Stage and game Stage in their methods ------------
+		// --------- Audio Table and Stage ------------
 
 		audioTable = new Table();
 		audioTable.setPosition(125, 150);
@@ -442,6 +442,9 @@ public class BoomChess extends ApplicationAdapter {
 			possibleMoveOverlay.draw();
 		}
 
+		// for the audio table - add it to currentStage
+		currentStage.addActor(audioTable);
+
 		// for the stages, displays only stage assigned as currentStage, see method switchToStage
 		currentStage.getViewport().apply();
 		currentStage.act();
@@ -460,7 +463,6 @@ public class BoomChess extends ApplicationAdapter {
 		deathExplosionStage.draw();
 
 		processTurn();
-
 
 	}
 
@@ -664,10 +666,6 @@ public class BoomChess extends ApplicationAdapter {
 		});
 		root.row();
 
-		// add the audio table to be positioned on the right side and to overgo all padding of other tables
-
-		menuStage.addActor(audioTable);
-
 		// End of first menu-layer Layout
 		return menuStage;
 	}
@@ -760,7 +758,8 @@ public class BoomChess extends ApplicationAdapter {
 		}
 
 		showMove = true;
-		
+
+		// add the audio table to gameStage as Actor and position on the far right of the Screen
 		Stage gameStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
 		// xMarkerOverlay
@@ -808,10 +807,6 @@ public class BoomChess extends ApplicationAdapter {
 				setGameBoard();
 			}
 		});
-
-		// add the audio table to gameStage as Actor and position on the far right of the Screen
-
-		gameStage.addActor(audioTable);
 
 		return gameStage;
 	}

@@ -33,7 +33,7 @@ public class Tank {
             randomDamage -= 5;
         }
 
-        BoomChess.tankSound.play();
+        BoomChess.tankSound.play(BoomChess.soundVolume);
 
         return randomDamage;
     }

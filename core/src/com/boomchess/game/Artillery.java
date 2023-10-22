@@ -31,7 +31,7 @@ public class Artillery {
             randomDamage += 5;
         }
 
-        BoomChess.artillerySound.play();
+        BoomChess.artillerySound.play(BoomChess.soundVolume);
 
         return randomDamage;
 
