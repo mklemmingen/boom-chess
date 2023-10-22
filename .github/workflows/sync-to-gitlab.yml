@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # fetch all history
 
       - name: Set up Git
         run: |
@@ -25,6 +27,7 @@ jobs:
           git fetch gitlab master:gitlab-master
           git merge gitlab-master --allow-unrelated-histories
           git push gitlab HEAD:master
+
 
 
 
