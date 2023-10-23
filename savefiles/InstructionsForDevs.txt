@@ -1,0 +1,8 @@
+In this directory, the game should save the 2D-Array saved through serialization and load it by deserialization.
+// TODO implement the save and load methods
+
+In the MainMenu the player should be able to load a saved game and continue playing.
+// TODO implement the Buttons
+During a Game, the player should be able to save his game and continue playing later.
+// TODO implement the Buttons
+

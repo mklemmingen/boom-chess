@@ -103,7 +103,7 @@ public class BoomChess extends ApplicationAdapter {
 	public static Sound tankSound;
 
 	// music
-	public static Music background_music;
+	public static MusicPlaylist background_music;
 	public static Music menu_music;
 
 	// universal Buttons -- here for music and sound control
@@ -192,13 +192,14 @@ public class BoomChess extends ApplicationAdapter {
 		commandoSound = Gdx.audio.newSound(Gdx.files.internal("sounds/sniper-rifle.mp3"));
 		tankSound = Gdx.audio.newSound(Gdx.files.internal("sounds/tank-engine.mp3"));
 
-		background_music = Gdx.audio.newMusic(Gdx.files.internal("music/05 Thought Soup.ogg"));
-		Music game_music2 = Gdx.audio.newMusic(Gdx.files.internal("music/06 Tonal Dissonance.ogg"));
-		Music game_music3 = Gdx.audio.newMusic(Gdx.files.internal("music/24 Stray Cat.ogg"));
-		Music game_music4 = Gdx.audio.newMusic(Gdx.files.internal("music/27 Coffee Break.ogg"));
-		Music game_music5 = Gdx.audio.newMusic(Gdx.files.internal("music/36 Tonal Resonance.ogg"));
-		Music game_music6 = Gdx.audio.newMusic(Gdx.files.internal("music/epic-battle.mp3"));
-		Music game_music7 = Gdx.audio.newMusic(Gdx.files.internal("music/Outside the Colosseum.ogg"));
+		background_music = new MusicPlaylist();
+		background_music.addSong("music/05 Thought Soup.ogg");
+		background_music.addSong("music/06 Tonal Dissonance.ogg");
+		background_music.addSong("music/24 Stray Cat.ogg");
+		background_music.addSong("music/27 Coffee Break.ogg");
+		background_music.addSong("music/36 Tonal Resonance.ogg");
+		background_music.addSong("music/epic-battle.mp3");
+		background_music.addSong("music/Outside the Colosseum.ogg");
 
 		// load the menu music
 
