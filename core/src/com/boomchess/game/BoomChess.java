@@ -184,11 +184,11 @@ public class BoomChess extends ApplicationAdapter {
 
 		// load the boom sound effect and background music --------------------------------------
 		boom = Gdx.audio.newSound(Gdx.files.internal("sounds/boom.ogg"));
-		generalSound = Gdx.audio.newSound(Gdx.files.internal("sounds/autocannon-20mm.mp3"));
+		generalSound = Gdx.audio.newSound(Gdx.files.internal("sounds/Gunshot/autocannon-20mm.mp3"));
 		infantrySound = Gdx.audio.newSound(Gdx.files.internal("sounds/desert-eagle-gunshot.mp3"));
 		helicopterSound = Gdx.audio.newSound(Gdx.files.internal("sounds/helicopter-rotor-loop.mp3"));
 		artillerySound = Gdx.audio.newSound(Gdx.files.internal("sounds/cannonball.mp3"));
-		wardogSound = Gdx.audio.newSound(Gdx.files.internal("sounds/dog_barking.mp3"));
+		wardogSound = Gdx.audio.newSound(Gdx.files.internal("sounds/Dogs/dog_barking.mp3"));
 		commandoSound = Gdx.audio.newSound(Gdx.files.internal("sounds/sniper-rifle.mp3"));
 		tankSound = Gdx.audio.newSound(Gdx.files.internal("sounds/tank-engine.mp3"));
 
@@ -1180,7 +1180,7 @@ public class BoomChess extends ApplicationAdapter {
 		int screenHeight = Gdx.graphics.getHeight();
 
 		// we then calculate the upper left corner of the gameBoard by subtracting the screenWidth and screenHeight by
-		// the gameBoard width and height and then dividing it by 2
+		// the gameBoard width and height and then dividing it by 2a
 		int upperLeftCornerX = (screenWidth - 720) / 2;
 		int upperLeftCornerY = (screenHeight - 640) / 2;
 
