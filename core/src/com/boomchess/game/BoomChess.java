@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -23,6 +21,10 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.boomchess.game.backend.*;
+import com.boomchess.game.frontend.DeathExplosionActor;
+import com.boomchess.game.frontend.DottedLineActor;
+import com.boomchess.game.frontend.MusicPlaylist;
 
 import java.util.ArrayList;
 
@@ -67,20 +69,20 @@ public class BoomChess extends ApplicationAdapter {
 
 	// all assets that can appear multiple times on the screen at once get called a Texture, for creating new Image
 	// objects down the line
-	private static Texture redTank;
-	private static Texture redHelicopter;
-	private static Texture redWardog;
-	private static Texture redGeneral;
-	private static Texture redCommando;
-	private static Texture redInfantry;
-	private static Texture greenTank;
-	private static Texture greenHelicopter;
-	private static Texture greenWardog;
-	private static Texture greenGeneral;
-	private static Texture greenCommando;
-	private static Texture greenInfantry;
-	private static Texture greenArtillery;
-	private static Texture redArtillery;
+	public static Texture redTank;
+	public static Texture redHelicopter;
+	public static Texture redWardog;
+	public static Texture redGeneral;
+	public static Texture redCommando;
+	public static Texture redInfantry;
+	public static Texture greenTank;
+	public static Texture greenHelicopter;
+	public static Texture greenWardog;
+	public static Texture greenGeneral;
+	public static Texture greenCommando;
+	public static Texture greenInfantry;
+	public static Texture greenArtillery;
+	public static Texture redArtillery;
 	private static Image map;
 	private static Image redMove;
 	private static Image greenMove;
@@ -88,8 +90,8 @@ public class BoomChess extends ApplicationAdapter {
 	private static Texture background;
 	private static Texture xMarker;
 	private static Image boomLogo;
-	private static Texture empty;
-	private static Texture hill;
+	public static Texture empty;
+	public static Texture hill;
 
 	// loading Sounds
 
@@ -856,219 +858,132 @@ public class BoomChess extends ApplicationAdapter {
 		// TODO GENERAL ANIMATION
 
 		Soldier[][] gameBoard = Board.getGameBoard();
+		final Soldier soldier = gameBoard[X][Y];
+
+		// load the corresponding image through the Soldier Take Selfie Method
+		Image solPiece = new Image(gameBoard[X][Y].takeSelfie());
+
 		int health = gameBoard[X][Y].getHealth();
-		final String soldierType = gameBoard[X][Y].getSoldierType();
-		String teamColor = gameBoard[X][Y].getTeamColor();
 
-		// load the corresponding image in a switch statement for all pieces
-		Image solPiece = new Image();
+			// draw the image at the correct position
+			solPiece.setSize(80, 80);
+			solPiece.setScaling(Scaling.fit);
 
-		switch (soldierType) {
-			case "infantry":
-				if (teamColor.equals("red")) {
-					solPiece = new Image(redInfantry);
-					break;
-				} else {
-					solPiece = new Image(greenInfantry);
-					break;
-				}
-			case "commando":
-				if (teamColor.equals("red")) {
-					solPiece = new Image(redCommando);
-					break;
-				} else {
-					solPiece = new Image(greenCommando);
-					break;
-				}
-			case "general":
-				if (teamColor.equals("red")) {
-					solPiece = new Image(redGeneral);
-					break;
-				} else {
-					solPiece = new Image(greenGeneral);
-					break;
-				}
-			case "wardog":
-				if (teamColor.equals("red")) {
-					solPiece = new Image(redWardog);
-					break;
-				} else {
-					solPiece = new Image(greenWardog);
-					break;
-				}
-			case "helicopter":
-				if (teamColor.equals("red")) {
-					solPiece = new Image(redHelicopter);
-					break;
-				} else {
-					solPiece = new Image(greenHelicopter);
-					break;
-				}
-			case "tank":
-				if (teamColor.equals("red")) {
-					solPiece = new Image(redTank);
-					break;
-				} else {
-					solPiece = new Image(greenTank);
-					break;
-				}
-			case "artillery":
-				if (teamColor.equals("red")) {
-					solPiece = new Image(redArtillery);
-					break;
-				} else {
-					solPiece = new Image(greenArtillery);
-					break;
-				}
-			case "empty":
-				solPiece = new Image(empty);
-				break;
-			case "hill":
-				solPiece = new Image(hill);
-				break;
-		}
+			final Stack tileWidget = new Stack();
 
-				// draw the image at the correct position
-				solPiece.setSize(80, 80);
-				solPiece.setScaling(Scaling.fit);
+			if (health < 15 && health > 0) {
+				// Apply a light red hue effect to the tileWidget's image
+				Color lightRed = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+				solPiece.setColor(lightRed);
+			}
 
-				final Stack tileWidget = new Stack();
+			tileWidget.add(solPiece);
 
-				if (health < 15 && health > 0) {
-					// Apply a light red hue effect to the tileWidget's image
-					Color lightRed = new Color(1.0f, 0.5f, 0.5f, 1.0f);
-					solPiece.setColor(lightRed);
-				}
+			if (!(health == -1)) {
+				// tileWidget is only move able if a Piece is on it, meaning it has health
+				tileWidget.setTouchable(Touchable.enabled);
+				// draw the health bar
+				final ProgressBar healthBar = new ProgressBar(0f, 60f, 1f, false,
+						progressBarSkin);
+				healthBar.setSize(0.025F, 0.1F);
 
-				tileWidget.add(solPiece);
+				healthBar.setValue(health);
+				tileWidget.add(healthBar);
 
-				if (!(health == -1)) {
-					// tileWidget is only move able if a Piece is on it, meaning it has health
-					tileWidget.setTouchable(Touchable.enabled);
-					// draw the health bar
-					final ProgressBar healthBar = new ProgressBar(0f, 60f, 1f, false,
-							progressBarSkin);
-					healthBar.setSize(0.025F, 0.1F);
+				// hide the health bar by default
+				healthBar.setVisible(false);
 
-					healthBar.setValue(health);
-					tileWidget.add(healthBar);
-
-					// hide the health bar by default
-					healthBar.setVisible(false);
-
-					// the tileWidget Listener checks if the mouse is over the tile and if yes, displays healthBar
-					tileWidget.addListener(new InputListener() {
-						@Override
-						public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-							healthBar.setVisible(true); // Show the health bar when the mouse enters
-						}
-
-						@Override
-						public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-							healthBar.setVisible(false); // Hide the health bar when the mouse exits
-						}
-					});
-				}
-
-
-				tileWidget.addListener(new DragListener() {
+				// the tileWidget Listener checks if the mouse is over the tile and if yes, displays healthBar
+				tileWidget.addListener(new InputListener() {
 					@Override
-					public void dragStart(InputEvent event, float x, float y, int pointer) {
-						// Code runs when dragging starts:
-						System.out.println("\n Started dragging the actor!");
-
-						// Get the team color of the current tile
-						Soldier[][] gameBoard = Board.getGameBoard();
-						String tileTeamColor = gameBoard[X][Y].getTeamColor();
-
-						// If it's not the current team's turn, cancel the drag and return
-						if ((currentState == GameState.RED_TURN && !tileTeamColor.equals("red")) ||
-								(currentState == GameState.GREEN_TURN && !tileTeamColor.equals("green"))) {
-							event.cancel();
-							System.out.println("\n It's not your turn!");
-							reRenderGame();
-							return;
-						}
-
-						tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
-						// as long as the mouse is pressed down, the actor is moved to the mouse position
-						// we calculate the tiles it can move to and highlight these tiles with a slightly red hue
-						// the calculated tiles are part of a ArrayList variable that is created at create
-						// of the whole programm
-						// and gets cleared once we touchDragged the actor to a new position
-
-						// switch statement for deciding which
-						// Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
-
-						switch (soldierType) {
-							case ("infantry"):
-								setAllowedTiles(Infantry.mathMove(X, Y));
-								break;
-							case ("general"):
-								setAllowedTiles(General.mathMove(X, Y));
-								break;
-							case ("wardog"):
-								setAllowedTiles(Wardog.mathMove(X, Y));
-								break;
-							case ("artillery"):
-								setAllowedTiles(Artillery.mathMove(X, Y));
-								break;
-							case ("helicopter"):
-								setAllowedTiles(Helicopter.mathMove(X, Y));
-								break;
-							case ("commando"):
-								setAllowedTiles(Commando.mathMove(X, Y));
-								break;
-							case ("tank"):
-								setAllowedTiles(Tank.mathMove(X, Y));
-								break;
-						}
+					public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+						healthBar.setVisible(true); // Show the health bar when the mouse enters
 					}
 
 					@Override
-					public void drag(InputEvent event, float x, float y, int pointer) {
-						// Code here will run during the dragging
-						tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
-					}
-
-					@Override
-					public void dragStop(InputEvent event, float x, float y, int pointer) {
-						// Code here will run when the player lets go of the actor
-
-						// Get the position of the tileWidget relative to the parent actor (the gameBoard)
-						Vector2 localCoords = new Vector2(x, y);
-						// Convert the position to stage (screen) coordinates
-						Vector2 screenCoords = tileWidget.localToStageCoordinates(localCoords);
-
-						System.out.println("\n Drag stopped at screen position: " + screenCoords.x + ", " + screenCoords.y);
-
-						Coordinates currentCoord = calculateTileByPX((int) screenCoords.x, (int) screenCoords.y);
-
-						// for loop through validMoveTiles, at each tile we check for equality of currentCoord with the Coordinate
-						// in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true, we set the
-						// validMove Variable to true, call on the update method of the Board class and break the for loop
-						// then clear the Board.
-
-
-						ArrayList<Coordinates> validMoveTiles = Board.getValidMoveTiles();
-						for (Coordinates validMoveTile : validMoveTiles) {
-							if (currentCoord.checkEqual(validMoveTile)) {
-								// Board.update with oldX, oldY, newX, newY
-								Board.update(X, Y, currentCoord.getX(), currentCoord.getY());
-								legitTurn = true;
-								break;
-							}
-						}
-
-						// and the validMoveTiles are cleared
-						clearAllowedTiles(); // for turning off the Overlay
-						Board.emptyValidMoveTiles();
-						reRenderGame();
-
+					public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+						healthBar.setVisible(false); // Hide the health bar when the mouse exits
 					}
 				});
-			return tileWidget;
-		}
+			}
+
+
+			tileWidget.addListener(new DragListener() {
+				@Override
+				public void dragStart(InputEvent event, float x, float y, int pointer) {
+					// Code runs when dragging starts:
+					System.out.println("\n Started dragging the actor!");
+
+					// Get the team color of the current tile
+					Soldier[][] gameBoard = Board.getGameBoard();
+					String tileTeamColor = gameBoard[X][Y].getTeamColor();
+
+					// If it's not the current team's turn, cancel the drag and return
+					if ((currentState == GameState.RED_TURN && !tileTeamColor.equals("red")) ||
+							(currentState == GameState.GREEN_TURN && !tileTeamColor.equals("green"))) {
+						event.cancel();
+						System.out.println("\n It's not your turn!");
+						reRenderGame();
+						return;
+					}
+
+					tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
+					// as long as the mouse is pressed down, the actor is moved to the mouse position
+					// we calculate the tiles it can move to and highlight these tiles with a slightly red hue
+					// the calculated tiles are part of a ArrayList variable that is created at create
+					// of the whole programm
+					// and gets cleared once we touchDragged the actor to a new position
+
+					// switch statement for deciding which
+					// Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
+
+					setAllowedTiles(soldier.mathMove(X, Y));
+				}
+
+				@Override
+				public void drag(InputEvent event, float x, float y, int pointer) {
+					// Code here will run during the dragging
+					tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
+				}
+
+				@Override
+				public void dragStop(InputEvent event, float x, float y, int pointer) {
+					// Code here will run when the player lets go of the actor
+
+					// Get the position of the tileWidget relative to the parent actor (the gameBoard)
+					Vector2 localCoords = new Vector2(x, y);
+					// Convert the position to stage (screen) coordinates
+					Vector2 screenCoords = tileWidget.localToStageCoordinates(localCoords);
+
+					System.out.println("\n Drag stopped at screen position: " + screenCoords.x + ", " + screenCoords.y);
+
+					Coordinates currentCoord = calculateTileByPX((int) screenCoords.x, (int) screenCoords.y);
+
+					// for loop through validMoveTiles, at each tile we check for equality of currentCoord with the Coordinate
+					// in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true, we set the
+					// validMove Variable to true, call on the update method of the Board class and break the for loop
+					// then clear the Board.
+
+
+					ArrayList<Coordinates> validMoveTiles = Board.getValidMoveTiles();
+					for (Coordinates validMoveTile : validMoveTiles) {
+						if (currentCoord.checkEqual(validMoveTile)) {
+							// Board.update with oldX, oldY, newX, newY
+							Board.update(X, Y, currentCoord.getX(), currentCoord.getY());
+							legitTurn = true;
+							break;
+						}
+					}
+
+					// and the validMoveTiles are cleared
+					clearAllowedTiles(); // for turning off the Overlay
+					Board.emptyValidMoveTiles();
+					reRenderGame();
+
+				}
+			});
+		return tileWidget;
+	}
 
 	public static void reRenderGame(){
 		// method for clearing and recreating gameStage
