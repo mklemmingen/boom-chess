@@ -1,12 +1,13 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.subsoldier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.*;
 
-import java.awt.*;
 import java.util.ArrayList;
 
-public class Helicopter extends Soldier {
+public class Helicopter extends Soldier
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
     /*
      * Helicopter.java is the object for the chess piece General in the game Boom Chess.
      * It holds the specific movement patterns for this piece, mathMove,
@@ -33,7 +34,7 @@ public class Helicopter extends Soldier {
         }
     }
 
-    public static int calculateDamage(Soldier soldierDefend) {
+    public int calculateDamage(Soldier soldierDefend) {
 
         // deals 5-20 damage
         // advantages: deals +5 to tanks
@@ -72,7 +73,7 @@ public class Helicopter extends Soldier {
             int newX = positionX + offset;
 
             if (Board.isValidMove(newX, upwardsY)) {
-                if (!(gameBoard[newX][upwardsY] instanceof Empty))  {
+                if ((gameBoard[newX][upwardsY] instanceof Empty))  {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, upwardsY);
                     possibleMoves.add(coordinates);
@@ -86,7 +87,7 @@ public class Helicopter extends Soldier {
             int newX = positionX + offset;
 
             if (Board.isValidMove(newX, downwardsY)) {
-                if (!(gameBoard[newX][downwardsY] instanceof Empty)) {
+                if ((gameBoard[newX][downwardsY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, downwardsY);
                     possibleMoves.add(coordinates);
@@ -100,7 +101,7 @@ public class Helicopter extends Soldier {
             int newY = positionY - offset;
 
             if (Board.isValidMove(rightsideX, newY)) {
-                if (!(gameBoard[rightsideX][newY] instanceof Empty)) {
+                if ((gameBoard[rightsideX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(rightsideX, newY);
                     possibleMoves.add(coordinates);
@@ -114,7 +115,7 @@ public class Helicopter extends Soldier {
             int newY = positionY - offset;
 
             if (Board.isValidMove(leftsideX, newY)) {
-                if (!(gameBoard[leftsideX][newY] instanceof Empty)) {
+                if ((gameBoard[leftsideX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(leftsideX, newY);
                     possibleMoves.add(coordinates);
@@ -125,7 +126,7 @@ public class Helicopter extends Soldier {
         return possibleMoves;
     }
 
-    public static int defendAndBleed(int damage, Soldier soldierAttack) {
+    public int defendAndBleed(int damage, Soldier soldierAttack) {
         // calculate resistance to attack based on attackingSoldier
         if (soldierAttack instanceof Tank){
             return damage - 5;

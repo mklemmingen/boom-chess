@@ -1,11 +1,16 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.subsoldier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.backend.calculateDamageInterface;
+import com.boomchess.game.backend.defendAndBleedInterface;
+import com.boomchess.game.backend.takeSelfieInterface;
 
 import java.util.ArrayList;
 
-public class General extends Soldier{
+public class General extends Soldier
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
     /*
      * General.java is the object for the chess piece General in the game Boom Chess.
      * It holds the specific movement patterns for this piece, mathMove,
@@ -33,7 +38,7 @@ public class General extends Soldier{
         }
     }
 
-    public static int calculateDamage(String soldierDefend) {
+    public int calculateDamage(Soldier soldierDefend) {
         // only deals 5-10 damage
 
         int minValue = 5;
@@ -47,7 +52,7 @@ public class General extends Soldier{
         return (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
     }
 
-    public static int defendAndBleed(int damage, Soldier soldierAttack) {
+    public int defendAndBleed(int damage, Soldier soldierAttack) {
         // The General is very resistant and only takes half damage to anything. He likes to chill in a Bunker
 
         System.out.println("The General is in a Bunker and only takes half damage!");

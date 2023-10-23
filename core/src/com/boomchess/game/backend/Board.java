@@ -1,5 +1,7 @@
 package com.boomchess.game.backend;
 
+import com.boomchess.game.backend.subsoldier.*;
+
 import java.util.ArrayList;
 
 public class Board {
@@ -67,7 +69,6 @@ public class Board {
         // infantry
         int i = 1;
         for (int j = 0; j < 8; j++) {
-            int ID = j + 1;
             if(j == 2 || j == 5){
                 continue;
             }
@@ -95,7 +96,6 @@ public class Board {
         // infantry
         int x = 7;
         for (int j = 0; j < 8; j++) {
-            int ID = j + 1;
             if(j == 2 || j == 5){
                 continue;
             }

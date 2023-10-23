@@ -1,9 +1,12 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.subsoldier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.backend.takeSelfieInterface;
 
-public class Empty extends Soldier{
+public class Empty extends Soldier
+        implements takeSelfieInterface {
     /*
     * Empty.java is the object for the an Empty tile in the game Boom Chess.
     * It acts as a non-moving object on the board.

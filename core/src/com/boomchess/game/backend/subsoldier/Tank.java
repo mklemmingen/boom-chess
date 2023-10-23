@@ -1,10 +1,13 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.subsoldier;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.*;
 
 import java.util.ArrayList;
 
-public class Tank extends Soldier{
+public class Tank extends Soldier
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
     /*
      * Tank.java is the object for the chess piece General in the game Boom Chess.
      * It holds the specific movement patterns for this piece, mathMove,
@@ -19,7 +22,7 @@ public class Tank extends Soldier{
         super(teamColor, 50);
     }
 
-    public static int calculateDamage(Soldier soldierDefend) {
+    public int calculateDamage(Soldier soldierDefend) {
 
         // deals 10-20 damage
         // advantages: deals +5 to infantry
@@ -32,9 +35,9 @@ public class Tank extends Soldier{
         // that generate a random number between 0 and 1 that we multiply
         int randomDamage = (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
 
-        if(soldierDefend.equals("infantry")){
+        if(soldierDefend instanceof Infantry){
             randomDamage += 5;
-        } else if (soldierDefend.equals("wardog")){
+        } else if (soldierDefend instanceof Wardog){
             randomDamage -= 5;
         }
 
@@ -56,7 +59,7 @@ public class Tank extends Soldier{
             int newY = positionY + yOffset;
 
             if (Board.isValidMove(positionX, newY)) {
-                if (!(gameBoard[positionX][newY] instanceof Empty)) {
+                if ((gameBoard[positionX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(positionX, newY);
                     possibleMoves.add(coordinates);
@@ -73,7 +76,7 @@ public class Tank extends Soldier{
             int newY = positionY - yOffset;
 
             if (Board.isValidMove(positionX, newY)) {
-                if (!(gameBoard[positionX][newY] instanceof Empty)) {
+                if ((gameBoard[positionX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(positionX, newY);
                     possibleMoves.add(coordinates);
@@ -90,7 +93,7 @@ public class Tank extends Soldier{
             int newX = positionX + xOffset;
 
             if (Board.isValidMove(newX, positionY)) {
-                if (!(gameBoard[newX][positionY] instanceof Empty)) {
+                if ((gameBoard[newX][positionY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, positionY);
                     possibleMoves.add(coordinates);
@@ -107,7 +110,7 @@ public class Tank extends Soldier{
             int newX = positionX - xOffset;
 
             if (Board.isValidMove(newX, positionY)) {
-                if (!(gameBoard[newX][positionY] instanceof Empty)) {
+                if ((gameBoard[newX][positionY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, positionY);
                     possibleMoves.add(coordinates);
@@ -121,12 +124,24 @@ public class Tank extends Soldier{
         return possibleMoves;
     }
 
-    public static int defendAndBleed(int damage, Soldier soldierAttack) {
+    public int defendAndBleed(int damage, Soldier soldierAttack) {
         // calculate resistance to attack based on attackingSoldier
         if (soldierAttack instanceof Wardog){
             return damage - 5;
         }
         System.out.println("The tank has been damaged for " + damage + " points by " + soldierAttack + ".");
         return damage;
+    }
+
+    @Override
+    public Texture takeSelfie() {
+        /*
+         * this method returns a Texture depending on the team color
+         */
+        if (teamColor.equals("red")) {
+            return BoomChess.redTank;
+        } else {
+            return BoomChess.greenTank;
+        }
     }
 }

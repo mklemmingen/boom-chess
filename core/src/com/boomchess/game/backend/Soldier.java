@@ -1,7 +1,6 @@
 package com.boomchess.game.backend;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.boomchess.game.backend.subsoldier.Empty;
 
 import java.util.ArrayList;
 
@@ -25,15 +24,11 @@ public class Soldier {
         return this.teamColor;
     }
 
-    private void setTeamColor(String Color) {
-        teamColor = Color;
-    }
-
     public int getHealth() {
         return this.health;
     }
 
-    private void setHealth(int health) {
+    public void setHealth(int health) {
         this.health = health;
     }
 
@@ -42,7 +37,7 @@ public class Soldier {
         // this method returns a Coordinates array of all possible move-location for this soldier
         ArrayList<Coordinates> possibleMoves = new ArrayList<>();
 
-        // a Infantry soldier, A General Soldier and an Artillery all move only one tile in all directions.
+        // an Infantry soldier, A General Soldier and an Artillery all move only one tile in all directions.
         // these Soldier do not override mathMove in their superclass, all others are special little Pieces
 
         // here we do math to get the tile coordinates of the tile we want to check
@@ -74,7 +69,7 @@ public class Soldier {
                 int newX = positionX + xOffset;
                 int newY = positionY + yOffset;
 
-                if (Board.isValidMove(newX, newY) && !(gameBoard[newX][newY] instanceof Empty)) {
+                if (Board.isValidMove(newX, newY) && (gameBoard[newX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, newY);
                     possibleMoves.add(coordinates);
@@ -82,9 +77,5 @@ public class Soldier {
             }
         }
         return possibleMoves;
-    }
-
-    public Texture takeSelfie() {
-        return null;
     }
 }

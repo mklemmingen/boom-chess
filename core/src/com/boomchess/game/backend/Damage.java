@@ -2,8 +2,12 @@ package com.boomchess.game.backend;
 
 // import the General, Helicopter, Infantry, Tank, Wardog Classes of other files
 
-import com.badlogic.gdx.Gdx;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.subsoldier.Artillery;
+import com.boomchess.game.backend.subsoldier.Empty;
+import com.boomchess.game.backend.subsoldier.General;
+import com.boomchess.game.frontend.GameStage;
+
 
 public class Damage {
 
@@ -46,7 +50,7 @@ public class Damage {
 
         // if the piece is an artillery however, we check the 3 tiles surrounding it in each direction instead
         // this is done in the distance variable that gets changed from 1 to 3 if an artillery is checked
-        int distance = gameBoard[x][y].getSoldierType().equals("artillery") ? 3 : 1;
+        int distance = gameBoard[x][y] instanceof Artillery ? 2 : 1;
 
         int startX = Math.max(0, x - distance);
         int endX = Math.min(7, x + distance);
@@ -57,7 +61,7 @@ public class Damage {
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {
                 if (i == x && j == y) continue; // Skip on checking the original piece
-                if (gameBoard[i][j].getTaken()) {
+                if (!(gameBoard[i][j] instanceof Empty)) {
                     String hurtColor = gameBoard[i][j].getTeamColor();
                     if (!hurtColor.equals(attackColor)) {
                         dealBigBoom(x, y, i, j);
@@ -70,40 +74,18 @@ public class Damage {
     public static void dealBigBoom(int positionAttX, int positionAttY, int positionDefX, int positionDefY) {
         Soldier[][] gameBoard = Board.getGameBoard();
         int damage = 0;
-        // switch statement on the type of piece taking damage
-        String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
-        String soldierDefend = gameBoard[positionDefX][positionDefY].getSoldierType();
-        switch (soldierAttack) {
-            case "general":
-                damage = General.calculateDamage(soldierDefend);
-                break;
-            case "infantry":
-                damage = Infantry.calculateDamage(soldierDefend);
-                break;
-            case "tank":
-                damage = Tank.calculateDamage(soldierDefend);
-                break;
-            case "wardog":
-                damage = Wardog.calculateDamage(soldierDefend);
-                break;
-            case "artillery":
-                damage = Artillery.calculateDamage(soldierDefend);
-                break;
-            case "helicopter":
-                damage = Helicopter.calculateDamage(soldierDefend);
-                break;
-            case "commando":
-                damage = Commando.calculateDamage(soldierDefend);
-                break;
-            default:
-                // if none of the switch cases are true, this error gets triggered and the game exits
-                System.out.println("Error: Invalid soldier type. Bug in Damage.java or Soldier-Objects \n" +
-                        "or check if a soldiers name was written incorrectly like 'Infantry' instead of 'infantry'");
-                // for exiting the game
-                Gdx.app.exit();
-                // for ending all background activity on Windows systems specifically
-                System.exit(0);
+
+
+        Soldier soldierDefend = gameBoard[positionDefX][positionDefY];
+        Soldier soldierAttack = gameBoard[positionAttX][positionAttY];
+
+        // avoids runtime type checks and casts, ensure each soldier object has this method first
+        if (soldierAttack instanceof calculateDamageInterface) {
+            damage = ((calculateDamageInterface) soldierAttack).calculateDamage(soldierDefend);
+        } else {
+            System.out.println("The attacking piece is not a calculateDamageInterface");
         }
+
         damagePiece(damage, positionAttX, positionAttY, positionDefX, positionDefY);
     }
 
@@ -115,50 +97,31 @@ public class Damage {
         BoomChess.addDottedLine((float) positionAttX, (float) positionAttY, (float) positionDefX, (float) positionDefY);
         System.out.println("\nThe dotted line has been drawn");
 
-        // switch statement on the type of piece taking damage
-        String soldierAttack = gameBoard[positionAttX][positionAttY].getSoldierType();
-        String soldierDefend = gameBoard[positionDefX][positionDefY].getSoldierType();
+        // we need to get the current health of the defending piece
         int currentHealth = gameBoard[positionDefX][positionDefY].getHealth();
-        switch (soldierDefend) {
-            case "general":
-                currentHealth -= General.defendAndBleed(damage, soldierAttack);
-                if (currentHealth <= 0) {
-                    String attackerColor = gameBoard[positionAttX][positionAttY].getTeamColor();
-                    BoomChess.createGameEndStage(attackerColor);
-                }
-                break;
-            case "infantry":
-                currentHealth -= Infantry.defendAndBleed(damage, soldierAttack);
-                break;
-            case "tank":
-                currentHealth -= Tank.defendAndBleed(damage, soldierAttack);
-                break;
-            case "wardog":
-                currentHealth -= Wardog.defendAndBleed(damage, soldierAttack);
-                break;
-            case "helicopter":
-                currentHealth -= Helicopter.defendAndBleed(damage, soldierAttack);
-                break;
-            case "commando":
-                currentHealth -= Commando.defendAndBleed(damage, soldierAttack);
-                break;
-            case "artillery":
-                currentHealth -= Artillery.defendAndBleed(damage, soldierAttack);
-                break;
-            default:
-                System.out.println("Error: Invalid soldier type. Bug in Damage.hurtPiece\n" +
-                        "check if a soldiers name was written incorrectly like 'Infantry' instead of 'infantry'");
-                // for exiting the game
-                Gdx.app.exit();
-                // for ending all background activity on Windows systems specifically
-                System.exit(0);
-        }
-        // put currentHealth as new setHealth() onto the gameBoard Soldier object
-        gameBoard[positionDefX][positionDefY].setHealth(currentHealth);
-        if (currentHealth <= 0) {
-            killPiece(positionDefX, positionDefY);
+
+        // avoids runtime type checks and casts, ensure each soldier object has this method first
+        if (gameBoard[positionDefX][positionDefY] instanceof defendAndBleedInterface) {
+            currentHealth -= ((defendAndBleedInterface) gameBoard[positionDefX][positionDefY])
+                    .defendAndBleed(damage, gameBoard[positionAttX][positionAttY]);
+        } else {
+            System.out.println("The defending piece is not a defendAndBleedInterface");
         }
 
+
+        // if the defending piece is a general, we need to check if it is dead
+        // if it is dead, we need to end the game
+
+        if (currentHealth <= 0) {
+            if (gameBoard[positionDefX][positionDefY] instanceof General) {
+                String attackerColor = gameBoard[positionAttX][positionAttY].getTeamColor();
+                BoomChess.createGameEndStage(attackerColor);
+            }
+            killPiece(positionDefX, positionDefY);
+        } else {
+            // set the new health of the piece to the currentHealth variable
+            gameBoard[positionDefX][positionDefY].setHealth(currentHealth);
+        }
     }
 
     private static void killPiece(int positionX, int positionY) {
@@ -175,14 +138,11 @@ public class Damage {
         BoomChess.addDeathAnimation(positionX, positionY);
         System.out.print("\nDeath animation has been added on the corpse! Oh no!");
 
-        // we use this int-array x and y position to set the tile to empty.
+        // we use this int-array x and y position to set the tile to an Empty object
 
-        gameBoard[positionX][positionY].setTaken(false);
-        gameBoard[positionX][positionY].setSoldierType("empty");
-        gameBoard[positionX][positionY].setTeamColor("none");
-        gameBoard[positionX][positionY].setPieceID(0);
-        gameBoard[positionX][positionY].setHealth(-1);
+        gameBoard[positionX][positionY] = new Empty("empty");
+        System.out.println("\nThe tile has been set to an Empty object");
 
-        BoomChess.reRenderGame();
+        GameStage.createGameStage(BoomChess.isBotMatch);
     }
 }

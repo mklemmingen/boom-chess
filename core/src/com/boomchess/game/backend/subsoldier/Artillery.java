@@ -1,10 +1,14 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.subsoldier;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.backend.calculateDamageInterface;
+import com.boomchess.game.backend.defendAndBleedInterface;
+import com.boomchess.game.backend.takeSelfieInterface;
 
-import java.util.ArrayList;
-
-public class Artillery extends Soldier {
+public class Artillery extends Soldier
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
     /*
      * Artillery.java is a fully new piece in the game Boom Chess.
      * It holds the specific movement patterns for this piece, mathMove,
@@ -20,7 +24,7 @@ public class Artillery extends Soldier {
         super(teamColor, 40);
     }
 
-    public static int calculateDamage(Soldier soldierDefend) {
+    public int calculateDamage(Soldier soldierDefend) {
 
         // deals 1-5 damage
         // advantages: deals +5 to infantry
@@ -42,12 +46,24 @@ public class Artillery extends Soldier {
 
     }
 
-    public static int defendAndBleed(int damage, Soldier soldierAttack) {
+    public int defendAndBleed(int damage, Soldier soldierAttack) {
         // calculate resistance to attack based on attackingSoldier
         if (soldierAttack instanceof Wardog){
             return damage - 5;
         }
         System.out.println("The artillery has been damaged for " + damage + " points by " + soldierAttack + ".");
         return damage;
+    }
+
+    @Override
+    public Texture takeSelfie() {
+        /*
+         * this method returns a Texture depending on the team color
+         */
+        if (teamColor.equals("red")) {
+            return BoomChess.redArtillery;
+        } else {
+            return BoomChess.greenArtillery;
+        }
     }
 }

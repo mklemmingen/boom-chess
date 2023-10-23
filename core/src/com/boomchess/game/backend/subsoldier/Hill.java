@@ -1,9 +1,11 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.subsoldier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.backend.takeSelfieInterface;
 
-public class Hill extends Soldier{
+public class Hill extends Soldier implements takeSelfieInterface {
     /*
     * Hill.java is the object for the chess piece Hill in the game Boom Chess.
     * It acts as a non-moving and non-passable object on the board.

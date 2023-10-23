@@ -1,11 +1,13 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.subsoldier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.*;
 
 import java.util.ArrayList;
 
-public class Wardog extends Soldier{
+public class Wardog extends Soldier
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
     /*
      * Wardog.java is the object for the chess piece General in the game Boom Chess.
      * It holds the specific movement patterns for this piece, mathMove,
@@ -32,7 +34,7 @@ public class Wardog extends Soldier{
         }
     }
 
-    public static int calculateDamage(Soldier soldierDefend) {
+    public int calculateDamage(Soldier soldierDefend) {
 
         // damage: 5-20
         // advantages: +5 to infantry
@@ -70,7 +72,7 @@ public class Wardog extends Soldier{
             int newY = positionY + offset;
 
             if (Board.isValidMove(newX, newY)) {
-                if (!(gameBoard[newX][newY] instanceof Empty)) {
+                if ((gameBoard[newX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, newY);
                     possibleMoves.add(coordinates);
@@ -88,7 +90,7 @@ public class Wardog extends Soldier{
             int newY = positionY + offset;
 
             if (Board.isValidMove(newX, newY)) {
-                if (!(gameBoard[newX][newY] instanceof Empty)) {
+                if ((gameBoard[newX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, newY);
                     possibleMoves.add(coordinates);
@@ -106,7 +108,7 @@ public class Wardog extends Soldier{
             int newY = positionY - offset;
 
             if (Board.isValidMove(newX, newY)) {
-                if (!(gameBoard[newX][newY] instanceof Empty)) {
+                if ((gameBoard[newX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, newY);
                     possibleMoves.add(coordinates);
@@ -124,7 +126,7 @@ public class Wardog extends Soldier{
             int newY = positionY - offset;
 
             if (Board.isValidMove(newX, newY)) {
-                if (!(gameBoard[newX][newY] instanceof Empty)) {
+                if ((gameBoard[newX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, newY);
                     possibleMoves.add(coordinates);
@@ -139,7 +141,7 @@ public class Wardog extends Soldier{
         return possibleMoves;
     }
 
-    public static int defendAndBleed(int damage, Soldier soldierAttack) {
+    public int defendAndBleed(int damage, Soldier soldierAttack) {
         // calculate resistance to attack based on attackingSoldier
         if (soldierAttack instanceof Infantry){
             return damage - 5;

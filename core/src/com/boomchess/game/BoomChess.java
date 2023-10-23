@@ -10,21 +10,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
-import com.boomchess.game.frontend.DeathExplosionActor;
-import com.boomchess.game.frontend.DottedLineActor;
-import com.boomchess.game.frontend.MusicPlaylist;
+import com.boomchess.game.frontend.*;
 
 import java.util.ArrayList;
 
@@ -32,14 +25,14 @@ import java.util.ArrayList;
 public class BoomChess extends ApplicationAdapter {
 
 	// used for essential resolution and drawing matters -------------------------------------------------------
-	private static SpriteBatch batch;
+	public static SpriteBatch batch;
 	// usage for Scene2DUI-skins and stages -------------------------------------------------------
-	private static Skin skin;
-	private static Skin progressBarSkin;
+	public static Skin skin;
+	public static Skin progressBarSkin;
 	private static Stage currentStage;
 
 	// for the Move Overlay ------------------------------------------------------
-	private static boolean showMove = false;
+	public static boolean showMove = false;
 	private static Stage  moveLogoStage;
 
 	// for the  map -----------------------------------------
@@ -89,7 +82,7 @@ public class BoomChess extends ApplicationAdapter {
 	// background is drawn in a batch, hence Texture
 	private static Texture background;
 	private static Texture xMarker;
-	private static Image boomLogo;
+	public static Image boomLogo;
 	public static Texture empty;
 	public static Texture hill;
 
@@ -202,11 +195,11 @@ public class BoomChess extends ApplicationAdapter {
 		background_music.addSong("music/36 Tonal Resonance.ogg");
 		background_music.addSong("music/epic-battle.mp3");
 		background_music.addSong("music/Outside the Colosseum.ogg");
+		background_music.addSong("music/A Little R & R.ogg");
 
 		// load the menu music
 
 		menu_music = Gdx.audio.newMusic(Gdx.files.internal("music/(LOOP-READY) Track 1 - Safe Zone No Intro.mp3"));
-		Music menu_music2 = Gdx.audio.newMusic(Gdx.files.internal("music/A Little R & R.ogg"));
 
 		// ---------------------------- universal Buttons for adding to stages
 
@@ -383,7 +376,7 @@ public class BoomChess extends ApplicationAdapter {
 		progressBarSkin = new Skin(Gdx.files.internal("progressBarSkin/neon-ui.json"));
 
 		// ensures game starts in menu
-		currentStage = createMainMenuStage();
+		createMainMenuStage();
 
 		// for the Move Logo Overlay
 		moveLogoStage = new Stage();
@@ -393,12 +386,12 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 
-	enum GameState {
+	public enum GameState {
 		// for determining the current state of the game
 		RED_TURN, GREEN_TURN, NOT_IN_GAME
 	}
 
-	static GameState currentState = GameState.NOT_IN_GAME;
+	public static GameState currentState = GameState.NOT_IN_GAME;
 	
 	@Override
 	public void render() {
@@ -521,7 +514,7 @@ public class BoomChess extends ApplicationAdapter {
 		dottedLineStage.dispose();
 		deathExplosionStage.dispose();
 
-		// dispose of all assets --- Textures do not natively get garbage canned by Javas inbuilt collector
+		// dispose of all assets --- Textures do not natively get rubbish canned by Javas inbuilt collector
 		// Images do tho!
 		 redTank.dispose();
 		 redHelicopter.dispose();
@@ -540,455 +533,44 @@ public class BoomChess extends ApplicationAdapter {
 		 hill.dispose();
 	}
 
-	private static void switchToStage(Stage newStage) {
+	public static void switchToStage(Stage newStage) {
 		// this method removes the currentStage and loads a new one
-		currentStage.clear();
+		// used in the Stage classes at the end to load the created Stages
+		if (currentStage != null){
+			currentStage.clear();}
 		currentStage = newStage;
 		Gdx.input.setInputProcessor(currentStage);
 	}
 
-	private static Stage createMainMenuStage() {
-
-		showMove = false;
-
-		// setOverlay to false
-		renderOverlay = false;
-
-		Stage menuStage = new Stage();
-		Gdx.input.setInputProcessor(menuStage);
-
-		// start menu music
-		background_music.stop();
-		menu_music.setLooping(true);
-		menu_music.play();
-		menu_music.setVolume(volume);
-
-		// Begin of Main Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
-		final Table root = new Table();
-		root.setFillParent(true);
-		menuStage.addActor(root);
-
-		final Image title = boomLogo;
-		root.add(title).top().padBottom(20);
-		root.row();
-
-		TextButton helpButton = new TextButton("Help!", skin);
-		root.add(helpButton).padBottom(20);
-		// if help button is pressed, create a new stage for the help information
-		helpButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createHelpStage());
-			}
-		});
-		root.row();
-
-		TextButton play2Button = new TextButton("Play a 2 Player Game", skin);
-		root.add(play2Button).padBottom(20);
-
-		play2Button.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				// create the first gameBoard
-				setGameBoard();
-
-				// stop menu music and start background_music
-				menu_music.stop();
-				background_music.setLooping(true);
-				background_music.play();
-				background_music.setVolume(volume);
-
-				currentState = GameState.RED_TURN;
-				
-				boolean isBotMatch = false;
-
-				// create the big game Board as an object of the Board class
-				Board.initialise();
-
-				switchToStage(createGameStage(isBotMatch));
-			}
-		});
-		root.row();
-
-		TextButton playBotButton = new TextButton("Play a Game Against the Computer", skin);
-		root.add(playBotButton).padBottom(20);
-		playBotButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				// create the first gameBoard
-				setGameBoard();
-
-				// stop menu music and start background_music
-				menu_music.stop();
-				background_music.setLooping(true);
-				background_music.play();
-				background_music.setVolume(volume);
-
-				currentState = GameState.RED_TURN;
-				
-				boolean isBotMatch = true;
-
-				// create the big game Board as an object of the Board class
-				Board.initialise();
-
-				switchToStage(createGameStage(isBotMatch));
-			}
-		});
-		root.row();
-
-		TextButton optionsButton = new TextButton("Options", skin);
-		root.add(optionsButton).padBottom(20);
-		optionsButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createOptionsStage());
-			}
-		});
-		root.row();
-
-		TextButton creditsButton = new TextButton("Credits", skin);
-		root.add(creditsButton).padBottom(20);
-		creditsButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createCreditsStage());
-			}
-		});
-		root.row();
-
-		TextButton exitButton = new TextButton("Exit", skin);
-		root.add(exitButton).padBottom(20).padRight(2);
-		exitButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				// for exiting the game
-				Gdx.app.exit();
-				// for ending all background activity on Windows systems specifically
-				System.exit(0);
-			}
-		});
-		root.row();
-
-		// End of first menu-layer Layout
-		return menuStage;
-	}
-
-	private static Stage createHelpStage() {
-		Stage helpStage = new Stage();
-
-		// Begin of Help Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
-		final Table root = new Table();
-		root.setFillParent(true);
-		helpStage.addActor(root);
-
-		// TODO: here starts a long string of text that will be displayed in the help menu about
-		//		 what the premise of the game is and what to expect. also a quick overview about the controls and
-		//		 pieces (their stats)
-
-		// back button to return to the main menu
-		TextButton backButton = new TextButton("Back", skin);
-		root.add(backButton).padBottom(20);
-		backButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createMainMenuStage());
-			}
-		});
-		root.row();
-
-		return helpStage;
-	}
-
-	private static Stage createOptionsStage() {
-		Stage optionsStage = new Stage();
-
-		// Begin of Options Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
-		final Table root = new Table();
-		root.setFillParent(true);
-		optionsStage.addActor(root);
-
-		// TODO add buttons that change the volume of the music and sound effects as well as
-		//  yet to be decided variables in the backend like NIKI Difficulty etc
-
-		// TODO CHANGE FROM GREEN AND RED TO BLUE AND RED BY CHANGING THE TEXTURE VARIABLES FROM GREEN PNGS TO BLUE
-
-		// back button to return to the main menu
-		TextButton backButton = new TextButton("Back", skin);
-		root.add(backButton).padBottom(20);
-		backButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createMainMenuStage());
-			}
-		});
-		root.row();
-
-		return optionsStage;
-	}
-
-	private static Stage createCreditsStage() {
-		Stage creditsStage = new Stage();
-
-		// Begin of Options Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
-		final Table root = new Table();
-		root.setFillParent(true);
-		creditsStage.addActor(root);
-
-		// TODO add long list of names of people who worked on the game, what they did, sources and tools used
-
-		// https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/ui/TextArea.html
-		// so called TextArea Widget used for displaying text in a scrollable box
-
-		// back button to return to the main menu
-		TextButton backButton = new TextButton("Back", skin);
-		root.add(backButton).padBottom(20);
-		backButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createMainMenuStage());
-			}
-		});
-		root.row();
-
-		return creditsStage;
-	}
-
-	private static Stage createGameStage(boolean isBotMatch) {
-
-		if (isBotMatch){
-			System.out.println("Bot Match");
-			// TODO CREATE MULTIPLE BOT DIFFICULTIES
-		}
-
-		showMove = true;
-
-		// add the audio table to gameStage as Actor and position on the far right of the Screen
-		Stage gameStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-
-		// xMarkerOverlay
-		possibleMoveOverlay = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-
-		// CHECKED try to implement the game board as a tiled map and the pieces as actors on top of it
-		//  combine the tiled map renderer with the stage renderer? Research: addressing individual .tmx tiles in code
-		//  - corresponding to the 2D Array Game Board, the pieces on it, their stats as clean health bars.
-		//  ----------------------------------------------------------------------------------------------
-		//  Actor-Images must be 80x80px. Add Exit-Button in the Bottom right corner of the screen
-		//  Actors should be able to be drag-droppable and snap to the grid. They can only move to tiles
-		//  their chess characteristics allow them to. This should be checked by the backend, and be sent back as tile
-		//  coordinates, so the allowed tiles can temporarily be highlighted. If piece is dropped on an allowed tile,
-		//  update 2D Array with this new information. End turn.
-		//  Calculate Damage from all the current Players pieces onto enemy pieces. All hit pieces should be highlighted.
-		//  If a piece is killed, remove it from the board and the 2D Array. If a piece is killed, check if that piece
-		//  was the general and end the game by saving who won (who killed the other general).
-		//  If not, switch to the next player.
-		//  If yes, create Game-End-Stage: display the winner and a button to return to the main menu.
-
-		// render the gameBoard by iterating through the 2D Array Soldiers[][] gameBoard
-		// checking which type of piece at position and drawing the correct image there
-
-		// add game board
-		gameStage.addActor(drawTheGameBoard());
-
-
-		// create another stage for the back to main menu button
-		Table backTable = new Table();
-		backTable.setSize(400, 80); // determines the frame size for the backTable (button: to main menu)
-		// bottom right the table in the parent container
-		backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 0);
-		gameStage.addActor(backTable); // Add the table to the stage
-
-		// Exit to Main Menu button to return to the main menu
-		TextButton menuButton = new TextButton("Return to Main Menu", skin);
-		menuButton.align(Align.bottomRight);
-		backTable.add(menuButton);
-		menuButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				switchToStage(createMainMenuStage());
-				// create a new gameBoard since game has ended
-				currentState = GameState.NOT_IN_GAME;
-				setGameBoard();
-			}
-		});
-
-		return gameStage;
-	}
-
-	private static void setGameBoard() {
-		Board.initialise();
-	}
-
-	public static Table drawTheGameBoard() {
-
-		// Begin of GameLayout - Root Table arranges content automatically and adaptively as ui-structure
-		Table root = new Table();
-
-		root.setSize(720, 640);
-		root.center(); // Center the gameBoard in the parent container (stage)
-		// refine the position of the root Table, since the orthoCamera is centered on a screen that may change size
-		root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
-				(Gdx.graphics.getHeight() - root.getHeight()) / 2f);
-
-
-		// for the size of the tiles
-		int tileSize = 80;
-		int numRows = 8;
-		int numColumns = 9;
-
-		batch.begin();
-
-		for (int i = 0; i < numRows; i++) {
-			// add a new stage Table row after each row of the gameBoard
-			root.row();
-			for (int j = 0; j < numColumns; j++) {
-				// create a new box like widget at each position of the board and add it to the root table
-				// it is 80x80 pixels, holds the image of the piece at that position and is movable to other positions
-				root.add(drawPiece(j, i)).size(tileSize);
-			}
-		}
-		System.out.println("\n New Board has been rendered.");
-		batch.end();
-		return root;
-	}
-
-	private static Actor drawPiece(final int X, final int Y) {
-
-		// if soldierType is a general, use an animation instead of an Image SolPipece
-
-		// TODO GENERAL ANIMATION
-
-		Soldier[][] gameBoard = Board.getGameBoard();
-		final Soldier soldier = gameBoard[X][Y];
-
-		// load the corresponding image through the Soldier Take Selfie Method
-		Image solPiece = new Image(gameBoard[X][Y].takeSelfie());
-
-		int health = gameBoard[X][Y].getHealth();
-
-			// draw the image at the correct position
-			solPiece.setSize(80, 80);
-			solPiece.setScaling(Scaling.fit);
-
-			final Stack tileWidget = new Stack();
-
-			if (health < 15 && health > 0) {
-				// Apply a light red hue effect to the tileWidget's image
-				Color lightRed = new Color(1.0f, 0.5f, 0.5f, 1.0f);
-				solPiece.setColor(lightRed);
-			}
-
-			tileWidget.add(solPiece);
-
-			if (!(health == -1)) {
-				// tileWidget is only move able if a Piece is on it, meaning it has health
-				tileWidget.setTouchable(Touchable.enabled);
-				// draw the health bar
-				final ProgressBar healthBar = new ProgressBar(0f, 60f, 1f, false,
-						progressBarSkin);
-				healthBar.setSize(0.025F, 0.1F);
-
-				healthBar.setValue(health);
-				tileWidget.add(healthBar);
-
-				// hide the health bar by default
-				healthBar.setVisible(false);
-
-				// the tileWidget Listener checks if the mouse is over the tile and if yes, displays healthBar
-				tileWidget.addListener(new InputListener() {
-					@Override
-					public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-						healthBar.setVisible(true); // Show the health bar when the mouse enters
-					}
-
-					@Override
-					public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-						healthBar.setVisible(false); // Hide the health bar when the mouse exits
-					}
-				});
-			}
-
-
-			tileWidget.addListener(new DragListener() {
-				@Override
-				public void dragStart(InputEvent event, float x, float y, int pointer) {
-					// Code runs when dragging starts:
-					System.out.println("\n Started dragging the actor!");
-
-					// Get the team color of the current tile
-					Soldier[][] gameBoard = Board.getGameBoard();
-					String tileTeamColor = gameBoard[X][Y].getTeamColor();
-
-					// If it's not the current team's turn, cancel the drag and return
-					if ((currentState == GameState.RED_TURN && !tileTeamColor.equals("red")) ||
-							(currentState == GameState.GREEN_TURN && !tileTeamColor.equals("green"))) {
-						event.cancel();
-						System.out.println("\n It's not your turn!");
-						reRenderGame();
-						return;
-					}
-
-					tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
-					// as long as the mouse is pressed down, the actor is moved to the mouse position
-					// we calculate the tiles it can move to and highlight these tiles with a slightly red hue
-					// the calculated tiles are part of a ArrayList variable that is created at create
-					// of the whole programm
-					// and gets cleared once we touchDragged the actor to a new position
-
-					// switch statement for deciding which
-					// Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
-
-					setAllowedTiles(soldier.mathMove(X, Y));
-				}
-
-				@Override
-				public void drag(InputEvent event, float x, float y, int pointer) {
-					// Code here will run during the dragging
-					tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
-				}
-
-				@Override
-				public void dragStop(InputEvent event, float x, float y, int pointer) {
-					// Code here will run when the player lets go of the actor
-
-					// Get the position of the tileWidget relative to the parent actor (the gameBoard)
-					Vector2 localCoords = new Vector2(x, y);
-					// Convert the position to stage (screen) coordinates
-					Vector2 screenCoords = tileWidget.localToStageCoordinates(localCoords);
-
-					System.out.println("\n Drag stopped at screen position: " + screenCoords.x + ", " + screenCoords.y);
-
-					Coordinates currentCoord = calculateTileByPX((int) screenCoords.x, (int) screenCoords.y);
-
-					// for loop through validMoveTiles, at each tile we check for equality of currentCoord with the Coordinate
-					// in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true, we set the
-					// validMove Variable to true, call on the update method of the Board class and break the for loop
-					// then clear the Board.
-
-
-					ArrayList<Coordinates> validMoveTiles = Board.getValidMoveTiles();
-					for (Coordinates validMoveTile : validMoveTiles) {
-						if (currentCoord.checkEqual(validMoveTile)) {
-							// Board.update with oldX, oldY, newX, newY
-							Board.update(X, Y, currentCoord.getX(), currentCoord.getY());
-							legitTurn = true;
-							break;
-						}
-					}
-
-					// and the validMoveTiles are cleared
-					clearAllowedTiles(); // for turning off the Overlay
-					Board.emptyValidMoveTiles();
-					reRenderGame();
-
-				}
-			});
-		return tileWidget;
-	}
-
 	public static void reRenderGame(){
-		// method for clearing and recreating gameStage
-		System.out.println("\n reRenderGame called.");
-		switchToStage(createGameStage(isBotMatch));
+		switchToStage(GameStage.createGameStage(isBotMatch));
+	}
+
+	public static void createMainMenuStage() {
+		switchToStage(MenuStage.initializeUI());
+	}
+
+	public static void createHelpStage() {
+		switchToStage(HelpStage.initializeUI());
+	}
+
+	public static void createOptionsStage() {
+		switchToStage(OptionsStage.initalizeUI());
+	}
+
+	public static void createCreditsStage() {
+		switchToStage(CreditsStage.initializeUI());
+	}
+
+	public static void createGameEndStage (String winnerTeamColour){
+		// method for creating the stage for the game end ON TOP of the gameStage
+		// (changing InputProcessor to stop Game Progress)
+		addToStage(GameEndStage.initializeUI(winnerTeamColour));
+	}
+
+	public static void addToStage (Actor actorToAdd){
+		// method for adding a stage to the currentStage
+		currentStage.addActor(actorToAdd);
 	}
 
 	// method for setting the ArrayList of allowed tiles to move to and a method for clearing it to nothing
@@ -1044,43 +626,6 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static void clearAllowedTiles () {
 		renderOverlay = false;
-	}
-
-	// method for creating the stage for the game end ON TOP of the gameStage
-	// (changing InputProcessor to stop Game Progress)
-
-	public static void createGameEndStage (String winnerTeamColour){
-		Stage gameEndStage = new Stage();
-
-		currentState = GameState.NOT_IN_GAME;
-
-		// change input to gameEndStage so old Back to Main Menu isn't trigger-able as well as Drag and Drop
-		Gdx.input.setInputProcessor(gameEndStage);
-
-		// Begin of GameEndLayout - Root Table arranges content automatically and adaptively as ui-structure
-		final Table endRoot = new Table();
-		endRoot.setFillParent(true);
-		gameEndStage.addActor(endRoot);
-
-		// display the winner and a button to return to the main menu.
-		Label winnerLabel = new Label("The " + winnerTeamColour + " Team won!", skin);
-		endRoot.add(winnerLabel).padBottom(20);
-		endRoot.row();
-
-		// back button to return to the main menu
-		TextButton backButton = new TextButton("Return To Main Menu", skin);
-		endRoot.add(backButton).padBottom(20);
-		backButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				// refresh gameBoard to initial state by going to the mainMenu
-				switchToStage(createMainMenuStage());
-				// create a new gameBoard since the old one is still in memory
-				setGameBoard();
-			}
-		});
-		endRoot.row();
-
 	}
 
 	public static Coordinates calculateTileByPX(int pxCoordinateX, int pxCoordinateY) {

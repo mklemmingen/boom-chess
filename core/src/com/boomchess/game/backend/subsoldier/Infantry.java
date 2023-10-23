@@ -1,10 +1,15 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.subsoldier;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.backend.calculateDamageInterface;
+import com.boomchess.game.backend.defendAndBleedInterface;
+import com.boomchess.game.backend.subsoldier.Helicopter;
+import com.boomchess.game.backend.takeSelfieInterface;
 
-import java.util.ArrayList;
-
-public class Infantry extends Soldier{
+public class Infantry extends Soldier
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
     /*
      * Infantry.java is the object for the chess piece General in the game Boom Chess.
      * It holds the specific movement patterns for this piece, mathMove,
@@ -19,7 +24,7 @@ public class Infantry extends Soldier{
         super(teamColor, 40);
     }
 
-    public static int calculateDamage(Soldier soldierDefend) {
+    public int calculateDamage(Soldier soldierDefend) {
 
         // deals 01-20 damage
         // advantages +5 to attacking helicopters
@@ -31,7 +36,7 @@ public class Infantry extends Soldier{
         // that generate a random number between 0 and 1 that we multiply
         int randomDamage = (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
 
-        if(soldierDefend.equals("helicopter")){
+        if(soldierDefend instanceof Helicopter){
             randomDamage += 5;
         }
 
@@ -41,7 +46,7 @@ public class Infantry extends Soldier{
 
     }
 
-    public static int defendAndBleed(int damage, Soldier soldierAttack) {
+    public int defendAndBleed(int damage, Soldier soldierAttack) {
         // calculate resistance to attack based on attackingSoldier
         if (soldierAttack instanceof Helicopter){
             return damage - 5;
@@ -49,5 +54,17 @@ public class Infantry extends Soldier{
 
         System.out.println("The Infantry has been damaged for " + damage + " points by " + soldierAttack + ".");
         return damage;
+    }
+
+    @Override
+    public Texture takeSelfie() {
+        /*
+         * this method returns a Texture depending on the team color
+         */
+        if (teamColor.equals("red")) {
+            return BoomChess.redInfantry;
+        } else {
+            return BoomChess.greenInfantry;
+        }
     }
 }

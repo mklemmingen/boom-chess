@@ -1,11 +1,13 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.subsoldier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.*;
 
 import java.util.ArrayList;
 
-public class Commando extends Soldier{
+public class Commando extends Soldier
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
     /*
      * Commando.java is the object for the chess piece Commando in the game Boom Chess.
      * It holds the specific movement patterns for this piece, the special damage it can deal and the initial health.
@@ -32,7 +34,7 @@ public class Commando extends Soldier{
         }
     }
     
-    public static int calculateDamage(String soldierDefend) {
+    public int calculateDamage(Soldier soldierDefend) {
 
         // deals 5-30 damage
         // deals +10 to attacking tanks
@@ -43,7 +45,7 @@ public class Commando extends Soldier{
         // that generate a random number between 0 and 1 that we multiply
         int randomDamage = (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
 
-        if(soldierDefend.equals("tank")){
+        if(soldierDefend instanceof Tank){
             randomDamage += 10;
         }
 
@@ -83,7 +85,7 @@ public class Commando extends Soldier{
             int newY = positionY + yOffset;
 
             if (Board.isValidMove(positionX, newY)) {
-                if (!(gameBoard[positionX][newY] instanceof Empty)) {
+                if ((gameBoard[positionX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(positionX, newY);
                     possibleMoves.add(coordinates);
@@ -100,7 +102,7 @@ public class Commando extends Soldier{
             int newY = positionY - yOffset;
 
             if (Board.isValidMove(positionX, newY)) {
-                if (!(gameBoard[positionX][newY] instanceof Empty)) {
+                if ((gameBoard[positionX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(positionX, newY);
                     possibleMoves.add(coordinates);
@@ -117,7 +119,7 @@ public class Commando extends Soldier{
             int newX = positionX + xOffset;
 
             if (Board.isValidMove(newX, positionY)) {
-                if (!(gameBoard[newX][positionY] instanceof Empty)) {
+                if ((gameBoard[newX][positionY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, positionY);
                     possibleMoves.add(coordinates);
@@ -134,7 +136,7 @@ public class Commando extends Soldier{
             int newX = positionX - xOffset;
 
             if (Board.isValidMove(newX, positionY)) {
-                if (!(gameBoard[newX][positionY] instanceof Empty)) {
+                if ((gameBoard[newX][positionY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, positionY);
                     possibleMoves.add(coordinates);
@@ -152,7 +154,7 @@ public class Commando extends Soldier{
             int newY = positionY + offset;
 
             if (Board.isValidMove(newX, newY)) {
-                if (!(gameBoard[newX][newY] instanceof Empty)) {
+                if ((gameBoard[newX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, newY);
                     possibleMoves.add(coordinates);
@@ -170,7 +172,7 @@ public class Commando extends Soldier{
             int newY = positionY + offset;
 
             if (Board.isValidMove(newX, newY)) {
-                if (!(gameBoard[newX][newY] instanceof Empty)) {
+                if ((gameBoard[newX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, newY);
                     possibleMoves.add(coordinates);
@@ -188,7 +190,7 @@ public class Commando extends Soldier{
             int newY = positionY - offset;
 
             if (Board.isValidMove(newX, newY)) {
-                if (!(gameBoard[newX][newY] instanceof Empty)) {
+                if ((gameBoard[newX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, newY);
                     possibleMoves.add(coordinates);
@@ -206,7 +208,7 @@ public class Commando extends Soldier{
             int newY = positionY - offset;
 
             if (Board.isValidMove(newX, newY)) {
-                if (!(gameBoard[newX][newY] instanceof Empty)) {
+                if ((gameBoard[newX][newY] instanceof Empty)) {
                     Coordinates coordinates = new Coordinates();
                     coordinates.setCoordinates(newX, newY);
                     possibleMoves.add(coordinates);
@@ -221,7 +223,7 @@ public class Commando extends Soldier{
         return possibleMoves;
     }
 
-    public static int defendAndBleed(int damage, Soldier soldierAttack) {
+    public int defendAndBleed(int damage, Soldier soldierAttack) {
         // The Commando is very sneaky and rogue. His resistance is randomized.
         // on a randomized 1-3 scale, he takes damage / factor(1-3) damage
 
