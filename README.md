@@ -1,4 +1,15 @@
 # boom-chess
+
+Programmierprojekt Gruppe 1 "Boom Chess" von Boom Softwares 
+
+WS 23 Informatik 2 Praktikum
+
+Gruppenmitglieder:
+
+Lauterbach, Yateem, Cam, Ruckgaber
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 Idiocracied chess, with health, guns, obstacles, boom and stuff
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
