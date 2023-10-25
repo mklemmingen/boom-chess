@@ -114,9 +114,9 @@ public class BoomChess extends ApplicationAdapter {
 
 	// volume of Sounds
 
-	public static float volume = 0.1f;  // variable to store the current MUSIC volume level
+	public static float volume = 0.2f;  // variable to store the current MUSIC volume level
 
-	public static float soundVolume = 1.0f;  // variable to store the current SOUND volume level
+	public static float soundVolume = 0.20f;  // variable to store the current SOUND volume level
 
 	// for the labels
 
@@ -249,7 +249,7 @@ public class BoomChess extends ApplicationAdapter {
 			   // if in game state - play background_music
 			   if (volume == 0) {
 				   volume = 0.1f;
-				   soundVolume = 1.0f;
+				   soundVolume = 0.1f;
 				   volumeSlider.setValue(0.1f);
 				   soundVolumeSlider.setValue(1.0f);
 				   if (currentState != GameState.NOT_IN_GAME) {
@@ -274,7 +274,7 @@ public class BoomChess extends ApplicationAdapter {
 		// universal volume sliders
 
 		volumeSlider = new Slider(0, 0.4f, 0.01f, false, skin);
-		volumeSlider.setValue(0.1f);
+		volumeSlider.setValue(0.2f);
 		volumeSlider.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -287,8 +287,8 @@ public class BoomChess extends ApplicationAdapter {
 			}
 		});
 
-		soundVolumeSlider = new Slider(0, 1f, 0.1f, false, skin);
-		soundVolumeSlider.setValue(1.0f);
+		soundVolumeSlider = new Slider(0, 0.4f, 0.01f, false, skin);
+		soundVolumeSlider.setValue(0.2f);
 
 		soundVolumeSlider.addListener(new ChangeListener() {
 			@Override
