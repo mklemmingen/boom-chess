@@ -117,9 +117,11 @@ public class MenuStage extends Stage{
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 if(isMedievalMode){
                     isMedievalMode = false;
+                    createMapStage();
                 }
                 else{
                     isMedievalMode = true;
+                    createMapStage();
                 }
                 BoomChess.createMainMenuStage();
             }

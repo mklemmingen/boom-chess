@@ -18,11 +18,14 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
+import com.boomchess.game.frontend.picture.RandomImage;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
 import com.boomchess.game.frontend.stage.*;
 import com.boomchess.game.frontend.sound.RandomSound;
 
 import java.util.ArrayList;
+
+import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
 
 
 public class BoomChess extends ApplicationAdapter {
@@ -39,7 +42,11 @@ public class BoomChess extends ApplicationAdapter {
 	private static Stage  moveLogoStage;
 
 	// for the  map -----------------------------------------
-	Stage mapStage;
+
+	public static Stage mapStage;
+
+	public static RandomImage medievalMaps;
+	public static RandomImage modernMaps;
 
 	// for setting the current "Mover" of the game / if a Move has been valid ------------------------------
 	public static boolean legitTurn = false;
@@ -204,7 +211,26 @@ public class BoomChess extends ApplicationAdapter {
 		empty = new Texture(Gdx.files.internal("empty.png"));
 
 		// Loading Texture of the map
-		Image map = new Image(new Texture(Gdx.files.internal("map3/map6.png")));
+
+		mapStage  = new Stage();
+		
+		medievalMaps = new RandomImage();
+		modernMaps = new RandomImage();
+
+		medievalMaps.addTexture("map2/game_map.png"); // colourful medieval map
+		modernMaps.addTexture("map2/game_map2.png"); // city map
+		modernMaps.addTexture("map2/game_map3.png"); // city map
+		medievalMaps.addTexture("map2/game_map4.png"); // colourful village map
+		medievalMaps.addTexture("map2/game_map5.png"); // colourful village map
+		modernMaps.addTexture("map2/game_map6.png"); // desert City map
+		modernMaps.addTexture("map2/game_map7.png"); // desert City map
+
+		modernMaps.addTexture("map3/map1.png"); // cool black and white map
+		modernMaps.addTexture("map3/map2.png"); // cool black and white map
+		modernMaps.addTexture("map3/map3.png"); // cool black and white map
+		modernMaps.addTexture("map3/map4.png"); // cool black and white map
+		modernMaps.addTexture("map3/map5.png"); // cool black and white map
+		modernMaps.addTexture("map3/map6.png"); // cool black and white map
 
 		// load the Textures of the medieval game mode
 
@@ -408,23 +434,6 @@ public class BoomChess extends ApplicationAdapter {
 		volumeLabel = new Label("Music", skin);
 		soundVolumeLabel = new Label("Sound", skin);
 
-		// ----------------------------
-
-		// adding mapStage
-		// for the  map used as the chess board
-
-		mapStage = new Stage(new ScreenViewport());
-
-		// Center the map on the screen
-		map.setPosition((float) Gdx.graphics.getWidth() /2 - map.getWidth()/2,
-				(float) Gdx.graphics.getHeight() /2 - map.getHeight()/2);
-
-		// Add a gray hue to the map
-		map.setColor(0.8f, 0.8f, 0.8f, 1f);  // apply a grey tint to the map
-
-		mapStage.addActor(map);
-
-
 		// -----------------------------------------------------------------------------------------
 		// creation of the camera fitting to the set resolution in DesktopLauncher
 
@@ -478,6 +487,10 @@ public class BoomChess extends ApplicationAdapter {
 
 		// creation of empty Board.validMoveTiles for null-pointer exception avoidance
 		Board.validMoveTiles = new ArrayList<>();
+
+		// create a new MapStage Object for the variable mapStage
+
+		createMapStage();
 
 		// ensures game starts in menu
 		createMainMenuStage();
@@ -641,7 +654,7 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	public static void reRenderGame(){
-		switchToStage(GameStage.createGameStage(isBotMatch));
+		switchToStage(createGameStage(isBotMatch));
 	}
 
 	public static void createMainMenuStage() {
@@ -664,6 +677,11 @@ public class BoomChess extends ApplicationAdapter {
 		// method for creating the stage for the game end ON TOP of the gameStage
 		// (changing InputProcessor to stop Game Progress)
 		addToStage(GameEndStage.initializeUI(winnerTeamColour));
+	}
+
+	public static void createMapStage() {
+		// method for creating the stage for the map that is rendered in variable mapStage
+		mapStage = MapStage.initializeUI();
 	}
 
 	public static void addToStage (Actor actorToAdd){

@@ -241,6 +241,20 @@ public class GameStage {
         backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 0);
         gameStage.addActor(backTable); // Add the table to the stage
 
+        backTable.row().padBottom(20);
+        // change Map
+        TextButton changeMapButton = new TextButton("Change Map", skin);
+        changeMapButton.align(Align.bottomRight);
+        backTable.add(changeMapButton);
+        changeMapButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                BoomChess.createMapStage();
+                createGameStage(isBotMatch);
+            }
+        });
+        backTable.row().padBottom(20);
+
         // Exit to Main Menu button to return to the main menu
         TextButton menuButton = new TextButton("Return to Main Menu", skin);
         menuButton.align(Align.bottomRight);
@@ -260,11 +274,6 @@ public class GameStage {
 
     public static void setGameBoard() {
         Board.initialise();
-    }
-
-    public void render() {
-        gameStage.act(Gdx.graphics.getDeltaTime());
-        gameStage.draw();
     }
 
     public Stage getStage() {
