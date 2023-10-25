@@ -59,8 +59,11 @@ public class Wardog extends Soldier
             randomDamage += 5;
         }
 
-        BoomChess.dogSound.play(BoomChess.soundVolume);
-
+        if(!BoomChess.isMedievalMode) {
+            BoomChess.dogSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.magicSound.play(BoomChess.soundVolume);
+        }
         return randomDamage;
     }
 
