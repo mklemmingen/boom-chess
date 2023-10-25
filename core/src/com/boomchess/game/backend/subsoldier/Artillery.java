@@ -40,7 +40,7 @@ public class Artillery extends Soldier
             randomDamage += 5;
         }
 
-        BoomChess.artillerySound.play(BoomChess.soundVolume);
+        BoomChess.smallExplosionSound.play(BoomChess.soundVolume);
 
         return randomDamage;
 

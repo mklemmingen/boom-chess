@@ -6,7 +6,7 @@ import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.subsoldier.Artillery;
 import com.boomchess.game.backend.subsoldier.Empty;
 import com.boomchess.game.backend.subsoldier.General;
-import com.boomchess.game.frontend.GameStage;
+import com.boomchess.game.frontend.stage.GameStage;
 
 
 public class Damage {
@@ -132,7 +132,7 @@ public class Damage {
         Soldier[][] gameBoard = Board.getGameBoard();
 
         // play the boom sound when a piece dies
-        BoomChess.boom.play();
+        BoomChess.bigExplosionSound.play(BoomChess.soundVolume);
         System.out.println("\nBoom! A piece has died");
 
         BoomChess.addDeathAnimation(positionX, positionY);

@@ -49,7 +49,7 @@ public class Commando extends Soldier
             randomDamage += 10;
         }
 
-        BoomChess.commandoSound.play(BoomChess.soundVolume);
+        BoomChess.bigArmsSound.play(BoomChess.soundVolume);
 
         return randomDamage;
     }

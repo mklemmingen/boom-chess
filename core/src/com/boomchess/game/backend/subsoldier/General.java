@@ -47,7 +47,7 @@ public class General extends Soldier
         // we achieve this randomisation using random.Math`s floor and random methods
         // that generate a random number between 0 and 1 that we multiply
 
-        BoomChess.generalSound.play(BoomChess.soundVolume);
+        BoomChess.smallArmsSound.play(BoomChess.soundVolume);
 
         return (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
     }

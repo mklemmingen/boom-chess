@@ -1,4 +1,4 @@
-package com.boomchess.game.frontend;
+package com.boomchess.game.frontend.stage;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -7,21 +7,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.boomchess.game.BoomChess;
 
-import static com.boomchess.game.BoomChess.skin;
+import static com.boomchess.game.BoomChess.*;
 
-public class HelpStage extends Stage{
+public class OptionsStage extends Stage{
 
-    public static Stage initializeUI() {
-        Stage helpStage = new Stage();
+    public static Stage initalizeUI() {
+        Stage optionsStage = new Stage();
 
-        // Begin of Help Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
+        // Begin of Options Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
         final Table root = new Table();
         root.setFillParent(true);
-        helpStage.addActor(root);
+        optionsStage.addActor(root);
 
-        // TODO: here starts a long string of text that will be displayed in the help menu about
-        //		 what the premise of the game is and what to expect. also a quick overview about the controls and
-        //		 pieces (their stats)
+        // TODO CHANGE FROM GREEN AND RED TO BLUE AND RED BY CHANGING THE TEXTURE VARIABLES FROM GREEN PNGS TO BLUE
+        //  yet to be decided variables in the backend like NIKI Difficulty etc
+        // change from current asset manager to medieval asset manager
+        // - old sound effects, music, map and figurines
 
         // back button to return to the main menu
         TextButton backButton = new TextButton("Back", skin);
@@ -32,7 +33,6 @@ public class HelpStage extends Stage{
                 BoomChess.createMainMenuStage();
             }
         });
-        root.row();
-        return helpStage;
+        return optionsStage;
     }
 }

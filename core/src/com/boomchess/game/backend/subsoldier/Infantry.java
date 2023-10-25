@@ -40,7 +40,7 @@ public class Infantry extends Soldier
             randomDamage += 5;
         }
 
-        BoomChess.infantrySound.play(BoomChess.soundVolume);
+        BoomChess.smallArmsSound.play(BoomChess.soundVolume);
 
         return randomDamage;
 

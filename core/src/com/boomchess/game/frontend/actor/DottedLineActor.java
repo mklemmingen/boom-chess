@@ -1,4 +1,4 @@
-package com.boomchess.game.frontend;
+package com.boomchess.game.frontend.actor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;

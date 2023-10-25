@@ -1,4 +1,4 @@
-package com.boomchess.game.frontend;
+package com.boomchess.game.frontend.sound;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;

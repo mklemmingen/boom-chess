@@ -1,4 +1,4 @@
-package com.boomchess.game.frontend;
+package com.boomchess.game.frontend.stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -10,7 +10,7 @@ import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Board;
 
 import static com.boomchess.game.BoomChess.*;
-import static com.boomchess.game.frontend.GameStage.setGameBoard;
+import static com.boomchess.game.frontend.stage.GameStage.setGameBoard;
 
 public class MenuStage extends Stage{
 

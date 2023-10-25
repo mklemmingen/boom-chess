@@ -3,7 +3,6 @@ package com.boomchess.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,7 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
-import com.boomchess.game.frontend.*;
+import com.boomchess.game.frontend.actor.DeathExplosionActor;
+import com.boomchess.game.frontend.actor.DottedLineActor;
+import com.boomchess.game.frontend.sound.MusicPlaylist;
+import com.boomchess.game.frontend.stage.*;
+import com.boomchess.game.frontend.sound.RandomSound;
 
 import java.util.ArrayList;
 
@@ -76,7 +79,6 @@ public class BoomChess extends ApplicationAdapter {
 	public static Texture greenInfantry;
 	public static Texture greenArtillery;
 	public static Texture redArtillery;
-	private static Image map;
 	private static Image redMove;
 	private static Image greenMove;
 	// background is drawn in a batch, hence Texture
@@ -85,17 +87,6 @@ public class BoomChess extends ApplicationAdapter {
 	public static Image boomLogo;
 	public static Texture empty;
 	public static Texture hill;
-
-	// loading Sounds
-
-	public static Sound boom;
-	public static Sound generalSound;
-	public static Sound infantrySound;
-	public static Sound helicopterSound;
-	public static Sound artillerySound;
-	public static Sound wardogSound;
-	public static Sound commandoSound;
-	public static Sound tankSound;
 
 	// music
 	public static MusicPlaylist background_music;
@@ -128,6 +119,15 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static Table audioTable;
 
+	// RandomSound Objects of Sound Groups to be played by the Pieces if they deal Damage
+
+	public static RandomSound smallArmsSound;
+	public static RandomSound bigArmsSound;
+	public static RandomSound dogSound;
+	public static RandomSound helicopterSound;
+	public static RandomSound tankSound;
+	public static RandomSound smallExplosionSound;
+	public static RandomSound bigExplosionSound;
 	// -----------------------------------------------------------------------------------------
 
 
@@ -135,6 +135,9 @@ public class BoomChess extends ApplicationAdapter {
 	public void create() {
 		// creation of the batch for drawing the images
 		batch = new SpriteBatch();
+
+		// loading Screen is going till loading complete and main menu starts ----------------------------
+		switchToStage(LoadingScreenStage.initalizeUI());
 
 		// skin of the UI --------------------
 		// skin (look) of the buttons via a prearranged json file
@@ -175,27 +178,69 @@ public class BoomChess extends ApplicationAdapter {
 		empty = new Texture(Gdx.files.internal("empty.png"));
 
 		// Loading Texture of the map
-		map = new Image(new Texture(Gdx.files.internal("map2/game_map7.png")));
+		Image map = new Image(new Texture(Gdx.files.internal("map2/game_map7.png")));
 
-		// load the boom sound effect and background music --------------------------------------
-		boom = Gdx.audio.newSound(Gdx.files.internal("sounds/boom.mp3"));
-		generalSound = Gdx.audio.newSound(Gdx.files.internal("sounds/Gunshot/autocannon-20mm.mp3"));
-		infantrySound = Gdx.audio.newSound(Gdx.files.internal("sounds/desert-eagle-gunshot.mp3"));
-		helicopterSound = Gdx.audio.newSound(Gdx.files.internal("sounds/helicopter-rotor-loop.mp3"));
-		artillerySound = Gdx.audio.newSound(Gdx.files.internal("sounds/cannonball.mp3"));
-		wardogSound = Gdx.audio.newSound(Gdx.files.internal("sounds/Dogs/dog_barking.mp3"));
-		commandoSound = Gdx.audio.newSound(Gdx.files.internal("sounds/sniper-rifle.mp3"));
-		tankSound = Gdx.audio.newSound(Gdx.files.internal("sounds/tank-engine.mp3"));
+		// load the sound effects into respective Objects --------------------------------------
 
+		smallArmsSound = new RandomSound();
+		smallArmsSound.addSound("sounds/desert-eagle-gunshot.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/autocannon-20mm.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Long/A.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Long/D.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Long/C.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Long/E.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Long/F.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Long/G.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Long/H.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Short/A.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Short/C.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Short/D.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Short/E.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Short/F.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Short/G.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/High/Short/H.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Short/A.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Short/C.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Short/D.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Short/E.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Short/F.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Short/G.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Short/H.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Long/A.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Long/C.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Long/D.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Long/E.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Long/F.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Long/G.mp3");
+		smallArmsSound.addSound("sounds/Gunshot/Low/Long/H.mp3");
+
+		bigArmsSound = new RandomSound();
+		bigArmsSound.addSound("sounds/cannonball.mp3");
+
+		dogSound = new RandomSound();
+		dogSound.addSound("sounds/Dogs/dog_barking.mp3");
+
+		helicopterSound = new RandomSound();
+		helicopterSound.addSound("sounds/helicopter-rotor-loop.mp3");
+
+		tankSound = new RandomSound();
+		tankSound.addSound("sounds/tank-engine.mp3");
+
+		smallExplosionSound = new RandomSound();
+
+		bigExplosionSound = new RandomSound();
+		bigExplosionSound.addSound("sounds/boom.mp3");
+
+		// load the background music into MusicPlaylist object --------------------------------------
 		background_music = new MusicPlaylist();
+		background_music.addSong("music/A Little R & R.mp3");
+		background_music.addSong("music/24 Stray cat.mp3");
 		background_music.addSong("music/05 Thought Soup.mp3");
 		background_music.addSong("music/06 Tonal Dissonance.mp3");
-		background_music.addSong("music/24 Stray cat.mp3");
 		background_music.addSong("music/27 Coffee Break.mp3");
 		background_music.addSong("music/36 Tonal Resonance.mp3");
 		background_music.addSong("music/epic-battle.mp3");
 		background_music.addSong("music/Outside the Colosseum.mp3");
-		background_music.addSong("music/A Little R & R.mp3");
 
 		// load the menu music
 
@@ -294,14 +339,13 @@ public class BoomChess extends ApplicationAdapter {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				soundVolume = soundVolumeSlider.getValue();
-				boom.setVolume(0, soundVolume);
-				generalSound.setVolume(0, soundVolume);
-				infantrySound.setVolume(0, soundVolume);
-				helicopterSound.setVolume(0, soundVolume);
-				artillerySound.setVolume(0, soundVolume);
-				wardogSound.setVolume(0, soundVolume);
-				commandoSound.setVolume(0, soundVolume);
-				tankSound.setVolume(0, soundVolume);
+				smallArmsSound.setVolume(soundVolume);
+				bigArmsSound.setVolume(soundVolume);
+				dogSound.setVolume(soundVolume);
+				helicopterSound.setVolume(soundVolume);
+				tankSound.setVolume(soundVolume);
+				smallExplosionSound.setVolume(soundVolume);
+				bigExplosionSound.setVolume(soundVolume);
 			}
 		});
 
