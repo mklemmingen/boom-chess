@@ -41,7 +41,11 @@ public class Tank extends Soldier
             randomDamage -= 5;
         }
 
-        BoomChess.tankSound.play(BoomChess.soundVolume);
+        if(BoomChess.isMedievalMode){
+        BoomChess.knightSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.tankSound.play(BoomChess.soundVolume);
+        }
 
         return randomDamage;
     }
@@ -138,10 +142,20 @@ public class Tank extends Soldier
         /*
          * this method returns a Texture depending on the team color
          */
-        if (teamColor.equals("red")) {
-            return BoomChess.redTank;
-        } else {
-            return BoomChess.greenTank;
+        if (BoomChess.isMedievalMode) {
+            if (teamColor.equals("red")) {
+                return BoomChess.redKnight;
+            } else {
+                return BoomChess.greenKnight;
+            }
+        }
+        else {
+            if (teamColor.equals("red")) {
+                return BoomChess.redTank;
+            }
+            else {
+                return BoomChess.greenTank;
+            }
         }
     }
 }

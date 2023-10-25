@@ -17,7 +17,30 @@ public class OptionsStage extends Stage{
         // Begin of Options Menu Layout - Root Table arranges content automatically and adaptively as ui-structure
         final Table root = new Table();
         root.setFillParent(true);
-        optionsStage.addActor(root);
+
+        // Change Mode button to switch medieval and modern
+        String currentMode = "";
+        if(isMedievalMode){
+            currentMode = "Medieval";
+        }
+        else{
+            currentMode = "Modern";
+        }
+        TextButton modeButton = new TextButton("Switch between Modern and Medieval: Current" + currentMode, skin);
+        root.add(modeButton).padBottom(20);
+        modeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                if(isMedievalMode){
+                    isMedievalMode = false;
+                }
+                else{
+                    isMedievalMode = true;
+                }
+                BoomChess.createOptionsStage();
+            }
+        });
+        root.row();
 
         // TODO CHANGE FROM GREEN AND RED TO BLUE AND RED BY CHANGING THE TEXTURE VARIABLES FROM GREEN PNGS TO BLUE
         //  yet to be decided variables in the backend like NIKI Difficulty etc
@@ -33,6 +56,8 @@ public class OptionsStage extends Stage{
                 BoomChess.createMainMenuStage();
             }
         });
+
+        optionsStage.addActor(root);
         return optionsStage;
     }
 }

@@ -40,7 +40,11 @@ public class Artillery extends Soldier
             randomDamage += 5;
         }
 
-        BoomChess.smallExplosionSound.play(BoomChess.soundVolume);
+        if(BoomChess.isMedievalMode){
+            BoomChess.catapultSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.smallExplosionSound.play(BoomChess.soundVolume);
+        }
 
         return randomDamage;
 
@@ -60,10 +64,20 @@ public class Artillery extends Soldier
         /*
          * this method returns a Texture depending on the team color
          */
-        if (teamColor.equals("red")) {
-            return BoomChess.redArtillery;
-        } else {
-            return BoomChess.greenArtillery;
+        if (BoomChess.isMedievalMode) {
+            if (teamColor.equals("red")) {
+                return BoomChess.redCatapult;
+            } else {
+                return BoomChess.greenCatapult;
+            }
+        }
+        else {
+            if (teamColor.equals("red")) {
+                return BoomChess.redArtillery;
+            }
+            else {
+                return BoomChess.greenArtillery;
+            }
         }
     }
 }

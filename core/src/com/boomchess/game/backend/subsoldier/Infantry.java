@@ -40,7 +40,11 @@ public class Infantry extends Soldier
             randomDamage += 5;
         }
 
-        BoomChess.smallArmsSound.play(BoomChess.soundVolume);
+        if(BoomChess.isMedievalMode){
+            BoomChess.archerSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.smallArmsSound.play(BoomChess.soundVolume);
+        }
 
         return randomDamage;
 
@@ -61,10 +65,20 @@ public class Infantry extends Soldier
         /*
          * this method returns a Texture depending on the team color
          */
-        if (teamColor.equals("red")) {
-            return BoomChess.redInfantry;
-        } else {
-            return BoomChess.greenInfantry;
+        if (BoomChess.isMedievalMode) {
+            if (teamColor.equals("red")) {
+                return BoomChess.redArcher;
+            } else {
+                return BoomChess.greenArcher;
+            }
+        }
+        else {
+            if (teamColor.equals("red")) {
+                return BoomChess.redInfantry;
+            }
+            else {
+                return BoomChess.greenInfantry;
+            }
         }
     }
 }

@@ -27,10 +27,20 @@ public class Commando extends Soldier
          * this method returns a Texture depending on the team color
          */
 
-        if (teamColor.equals("red")) {
-            return BoomChess.redCommando;
-        } else {
-            return BoomChess.greenCommando;
+        if (BoomChess.isMedievalMode) {
+            if (teamColor.equals("red")) {
+                return BoomChess.redQueen;
+            } else {
+                return BoomChess.greenQueen;
+            }
+        }
+        else {
+            if (teamColor.equals("red")) {
+                return BoomChess.redCommando;
+            }
+            else {
+                return BoomChess.greenCommando;
+            }
         }
     }
     
@@ -49,7 +59,11 @@ public class Commando extends Soldier
             randomDamage += 10;
         }
 
-        BoomChess.bigArmsSound.play(BoomChess.soundVolume);
+        if(BoomChess.isMedievalMode){
+            BoomChess.queenSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.bigArmsSound.play(BoomChess.soundVolume);
+        }
 
         return randomDamage;
     }

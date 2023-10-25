@@ -31,10 +31,20 @@ public class General extends Soldier
          * this method returns a Texture depending on the team color
          */
 
-        if (teamColor.equals("red")) {
-            return BoomChess.redGeneral;
-        } else {
-            return BoomChess.greenGeneral;
+        if (BoomChess.isMedievalMode) {
+            if (teamColor.equals("red")) {
+                return BoomChess.redKing;
+            } else {
+                return BoomChess.greenKing;
+            }
+        }
+        else {
+            if (teamColor.equals("red")) {
+                return BoomChess.redGeneral;
+            }
+            else {
+                return BoomChess.greenGeneral;
+            }
         }
     }
 
@@ -47,7 +57,11 @@ public class General extends Soldier
         // we achieve this randomisation using random.Math`s floor and random methods
         // that generate a random number between 0 and 1 that we multiply
 
-        BoomChess.smallArmsSound.play(BoomChess.soundVolume);
+        if(BoomChess.isMedievalMode){
+            BoomChess.kingSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.smallArmsSound.play(BoomChess.soundVolume);
+        }
 
         return (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
     }

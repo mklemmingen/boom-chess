@@ -85,6 +85,7 @@ public class BoomChess extends ApplicationAdapter {
 	private static Texture background;
 	private static Texture xMarker;
 	public static Image boomLogo;
+
 	public static Texture empty;
 	public static Texture hill;
 
@@ -128,6 +129,38 @@ public class BoomChess extends ApplicationAdapter {
 	public static RandomSound tankSound;
 	public static RandomSound smallExplosionSound;
 	public static RandomSound bigExplosionSound;
+
+	// for the medieval mode
+
+	public static RandomSound archerSound;
+	public static RandomSound catapultSound;
+	public static RandomSound magicSound;
+	public static RandomSound knightSound;
+	public static RandomSound queenSound;
+	public static RandomSound kingSound;
+
+	public static Texture redArcher;
+	public static Texture redCatapult;
+	public static Texture redMagician;
+	public static Texture redKnight;
+	public static Texture redTower;
+	public static Texture redQueen;
+	public static Texture redKing;
+	public static Texture greenArcher;
+	public static Texture greenCatapult;
+	public static Texture greenMagician;
+	public static Texture greenKnight;
+	public static Texture greenTower;
+	public static Texture greenQueen;
+	public static Texture greenKing;
+
+	// for the credits
+	public MusicPlaylist creditsMusic;
+
+	// for the boolean value if the game is in medieval mode
+
+	public static boolean isMedievalMode = false;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -149,25 +182,18 @@ public class BoomChess extends ApplicationAdapter {
 
 		greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
 		redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
-
 		greenInfantry = new Texture(Gdx.files.internal("infantry_green_right.png"));
 		redInfantry = new Texture(Gdx.files.internal("infantry_red_left.png"));
-
 		greenCommando = new Texture(Gdx.files.internal("commando_green_right.png"));
 		redCommando = new Texture(Gdx.files.internal("commando_red_left.png"));
-
 		greenGeneral = new Texture(Gdx.files.internal("general_green_right.png"));
 		redGeneral = new Texture(Gdx.files.internal("general_red_left.png"));
-
 		greenWardog = new Texture(Gdx.files.internal("war_dog_green_right.png"));
 		redWardog = new Texture(Gdx.files.internal("war_dog_red_left.png"));
-
 		greenHelicopter = new Texture(Gdx.files.internal("helicopter_green_right.png"));
 		redHelicopter = new Texture(Gdx.files.internal("helicopter_red_left.png"));
-
 		greenTank = new Texture(Gdx.files.internal("tank_green_right.png"));
 		redTank = new Texture(Gdx.files.internal("tank_red_left.png"));
-
 		greenArtillery = new Texture(Gdx.files.internal("artillery_green_right.png"));
 		redArtillery = new Texture(Gdx.files.internal("artillery_red_left.png"));
 
@@ -179,6 +205,21 @@ public class BoomChess extends ApplicationAdapter {
 
 		// Loading Texture of the map
 		Image map = new Image(new Texture(Gdx.files.internal("map2/game_map7.png")));
+
+		// load the Textures of the medieval game mode
+
+		redArcher = new Texture(Gdx.files.internal("medieval/red_archer.png"));
+		redCatapult = new Texture(Gdx.files.internal("medieval/red_catapult.png"));
+		redMagician = new Texture(Gdx.files.internal("medieval/red_magician.png"));
+		redKnight = new Texture(Gdx.files.internal("medieval/red_knight.png"));
+		redQueen = new Texture(Gdx.files.internal("medieval/red_queen.png"));
+		redKing = new Texture(Gdx.files.internal("medieval/red_king.png"));
+		greenArcher = new Texture(Gdx.files.internal("medieval/green_archer.png"));
+		greenCatapult = new Texture(Gdx.files.internal("medieval/green_catapult.png"));
+		greenMagician = new Texture(Gdx.files.internal("medieval/green_magician.png"));
+		greenKnight = new Texture(Gdx.files.internal("medieval/green_knight.png"));
+		greenQueen = new Texture(Gdx.files.internal("medieval/green_queen.png"));
+		greenKing = new Texture(Gdx.files.internal("medieval/green_king.png"));
 
 		// load the sound effects into respective Objects --------------------------------------
 
@@ -231,6 +272,10 @@ public class BoomChess extends ApplicationAdapter {
 		bigExplosionSound = new RandomSound();
 		bigExplosionSound.addSound("sounds/boom.mp3");
 
+		// load the sounds for the medieval mode
+
+
+
 		// load the background music into MusicPlaylist object --------------------------------------
 		background_music = new MusicPlaylist();
 		background_music.addSong("music/A Little R & R.mp3");
@@ -244,7 +289,8 @@ public class BoomChess extends ApplicationAdapter {
 
 		// load the menu music
 
-		menu_music = Gdx.audio.newMusic(Gdx.files.internal("music/(LOOP-READY) Track 1 - Safe Zone No Intro.mp3"));
+		menu_music = Gdx.audio.newMusic(Gdx.files.internal
+				("music/(LOOP-READY) Track 1 - Safe Zone No Intro.mp3"));
 
 		// ---------------------------- universal Buttons for adding to stages
 
@@ -419,14 +465,14 @@ public class BoomChess extends ApplicationAdapter {
 		// skin (look) of the progress bar via a prearranged json file
 		progressBarSkin = new Skin(Gdx.files.internal("progressBarSkin/neon-ui.json"));
 
-		// ensures game starts in menu
-		createMainMenuStage();
-
 		// for the Move Logo Overlay
 		moveLogoStage = new Stage();
 
 		// creation of empty Board.validMoveTiles for null-pointer exception avoidance
 		Board.validMoveTiles = new ArrayList<>();
+
+		// ensures game starts in menu
+		createMainMenuStage();
 	}
 
 

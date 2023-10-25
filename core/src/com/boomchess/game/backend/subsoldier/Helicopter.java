@@ -27,10 +27,20 @@ public class Helicopter extends Soldier
        * this method returns a Texture depending on the team color
         */
 
-        if (teamColor.equals("red")) {
-            return BoomChess.redHelicopter;
-        } else {
-            return BoomChess.greenHelicopter;
+        if (BoomChess.isMedievalMode) {
+            if (teamColor.equals("red")) {
+                return BoomChess.redMagician;
+            } else {
+                return BoomChess.greenMagician;
+            }
+        }
+        else {
+            if (teamColor.equals("red")) {
+                return BoomChess.redHelicopter;
+            }
+            else {
+                return BoomChess.greenHelicopter;
+            }
         }
     }
 
@@ -50,7 +60,11 @@ public class Helicopter extends Soldier
             randomDamage += 5;
         }
 
-        BoomChess.helicopterSound.play(BoomChess.soundVolume);
+        if(BoomChess.isMedievalMode){
+            BoomChess.magicSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.helicopterSound.play(BoomChess.soundVolume);
+        }
 
         return randomDamage;
     }
