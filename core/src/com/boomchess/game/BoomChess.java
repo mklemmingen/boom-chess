@@ -151,6 +151,8 @@ public class BoomChess extends ApplicationAdapter {
 	public static Texture greenKnight;
 	public static Texture greenQueen;
 	public static Texture greenKing;
+	public static Texture greenFea;
+	public static Texture redFea;
 
 	// for the credits
 	public MusicPlaylist creditsMusic;
@@ -218,6 +220,8 @@ public class BoomChess extends ApplicationAdapter {
 		greenKnight = new Texture(Gdx.files.internal("medieval/green_knight.png"));
 		greenQueen = new Texture(Gdx.files.internal("medieval/green_queen.png"));
 		greenKing = new Texture(Gdx.files.internal("medieval/green_king.png"));
+		redFea = new Texture(Gdx.files.internal("medieval/red_fea.png"));
+		greenFea = new Texture(Gdx.files.internal("medieval/green_fea.png"));
 
 		// load the sound effects into respective Objects --------------------------------------
 

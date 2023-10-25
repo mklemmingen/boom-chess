@@ -27,7 +27,13 @@ public class Wardog extends Soldier
          * this method returns a Texture depending on the team color
          */
 
-        if (teamColor.equals("red")) {
+        if (BoomChess.isMedievalMode){
+            if (teamColor.equals("red")) {
+                return BoomChess.redFea;
+            } else {
+                return BoomChess.greenFea;
+            }
+        } else if (teamColor.equals("red")) {
             return BoomChess.redWardog;
         } else {
             return BoomChess.greenWardog;
