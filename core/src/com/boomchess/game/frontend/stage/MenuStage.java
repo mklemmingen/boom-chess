@@ -102,6 +102,30 @@ public class MenuStage extends Stage{
         });
         root.row();
 
+        // Change Mode button to switch medieval and modern
+        String currentMode = "";
+        if(isMedievalMode){
+            currentMode = "Medieval";
+        }
+        else{
+            currentMode = "Modern";
+        }
+        TextButton modeButton = new TextButton("Switch Mode: " + currentMode, skin);
+        root.add(modeButton).padBottom(20);
+        modeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                if(isMedievalMode){
+                    isMedievalMode = false;
+                }
+                else{
+                    isMedievalMode = true;
+                }
+                BoomChess.createOptionsStage();
+            }
+        });
+        root.row();
+
         TextButton optionsButton = new TextButton("Options", skin);
         root.add(optionsButton).padBottom(20);
         optionsButton.addListener(new ChangeListener() {

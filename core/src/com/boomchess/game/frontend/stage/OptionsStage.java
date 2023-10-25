@@ -18,30 +18,6 @@ public class OptionsStage extends Stage{
         final Table root = new Table();
         root.setFillParent(true);
 
-        // Change Mode button to switch medieval and modern
-        String currentMode = "";
-        if(isMedievalMode){
-            currentMode = "Medieval";
-        }
-        else{
-            currentMode = "Modern";
-        }
-        TextButton modeButton = new TextButton("Switch between Modern and Medieval: Current is " + currentMode, skin);
-        root.add(modeButton).padBottom(20);
-        modeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                if(isMedievalMode){
-                    isMedievalMode = false;
-                }
-                else{
-                    isMedievalMode = true;
-                }
-                BoomChess.createOptionsStage();
-            }
-        });
-        root.row();
-
         // TODO CHANGE FROM GREEN AND RED TO BLUE AND RED BY CHANGING THE TEXTURE VARIABLES FROM GREEN PNGS TO BLUE
         //  yet to be decided variables in the backend like NIKI Difficulty etc
         // change from current asset manager to medieval asset manager
