@@ -26,7 +26,7 @@ public class OptionsStage extends Stage{
         else{
             currentMode = "Modern";
         }
-        TextButton modeButton = new TextButton("Switch between Modern and Medieval: Current" + currentMode, skin);
+        TextButton modeButton = new TextButton("Switch between Modern and Medieval: Current is " + currentMode, skin);
         root.add(modeButton).padBottom(20);
         modeButton.addListener(new ChangeListener() {
             @Override
