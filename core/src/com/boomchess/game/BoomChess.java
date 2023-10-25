@@ -274,7 +274,12 @@ public class BoomChess extends ApplicationAdapter {
 
 		// load the sounds for the medieval mode
 
-
+		archerSound = new RandomSound();
+		catapultSound = new RandomSound();
+		knightSound = new RandomSound();
+		magicSound = new RandomSound();
+		queenSound = new RandomSound();
+		kingSound = new RandomSound();
 
 		// load the background music into MusicPlaylist object --------------------------------------
 		background_music = new MusicPlaylist();
