@@ -289,6 +289,7 @@ public class BoomChess extends ApplicationAdapter {
 		background_music.addSong("music/36 Tonal Resonance.mp3");
 		background_music.addSong("music/epic-battle.mp3");
 		background_music.addSong("music/Outside the Colosseum.mp3");
+		background_music.addSong("music/Song Idee Chess.mp3"); // song added by Artist Wumbatz
 
 		// load the menu music
 
