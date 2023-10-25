@@ -178,7 +178,7 @@ public class BoomChess extends ApplicationAdapter {
 		map = new Image(new Texture(Gdx.files.internal("map2/game_map7.png")));
 
 		// load the boom sound effect and background music --------------------------------------
-		boom = Gdx.audio.newSound(Gdx.files.internal("sounds/boom.ogg"));
+		boom = Gdx.audio.newSound(Gdx.files.internal("sounds/boom.mp3"));
 		generalSound = Gdx.audio.newSound(Gdx.files.internal("sounds/Gunshot/autocannon-20mm.mp3"));
 		infantrySound = Gdx.audio.newSound(Gdx.files.internal("sounds/desert-eagle-gunshot.mp3"));
 		helicopterSound = Gdx.audio.newSound(Gdx.files.internal("sounds/helicopter-rotor-loop.mp3"));
@@ -188,14 +188,14 @@ public class BoomChess extends ApplicationAdapter {
 		tankSound = Gdx.audio.newSound(Gdx.files.internal("sounds/tank-engine.mp3"));
 
 		background_music = new MusicPlaylist();
-		background_music.addSong("music/05 Thought Soup.ogg");
-		background_music.addSong("music/06 Tonal Dissonance.ogg");
-		background_music.addSong("music/24 Stray Cat.ogg");
-		background_music.addSong("music/27 Coffee Break.ogg");
-		background_music.addSong("music/36 Tonal Resonance.ogg");
+		background_music.addSong("music/05 Thought Soup.mp3");
+		background_music.addSong("music/06 Tonal Dissonance.mp3");
+		background_music.addSong("music/24 Stray cat.mp3");
+		background_music.addSong("music/27 Coffee Break.mp3");
+		background_music.addSong("music/36 Tonal Resonance.mp3");
 		background_music.addSong("music/epic-battle.mp3");
-		background_music.addSong("music/Outside the Colosseum.ogg");
-		background_music.addSong("music/A Little R & R.ogg");
+		background_music.addSong("music/Outside the Colosseum.mp3");
+		background_music.addSong("music/A Little R & R.mp3");
 
 		// load the menu music
 
