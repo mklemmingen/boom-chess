@@ -121,7 +121,7 @@ public class MenuStage extends Stage{
                 else{
                     isMedievalMode = true;
                 }
-                BoomChess.createOptionsStage();
+                BoomChess.createMainMenuStage();
             }
         });
         root.row();
