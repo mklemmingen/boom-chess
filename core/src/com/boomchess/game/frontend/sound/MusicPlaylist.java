@@ -2,6 +2,8 @@ package com.boomchess.game.frontend.sound;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.boomchess.game.BoomChess;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,7 @@ public class MusicPlaylist {
      * MusicPlaylist.java is the object for the music playlist in the game Boom Chess.
      * It holds the playlist of music and the methods to play, pause, resume, and dispose of the music.
      */
-    private List<Music> songs;
+    private final List<Music> songs;
     private int currentIndex = 0;
     private boolean isLooping = false;
 
@@ -39,7 +41,9 @@ public class MusicPlaylist {
 
     public void play() {
         if (songs.size() > 0) {
-            songs.get(currentIndex).play();
+            Music playSong = songs.get(currentIndex);
+            playSong.play();
+            playSong.setVolume(BoomChess.volume);
         }
     }
 

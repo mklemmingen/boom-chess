@@ -143,14 +143,12 @@ public class BoomChess extends ApplicationAdapter {
 	public static Texture redCatapult;
 	public static Texture redMagician;
 	public static Texture redKnight;
-	public static Texture redTower;
 	public static Texture redQueen;
 	public static Texture redKing;
 	public static Texture greenArcher;
 	public static Texture greenCatapult;
 	public static Texture greenMagician;
 	public static Texture greenKnight;
-	public static Texture greenTower;
 	public static Texture greenQueen;
 	public static Texture greenKing;
 
