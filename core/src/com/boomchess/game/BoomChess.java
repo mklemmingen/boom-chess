@@ -204,7 +204,7 @@ public class BoomChess extends ApplicationAdapter {
 		empty = new Texture(Gdx.files.internal("empty.png"));
 
 		// Loading Texture of the map
-		Image map = new Image(new Texture(Gdx.files.internal("map2/game_map7.png")));
+		Image map = new Image(new Texture(Gdx.files.internal("map3/map6.png")));
 
 		// load the Textures of the medieval game mode
 
@@ -420,7 +420,7 @@ public class BoomChess extends ApplicationAdapter {
 				(float) Gdx.graphics.getHeight() /2 - map.getHeight()/2);
 
 		// Add a gray hue to the map
-		map.setColor(0.5f, 0.5f, 0.5f, 1f);  // apply a grey tint to the map
+		map.setColor(0.8f, 0.8f, 0.8f, 1f);  // apply a grey tint to the map
 
 		mapStage.addActor(map);
 
