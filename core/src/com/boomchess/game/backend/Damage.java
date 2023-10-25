@@ -143,6 +143,6 @@ public class Damage {
         gameBoard[positionX][positionY] = new Empty("empty");
         System.out.println("\nThe tile has been set to an Empty object");
 
-        GameStage.createGameStage(BoomChess.isBotMatch);
+        BoomChess.switchToStage(GameStage.createGameStage(BoomChess.isBotMatch));
     }
 }
