@@ -18,10 +18,9 @@ public class OptionsStage extends Stage{
         final Table root = new Table();
         root.setFillParent(true);
 
-        // TODO CHANGE FROM GREEN AND RED TO BLUE AND RED BY CHANGING THE TEXTURE VARIABLES FROM GREEN PNGS TO BLUE
-        //  yet to be decided variables in the backend like NIKI Difficulty etc
-        // change from current asset manager to medieval asset manager
-        // - old sound effects, music, map and figurines
+        // button to change colour of green figurines to blue in modern mode
+
+        // TODO
 
         // back button to return to the main menu
         TextButton backButton = new TextButton("Back", skin);
