@@ -6,111 +6,48 @@ import com.boomchess.game.BoomChess;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class MusicPlaylist {
-    /*
-     * MusicPlaylist.java is the object for the music playlist in the game Boom Chess.
-     * It holds the playlist of music and the methods to play, pause, resume, and dispose of the music.
-     */
-    private final List<Music> songs;
-    private int currentIndex = 0;
-    private boolean isLooping = false;
+public class Playlist {
+    private List<Song> songs;
+    private int currentIndex;
+    private boolean isLooping;
 
-    public MusicPlaylist() {
-        /*
-        * Constructor for MusicPlaylist.java
-        * does not take any arguments.
-        */
+    public Playlist() {
         songs = new ArrayList<>();
+        currentIndex = 0;
+        isLooping = false;
     }
 
-    public void addSong(String fileName) {
-        /*
-        * addSong adds a song, given a fileName/Direction to a Music Object, to the playlist.
-        * Adds a listener to go to the next song when the current song is finished.
-         */
-        Music song = Gdx.audio.newMusic(Gdx.files.internal(fileName));
-        song.setOnCompletionListener(new Music.OnCompletionListener() {
-            @Override
-            public void onCompletion(Music music) {
-                nextSong();
-            }
-        });
+    public void addSong(Song song) {
         songs.add(song);
     }
 
+    public void setLooping(boolean looping) {
+        isLooping = looping;
+    }
+
     public void play() {
-        if (songs.size() > 0) {
-            Music playSong = songs.get(currentIndex);
-            playSong.play();
-            playSong.setVolume(BoomChess.volume);
-        }
-    }
-
-    public void pause() {
-        if (songs.size() > 0) {
-            songs.get(currentIndex).pause();
-        }
-    }
-
-    public void resume() {
         if (songs.size() > 0) {
             songs.get(currentIndex).play();
         }
     }
 
     public void nextSong() {
-      /*
-      * nextSong goes to the next song in the playlist.
-      * Responds to the isLooping variable
-      */
-        if (songs.size() > 0) {
-            songs.get(currentIndex).stop();
-            if (currentIndex == songs.size() - 1 && isLooping) {
-                // If we're at the last song and looping is enabled, go back to the first song
-                currentIndex = 0;
-            } else {
-                // Otherwise, just go to the next song (or stop if we're at the last song)
-                currentIndex = (currentIndex + 1) % songs.size();
-            }
-            play();
-        }
-    }
-
-
-    public void stop() {
-        if (songs.size() > 0) {
-            songs.get(currentIndex).stop();
-        }
-    }
-
-    public void setVolume(float volume){
-        // can take but must not take a int value, if there is one, it is taken as the volume for setVolume
-        if (songs.size() > 0) {
-            songs.get(currentIndex).setVolume(volume);
-        }
-    }
-
-    public void setLooping(boolean isLooping){
         /*
-        * setLooping never lets the playlist end. It loops the playlist.
+         * nextSong goes to the next song in the playlist.
+         * Responds to the isLooping variable
          */
-        this.isLooping = isLooping;
-    }
-
-    public boolean isPlaying() {
-    /*
-    * isPlaying returns a boolean value of whether a song is playing.
-    */
         if (songs.size() > 0) {
-            return songs.get(currentIndex).isPlaying();
-        }
-        return false;
-    }
+            songs.get(currentIndex).stop();
+            int previousIndex = currentIndex;
 
-    public void dispose() {
-        for (Music song : songs) {
-            song.dispose();
+            // Generate a random index different from the previous one
+            do {
+                currentIndex = new Random().nextInt(songs.size());
+            } while (currentIndex == previousIndex);
+
+            play();
         }
     }
 }
