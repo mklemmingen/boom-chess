@@ -106,6 +106,8 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static Button muteButton;
 
+	public static Button skipButton;
+
 	// for the volume slider
 
 	public static Slider volumeSlider;
@@ -311,6 +313,7 @@ public class BoomChess extends ApplicationAdapter {
 
 		// load the background music into MusicPlaylist object --------------------------------------
 		background_music = new MusicPlaylist();
+		background_music.addSong("music/Breakdown.mp3"); // song added by Artist Wumbatz
 		background_music.addSong("music/A Little R & R.mp3");
 		background_music.addSong("music/24 Stray cat.mp3");
 		background_music.addSong("music/05 Thought Soup.mp3");
@@ -320,6 +323,8 @@ public class BoomChess extends ApplicationAdapter {
 		background_music.addSong("music/epic-battle.mp3");
 		background_music.addSong("music/Outside the Colosseum.mp3");
 		background_music.addSong("music/Song Idee Chess.mp3"); // song added by Artist Wumbatz
+		background_music.addSong("music/Song 2.mp3"); // song added by Artist Wumbatz
+
 
 		// load the menu music
 
@@ -331,6 +336,8 @@ public class BoomChess extends ApplicationAdapter {
 		playButton = new Button(skin, "music");
 
 		muteButton = new Button(skin, "sound");
+
+		skipButton = new TextButton("skip", skin);
 
 		// for the style out of the Commodore64 json file - REFERENCE:
 
@@ -394,6 +401,15 @@ public class BoomChess extends ApplicationAdapter {
 				   }
 			   }
 		   }
+		});
+
+		skipButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (currentState != GameState.NOT_IN_GAME) {
+					background_music.nextSong();
+				}
+			}
 		});
 
 		// universal volume sliders
@@ -472,6 +488,7 @@ public class BoomChess extends ApplicationAdapter {
 		audioTable.add(soundVolumeSlider);
 		audioTable.row();
 
+		audioTable.add(skipButton).padTop(10).padLeft(40);
 		// -----------------------------------------------------------------------------
 		/*
 		 * creation of the stages for the menu - this allows the Scene2D.ui to be used for quick swapping of screens

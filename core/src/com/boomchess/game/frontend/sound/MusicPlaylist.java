@@ -14,8 +14,8 @@ public class MusicPlaylist {
      * It holds the playlist of music and the methods to play, pause, resume, and dispose of the music.
      */
     private final List<Music> songs;
-    private int currentIndex = 0;
-    private boolean isLooping = false;
+    private int currentIndex = 0; // Initialize to -1 to indicate no song has been played yet
+    private final int previousIndex = -1; // Initialize to -1 to indicate no song has been played yet
 
     public MusicPlaylist() {
         /*
@@ -27,8 +27,8 @@ public class MusicPlaylist {
 
     public void addSong(String fileName) {
         /*
-        * addSong adds a song, given a fileName/Direction to a Music Object, to the playlist.
-        * Adds a listener to go to the next song when the current song is finished.
+         * addSong adds a song, given a fileName/Direction to a Music Object, to the playlist.
+         * Adds a listener to go to the next song when the current song is finished.
          */
         Music song = Gdx.audio.newMusic(Gdx.files.internal(fileName));
         song.setOnCompletionListener(new Music.OnCompletionListener() {
@@ -41,12 +41,18 @@ public class MusicPlaylist {
     }
 
     public void play() {
-        if (songs.size() > 0) {
-            Music playSong = songs.get(currentIndex);
-            playSong.play();
-            playSong.setVolume(BoomChess.volume);
-        }
+
+        int randomIndex;
+        do {
+            randomIndex = new Random().nextInt(songs.size());
+        } while (randomIndex == currentIndex);
+
+        currentIndex = randomIndex;
+        Music playSong = songs.get(currentIndex);
+        playSong.play();
+        playSong.setVolume(BoomChess.volume);
     }
+
 
     public void pause() {
         if (songs.size() > 0) {
@@ -60,24 +66,14 @@ public class MusicPlaylist {
         }
     }
 
-
-
     public void nextSong() {
         /*
          * nextSong goes to the next song in the playlist.
          * Responds to the isLooping variable
          */
-        if (songs.size() > 0) {
-            songs.get(currentIndex).stop();
-            int previousIndex = currentIndex;
 
-            // Generate a random index different from the previous one
-            do {
-                currentIndex = new Random().nextInt(songs.size());
-            } while (currentIndex == previousIndex);
-
-            play();
-        }
+        songs.get(currentIndex).stop();
+        play();
     }
 
     public void stop() {
@@ -97,7 +93,6 @@ public class MusicPlaylist {
         /*
         * setLooping never lets the playlist end. It loops the playlist.
          */
-        this.isLooping = isLooping;
     }
 
     public boolean isPlaying() {
