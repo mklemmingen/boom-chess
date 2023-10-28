@@ -6,6 +6,7 @@ import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.subsoldier.Artillery;
 import com.boomchess.game.backend.subsoldier.Empty;
 import com.boomchess.game.backend.subsoldier.General;
+import com.boomchess.game.backend.subsoldier.Hill;
 import com.boomchess.game.frontend.stage.GameStage;
 
 
@@ -61,10 +62,12 @@ public class Damage {
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {
                 if (i == x && j == y) continue; // Skip on checking the original piece
-                if (!(gameBoard[i][j] instanceof Empty)) {
-                    String hurtColor = gameBoard[i][j].getTeamColor();
-                    if (!hurtColor.equals(attackColor)) {
-                        dealBigBoom(x, y, i, j);
+                if (!(gameBoard[i][j] instanceof Empty)){
+                    if (!(gameBoard[i][j] instanceof Hill)){
+                            String hurtColor = gameBoard[i][j].getTeamColor();
+                        if (!hurtColor.equals(attackColor)) {
+                            dealBigBoom(x, y, i, j);
+                        }
                     }
                 }
             }

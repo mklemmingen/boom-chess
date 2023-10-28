@@ -111,6 +111,98 @@ public class Board {
         }
    }
 
+   public static void initialiseChallengeOne() {
+
+       // declaring the board
+
+       board = new Soldier[9][8];
+
+       // initialize the board with the correct pieces for the 1.Challenge
+
+       // the tank is the tower,
+       // the helicopter the knight,
+       // the wardog the bishop,
+       // the general the king,
+       // the commando the queen and
+       // the infantry the pawns.
+       // artillery is unique and can hit further
+       // as to the standard layout of the board:
+       // the red team is on the right of the screen, its the BOT
+       // and the green team on the left, its the PLAYER
+       // ob is an obstacle called hill
+
+       //   green               red
+       //    0  1  2  3  4  5  6  7  8
+       //  0 ob
+       //  1 h        ob          i  h
+       //  2    i     ob          w
+       //  3 g  a     ob          w  g
+       //  4    i                 w
+       //  5                      w
+       //  6 h ob                 i  h
+       //  7   ob
+
+         // start of the creation of the board
+
+         // green team
+            // infantry
+            board[1][2] = new Infantry("green");
+            board[1][4] = new Infantry("green");
+            // artillery
+            board[1][3] = new Artillery("green");
+            // helicopter
+            board[0][1] = new Helicopter("green");
+            board[0][6] = new Helicopter("green");
+            // general
+            board[0][3] = new General("green");
+
+        // red team
+            // infantry
+            board[7][1] = new Infantry("red");
+            board[7][6] = new Infantry("red");
+            // wardogs
+            board[7][2] = new Wardog("red");
+            board[7][3] = new Wardog("red");
+            board[7][4] = new Wardog("red");
+            board[7][5] = new Wardog("red");
+            // helicopter
+            board[8][1] = new Helicopter("red");
+            board[8][6] = new Helicopter("red");
+            // general
+            board[8][3] = new General("red");
+
+        // empty tiles around the soldiers
+        board[0][0] = new Hill("empty");
+        board[0][2] = new Empty("empty");
+        board[0][4] = new Empty("empty");
+        board[0][5] = new Empty("empty");
+        board[0][7] = new Empty("empty");
+        board[1][0] = new Empty("empty");
+        board[1][1] = new Empty("empty");
+        board[1][5] = new Empty("empty");
+        board[1][6] = new Hill("empty");
+        board[1][7] = new Hill("empty");
+        board[7][0] = new Empty("empty");
+        board[7][7] = new Empty("empty");
+        board[8][0] = new Empty("empty");
+        board[8][2] = new Empty("empty");
+        board[8][4] = new Empty("empty");
+        board[8][5] = new Empty("empty");
+        board[8][7] = new Empty("empty");
+
+        // from board[2][0] to board[6][7] is empty
+       for (int col = 2; col <= 6; col++) {
+           for (int row = 0; row < 8; row++) {
+                board[col][row] = new Empty("empty");
+           }
+       }
+
+        // override with hills were set
+        board[2][1] = new Hill("empty");
+        board[2][2] = new Hill("empty");
+        board[2][3] = new Hill("empty");
+ }
+
     public static Soldier[][] getGameBoard(){
         return board;
     }

@@ -49,6 +49,17 @@ public class MenuStage extends Stage{
         });
         root.row();
 
+        TextButton ChallengesButton = new TextButton("Challenges", skin);
+        root.add(ChallengesButton).padBottom(20);
+        ChallengesButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                BoomChess.createChallengeStage();
+            }
+        });
+
+        root.row();
+
         TextButton play2Button = new TextButton("Play a 2 Player Game", skin);
         root.add(play2Button).padBottom(20);
 

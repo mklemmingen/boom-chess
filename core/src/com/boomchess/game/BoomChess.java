@@ -163,6 +163,11 @@ public class BoomChess extends ApplicationAdapter {
 	public static Texture greenFea;
 	public static Texture redFea;
 
+	// random Texture Objects for the obstacles as well as the obstacle Texture loaded into it
+	// for use in the hill constructor
+
+	public static RandomImage obstacleTextures;
+
 	// for the credits
 	public MusicPlaylist creditsMusic;
 
@@ -250,6 +255,17 @@ public class BoomChess extends ApplicationAdapter {
 		greenKing = new Texture(Gdx.files.internal("medieval/green_king.png"));
 		redFea = new Texture(Gdx.files.internal("medieval/red_fea.png"));
 		greenFea = new Texture(Gdx.files.internal("medieval/green_fea.png"));
+
+		// textures of the obstacles
+
+		obstacleTextures = new RandomImage();
+		obstacleTextures.addTexture("obstacles/obstacle1.png");
+		obstacleTextures.addTexture("obstacles/obstacle2.png");
+		obstacleTextures.addTexture("obstacles/obstacle3.png");
+		obstacleTextures.addTexture("obstacles/obstacle4.png");
+		obstacleTextures.addTexture("obstacles/obstacle5.png");
+		obstacleTextures.addTexture("obstacles/obstacle6.png");
+		obstacleTextures.addTexture("obstacles/obstacle7.png");
 
 		// load the sound effects into respective Objects --------------------------------------
 
@@ -694,6 +710,10 @@ public class BoomChess extends ApplicationAdapter {
 		// method for creating the stage for the game end ON TOP of the gameStage
 		// (changing InputProcessor to stop Game Progress)
 		addToStage(GameEndStage.initializeUI(winnerTeamColour));
+	}
+
+	public static void createChallengeStage() {
+		switchToStage(ChallengeStage.initializeUI());
 	}
 
 	public static void createMapStage() {

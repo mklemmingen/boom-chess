@@ -104,7 +104,14 @@ public class GameStage {
                     solPiece = new Image(empty); // Ensure "empty" is properly defined before this line.
                 }
 
-                int health = soldier.getHealth(); // You can directly use the 'soldier' object since it's the same as gameBoard[X][Y]
+                // try getHealth, is null, make health to -1
+                int health;
+                if (!(soldier == null)) {
+                    health = soldier.getHealth(); // use the 'soldier' object since it's the same as gameBoard[X][Y]
+                } else {
+                    System.out.println("Error: Soldier is null in GameStage getHealth!");
+                    health = -1;
+                }
 
                 // draw the image at the correct position
                 solPiece.setSize(80, 80);
