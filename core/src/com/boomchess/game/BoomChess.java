@@ -35,6 +35,7 @@ public class BoomChess extends ApplicationAdapter {
 	// usage for Scene2DUI-skins and stages -------------------------------------------------------
 	public static Skin skin;
 	public static Skin progressBarSkin;
+	public static float numberObstacle; // number of obstacles in the default game mode
 	private static Stage currentStage;
 
 	// for the Move Overlay ------------------------------------------------------
@@ -524,6 +525,9 @@ public class BoomChess extends ApplicationAdapter {
 		// create a new MapStage Object for the variable mapStage
 
 		createMapStage();
+
+		// set number obstacle for initialization to 3
+		numberObstacle = 3;
 
 		// ensures game starts in menu
 		createMainMenuStage();

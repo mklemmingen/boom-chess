@@ -1,5 +1,6 @@
 package com.boomchess.game.backend;
 
+import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.subsoldier.*;
 
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class Board {
         // infantry
         int i = 1;
         for (int j = 0; j < 8; j++) {
-            if(j == 2 || j == 5){
+            if (j == 2 || j == 5) {
                 continue;
             }
             board[i][j] = new Infantry("green");
@@ -96,7 +97,7 @@ public class Board {
         // infantry
         int x = 7;
         for (int j = 0; j < 8; j++) {
-            if(j == 2 || j == 5){
+            if (j == 2 || j == 5) {
                 continue;
             }
             board[x][j] = new Infantry("red");
@@ -109,6 +110,15 @@ public class Board {
                 board[row][col] = new Empty("empty");
             }
         }
+
+        // override with number of hills as defined in numberObstacles
+        if (BoomChess.numberObstacle > 0)
+            // value must be between 2 and 6 on x and 0 and 7 on y
+            for (int iObstacle = 0; iObstacle < BoomChess.numberObstacle; iObstacle++) {
+                int xObstacle = (int) (Math.random() * 5) + 2;
+                int yObstacle = (int) (Math.random() * 8);
+                board[xObstacle][yObstacle] = new Hill("empty");
+            }
    }
 
    public static void initialiseChallengeOne() {
