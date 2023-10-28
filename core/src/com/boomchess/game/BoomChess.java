@@ -294,6 +294,10 @@ public class BoomChess extends ApplicationAdapter {
 		obstacleTextures.addTexture("obstacles/obstacle5.png");
 		obstacleTextures.addTexture("obstacles/obstacle6.png");
 		obstacleTextures.addTexture("obstacles/obstacle7.png");
+		obstacleTextures.addTexture("obstacles/obstacle8.png");
+		obstacleTextures.addTexture("obstacles/obstacle9.png");
+		obstacleTextures.addTexture("obstacles/obstacle10.png");
+		obstacleTextures.addTexture("obstacles/obstacle11.png");
 
 		// load the sound effects into respective Objects --------------------------------------
 
