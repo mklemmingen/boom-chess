@@ -150,11 +150,18 @@ public class Tank extends Soldier
             }
         }
         else {
-            if (teamColor.equals("red")) {
-                return BoomChess.redTank;
-            }
-            else {
-                return BoomChess.greenTank;
+            if(BoomChess.isColourChanged){
+                if (teamColor.equals("red")) {
+                    return BoomChess.redTank;
+                } else {
+                    return BoomChess.blueTank;
+                }
+            } else{
+                if (teamColor.equals("red")) {
+                    return BoomChess.redTank;
+                } else {
+                    return BoomChess.greenTank;
+                }
             }
         }
     }

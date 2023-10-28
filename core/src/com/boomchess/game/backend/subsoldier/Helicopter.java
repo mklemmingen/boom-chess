@@ -35,11 +35,18 @@ public class Helicopter extends Soldier
             }
         }
         else {
-            if (teamColor.equals("red")) {
-                return BoomChess.redHelicopter;
-            }
-            else {
-                return BoomChess.greenHelicopter;
+            if(BoomChess.isColourChanged){
+                if (teamColor.equals("red")) {
+                    return BoomChess.redHelicopter;
+                } else {
+                    return BoomChess.blueHelicopter;
+                }
+            } else{
+                if (teamColor.equals("red")) {
+                    return BoomChess.redHelicopter;
+                } else {
+                    return BoomChess.greenHelicopter;
+                }
             }
         }
     }

@@ -70,13 +70,19 @@ public class Artillery extends Soldier
             } else {
                 return BoomChess.greenCatapult;
             }
-        }
-        else {
-            if (teamColor.equals("red")) {
+        } else {
+            if(BoomChess.isColourChanged){
+                if (teamColor.equals("red")) {
                 return BoomChess.redArtillery;
-            }
-            else {
-                return BoomChess.greenArtillery;
+                } else {
+                return BoomChess.blueArtillery;
+                }
+            } else{
+                if (teamColor.equals("red")) {
+                    return BoomChess.redArtillery;
+                } else {
+                    return BoomChess.greenArtillery;
+                }
             }
         }
     }

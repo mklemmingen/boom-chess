@@ -3,6 +3,7 @@ package com.boomchess.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -87,8 +88,18 @@ public class BoomChess extends ApplicationAdapter {
 	public static Texture greenInfantry;
 	public static Texture greenArtillery;
 	public static Texture redArtillery;
+	public static Texture blueArtillery;
+	public static Texture blueInfantry;
+	public static Texture blueCommando;
+	public static Texture blueGeneral;
+	public static Texture blueWardog;
+	public static Texture blueHelicopter;
+	public static Texture blueTank;
+
 	private static Image redMove;
 	private static Image greenMove;
+	private static Image blueMove;
+
 	// background is drawn in a batch, hence Texture
 	private static Texture background;
 	private static Texture xMarker;
@@ -127,7 +138,6 @@ public class BoomChess extends ApplicationAdapter {
 	public static Label soundVolumeLabel;
 
 	// audio table
-
 	public static Table audioTable;
 
 	// RandomSound Objects of Sound Groups to be played by the Pieces if they deal Damage
@@ -176,6 +186,10 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static boolean isMedievalMode = false;
 
+	public static boolean isColourChanged = true;
+
+	public static Sound loadingSound;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -185,7 +199,9 @@ public class BoomChess extends ApplicationAdapter {
 		batch = new SpriteBatch();
 
 		// loading Screen is going till loading complete and main menu starts ----------------------------
+		loadingSound = Gdx.audio.newSound(Gdx.files.internal("sounds/countdown.mp3"));
 		switchToStage(LoadingScreenStage.initalizeUI());
+
 
 		// skin of the UI --------------------
 		// skin (look) of the buttons via a prearranged json file
@@ -197,6 +213,8 @@ public class BoomChess extends ApplicationAdapter {
 
 		greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
 		redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
+		blueMove = new Image(new Texture(Gdx.files.internal("blue_Move.png")));
+
 		greenInfantry = new Texture(Gdx.files.internal("infantry_green_right.png"));
 		redInfantry = new Texture(Gdx.files.internal("infantry_red_left.png"));
 		greenCommando = new Texture(Gdx.files.internal("commando_green_right.png"));
@@ -211,6 +229,15 @@ public class BoomChess extends ApplicationAdapter {
 		redTank = new Texture(Gdx.files.internal("tank_red_left.png"));
 		greenArtillery = new Texture(Gdx.files.internal("artillery_green_right.png"));
 		redArtillery = new Texture(Gdx.files.internal("artillery_red_left.png"));
+
+
+		blueArtillery = new Texture(Gdx.files.internal("blueTeam/artillery_blue_right.png"));
+		blueInfantry = new Texture(Gdx.files.internal("blueTeam/infantry_blue_right.png"));
+		blueCommando = new Texture(Gdx.files.internal("blueTeam/commando_blue_right.png"));
+		blueGeneral = new Texture(Gdx.files.internal("blueTeam/general_blue_right.png"));
+		blueWardog = new Texture(Gdx.files.internal("blueTeam/war_dog_blue_right.png"));
+		blueHelicopter = new Texture(Gdx.files.internal("blueTeam/helicopter_blue_right.png"));
+		blueTank = new Texture(Gdx.files.internal("blueTeam/tank_blue_right.png"));
 
 		xMarker = new Texture(Gdx.files.internal("xMarker.png"));
 
@@ -529,6 +556,7 @@ public class BoomChess extends ApplicationAdapter {
 		// set number obstacle for initialization to 3
 		numberObstacle = 3;
 
+		loadingSound.stop();
 		// ensures game starts in menu
 		createMainMenuStage();
 	}
@@ -572,7 +600,11 @@ public class BoomChess extends ApplicationAdapter {
 			if (currentState == GameState.RED_TURN) {
 				currentMover.addActor(redMove);
 			} else if (currentState == GameState.GREEN_TURN) {
-				currentMover.addActor(greenMove);
+				if (!isColourChanged) {
+					currentMover.addActor(greenMove);
+				} else {
+					currentMover.addActor(blueMove);
+				}
 			}
 			moveLogoStage.addActor(currentMover);
 

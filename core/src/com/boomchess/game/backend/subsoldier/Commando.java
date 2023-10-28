@@ -35,11 +35,18 @@ public class Commando extends Soldier
             }
         }
         else {
-            if (teamColor.equals("red")) {
-                return BoomChess.redCommando;
-            }
-            else {
-                return BoomChess.greenCommando;
+            if(BoomChess.isColourChanged){
+                if (teamColor.equals("red")) {
+                    return BoomChess.redCommando;
+                } else {
+                    return BoomChess.blueCommando;
+                }
+            } else{
+                if (teamColor.equals("red")) {
+                    return BoomChess.redCommando;
+                } else {
+                    return BoomChess.greenCommando;
+                }
             }
         }
     }

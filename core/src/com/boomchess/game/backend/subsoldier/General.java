@@ -39,11 +39,18 @@ public class General extends Soldier
             }
         }
         else {
-            if (teamColor.equals("red")) {
-                return BoomChess.redGeneral;
-            }
-            else {
-                return BoomChess.greenGeneral;
+            if(BoomChess.isColourChanged){
+                if (teamColor.equals("red")) {
+                    return BoomChess.redGeneral;
+                } else {
+                    return BoomChess.blueGeneral;
+                }
+            } else{
+                if (teamColor.equals("red")) {
+                    return BoomChess.redGeneral;
+                } else {
+                    return BoomChess.greenGeneral;
+                }
             }
         }
     }

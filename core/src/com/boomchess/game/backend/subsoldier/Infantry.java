@@ -73,11 +73,18 @@ public class Infantry extends Soldier
             }
         }
         else {
-            if (teamColor.equals("red")) {
-                return BoomChess.redInfantry;
-            }
-            else {
-                return BoomChess.greenInfantry;
+            if(BoomChess.isColourChanged){
+                if (teamColor.equals("red")) {
+                    return BoomChess.redInfantry;
+                } else {
+                    return BoomChess.blueInfantry;
+                }
+            } else{
+                if (teamColor.equals("red")) {
+                    return BoomChess.redInfantry;
+                } else {
+                    return BoomChess.greenInfantry;
+                }
             }
         }
     }

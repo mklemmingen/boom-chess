@@ -24,20 +24,45 @@ public class OptionsStage extends Stage{
         // TODO
 
         // text that displays a text saying "Number of Obstacles"
-        final TextButton numberObstaclesText = new TextButton("Number of Obstacles ->", skin);
-        root.add(numberObstaclesText).padBottom(20).padRight(5);
+        final TextButton numberObstaclesText = new TextButton("Number of Obstacles 0-10", skin);
+        root.add(numberObstaclesText).padBottom(10);
+        root.row();
+
         // slider for setting the number of obstacles in the initial no mans land
         final Slider obstacleSlider;
         obstacleSlider = new Slider(0, 10, 1f, false, skin);
         obstacleSlider.setValue(numberObstacle);
-        root.add(obstacleSlider).padBottom(20);
+        root.add(obstacleSlider).padBottom(50);
         obstacleSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 BoomChess.numberObstacle = obstacleSlider.getValue();
             }
         });
+        root.row();
 
+        // Change Mode button to switch blue and green
+        String currentMode = "";
+        if(isColourChanged){
+            currentMode = "Blue";
+        }
+        else{
+            currentMode = "Green";
+        }
+        TextButton modeButton = new TextButton("Switch 1.Player Colour: " + currentMode, skin);
+        root.add(modeButton).padBottom(50);
+        modeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                if(isColourChanged){
+                    isColourChanged = false;
+                }
+                else{
+                    isColourChanged = true;
+                }
+                BoomChess.createOptionsStage();
+            }
+        });
         root.row();
 
         // back button to return to the main menu

@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.boomchess.game.BoomChess;
 
+import static com.boomchess.game.BoomChess.loadingSound;
 import static com.boomchess.game.BoomChess.skin;
 
 public class LoadingScreenStage {
@@ -20,6 +21,8 @@ public class LoadingScreenStage {
         loadingScreen.addActor(root);
 
         // TODO ADD A RANDOM OUT OF 4 LOADING SCREEN DESIGN
+
+        loadingSound.play();
 
         return loadingScreen;
     }

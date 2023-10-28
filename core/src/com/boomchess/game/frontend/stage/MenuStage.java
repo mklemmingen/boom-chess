@@ -22,6 +22,7 @@ public class MenuStage extends Stage{
         Gdx.input.setInputProcessor(menuStage);
 
         // start menu music
+        // BoomChess.loadingSound.stop();
         background_music.stop();
         menu_music.setLooping(true);
         menu_music.play();

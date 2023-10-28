@@ -245,10 +245,27 @@ public class GameStage {
         Table backTable = new Table();
         backTable.setSize(400, 80); // determines the frame size for the backTable (button: to main menu)
         // bottom right the table in the parent container
-        backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 0);
+        backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 20);
         gameStage.addActor(backTable); // Add the table to the stage
 
-        backTable.row().padBottom(20);
+        backTable.row().padBottom(10);
+        // Button to change 1.Player Colour to blue
+        TextButton changeColourButton = new TextButton("Switch 1P Skin", skin);
+        changeColourButton.align(Align.bottomRight);
+        backTable.add(changeColourButton);
+        changeColourButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (isColourChanged) {
+                    isColourChanged = false;
+                } else {
+                    isColourChanged = true;
+                }
+                switchToStage(createGameStage(isBotMatch));
+            }
+        });
+
+        backTable.row().padBottom(10);
         // change Map
         TextButton changeMapButton = new TextButton("Change Map", skin);
         changeMapButton.align(Align.bottomRight);
@@ -260,7 +277,7 @@ public class GameStage {
                 createGameStage(isBotMatch);
             }
         });
-        backTable.row().padBottom(20);
+        backTable.row().padBottom(10);
 
         // Exit to Main Menu button to return to the main menu
         TextButton menuButton = new TextButton("Return to Main Menu", skin);
