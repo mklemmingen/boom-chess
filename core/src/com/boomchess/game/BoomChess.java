@@ -190,6 +190,8 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static Sound loadingSound;
 
+	public static String botDifficulty = "easy";
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -648,7 +650,25 @@ public class BoomChess extends ApplicationAdapter {
 
 	private void processTurn() {
 		if (currentState == GameState.RED_TURN) {
-			if (legitTurn) {
+			if (!isBotMatch){
+				if (legitTurn) {
+					calculateDamage("red");
+					switchTurn(currentState);
+					legitTurn = false;
+				}
+			} else {
+				// switch case to make a bot decision for red team
+				switch (botDifficulty) {
+					case ("easy"):
+						BOT.easyBotMove();
+						break;
+					case ("medium"):
+						BOT.mediumBotMove();
+						break;
+					case ("hard"):
+						BOT.hardBotMove();
+						break;
+				}
 				calculateDamage("red");
 				switchTurn(currentState);
 				legitTurn = false;

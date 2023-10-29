@@ -156,82 +156,86 @@ public class GameStage {
                 }
 
 
-                final int finalI = i;
-                final int finalJ = j;
-                tileWidget.addListener(new DragListener() {
-                    @Override
-                    public void dragStart(InputEvent event, float x, float y, int pointer) {
-                        // Code runs when dragging starts:
-                        System.out.println("\n Started dragging the actor!");
+                // add a Listener only if (!isBotMatch) || (isBotMatch && (state == GameState.GREEN_TURN))
+                // since we do not want Red to have Drag if it's a bot-match, since that's the bot team
+                if ((!isBotMatch) || (isBotMatch && (currentState == GameState.GREEN_TURN))) {
+                    final int finalI = i;
+                    final int finalJ = j;
+                    tileWidget.addListener(new DragListener() {
+                        @Override
+                        public void dragStart(InputEvent event, float x, float y, int pointer) {
+                            // Code runs when dragging starts:
+                            System.out.println("\n Started dragging the actor!");
 
-                        // Get the team color of the current tile
-                        Soldier[][] gameBoard = Board.getGameBoard();
-                        String tileTeamColor = gameBoard[finalI][finalJ].getTeamColor();
+                            // Get the team color of the current tile
+                            Soldier[][] gameBoard = Board.getGameBoard();
+                            String tileTeamColor = gameBoard[finalI][finalJ].getTeamColor();
 
-                        // If it's not the current team's turn, cancel the drag and return
-                        if ((currentState == BoomChess.GameState.RED_TURN && !tileTeamColor.equals("red")) ||
-                                (currentState == BoomChess.GameState.GREEN_TURN && !tileTeamColor.equals("green"))) {
-                            event.cancel();
-                            System.out.println("\n It's not your turn!");
-                            BoomChess.reRenderGame();
-                            return;
-                        }
-
-                        tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
-                        // as long as the mouse is pressed down, the actor is moved to the mouse position
-                        // we calculate the tiles it can move to and highlight these tiles with a slightly red hue
-                        // the calculated tiles are part of a ArrayList variable that is created at create
-                        // of the whole programm
-                        // and gets cleared once we touchDragged the actor to a new position
-
-                        // switch statement for deciding which
-                        // Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
-
-                        setAllowedTiles(soldier.mathMove(finalI, finalJ));
-                    }
-
-                    @Override
-                    public void drag(InputEvent event, float x, float y, int pointer) {
-                        // Code here will run during the dragging
-                        tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
-                    }
-
-                    @Override
-                    public void dragStop(InputEvent event, float x, float y, int pointer) {
-                        // Code here will run when the player lets go of the actor
-
-                        // Get the position of the tileWidget relative to the parent actor (the gameBoard)
-                        Vector2 localCoords = new Vector2(x, y);
-                        // Convert the position to stage (screen) coordinates
-                        Vector2 screenCoords = tileWidget.localToStageCoordinates(localCoords);
-
-                        System.out.println("\n Drag stopped at screen position: " + screenCoords.x + ", " + screenCoords.y);
-
-                        Coordinates currentCoord = calculateTileByPX((int) screenCoords.x, (int) screenCoords.y);
-
-                        // for loop through validMoveTiles, at each tile we check for equality of currentCoord with the Coordinate
-                        // in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true, we set the
-                        // validMove Variable to true, call on the update method of the Board class and break the for loop
-                        // then clear the Board.
-
-
-                        ArrayList<Coordinates> validMoveTiles = Board.getValidMoveTiles();
-                        for (Coordinates validMoveTile : validMoveTiles) {
-                            if (currentCoord.checkEqual(validMoveTile)) {
-                                // Board.update with oldX, oldY, newX, newY
-                                Board.update(finalI, finalJ, currentCoord.getX(), currentCoord.getY());
-                                legitTurn = true;
-                                break;
+                            // If it's not the current team's turn, cancel the drag and return
+                            if ((currentState == BoomChess.GameState.RED_TURN && !tileTeamColor.equals("red")) ||
+                                    (currentState == BoomChess.GameState.GREEN_TURN && !tileTeamColor.equals("green"))) {
+                                event.cancel();
+                                System.out.println("\n It's not your turn!");
+                                BoomChess.reRenderGame();
+                                return;
                             }
+
+                            tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
+                            // as long as the mouse is pressed down, the actor is moved to the mouse position
+                            // we calculate the tiles it can move to and highlight these tiles with a slightly red hue
+                            // the calculated tiles are part of a ArrayList variable that is created at create
+                            // of the whole programm
+                            // and gets cleared once we touchDragged the actor to a new position
+
+                            // switch statement for deciding which
+                            // Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
+
+                            setAllowedTiles(soldier.mathMove(finalI, finalJ));
                         }
 
-                        // and the validMoveTiles are cleared
-                        clearAllowedTiles(); // for turning off the Overlay
-                        Board.emptyValidMoveTiles();
-                        BoomChess.reRenderGame();
+                        @Override
+                        public void drag(InputEvent event, float x, float y, int pointer) {
+                            // Code here will run during the dragging
+                            tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
+                        }
 
-                    }
-                });
+                        @Override
+                        public void dragStop(InputEvent event, float x, float y, int pointer) {
+                            // Code here will run when the player lets go of the actor
+
+                            // Get the position of the tileWidget relative to the parent actor (the gameBoard)
+                            Vector2 localCoords = new Vector2(x, y);
+                            // Convert the position to stage (screen) coordinates
+                            Vector2 screenCoords = tileWidget.localToStageCoordinates(localCoords);
+
+                            System.out.println("\n Drag stopped at screen position: " + screenCoords.x + ", " + screenCoords.y);
+
+                            Coordinates currentCoord = calculateTileByPX((int) screenCoords.x, (int) screenCoords.y);
+
+                            // for loop through validMoveTiles, at each tile we check for equality of currentCoord with the Coordinate
+                            // in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true, we set the
+                            // validMove Variable to true, call on the update method of the Board class and break the for loop
+                            // then clear the Board.
+
+
+                            ArrayList<Coordinates> validMoveTiles = Board.getValidMoveTiles();
+                            for (Coordinates validMoveTile : validMoveTiles) {
+                                if (currentCoord.checkEqual(validMoveTile)) {
+                                    // Board.update with oldX, oldY, newX, newY
+                                    Board.update(finalI, finalJ, currentCoord.getX(), currentCoord.getY());
+                                    legitTurn = true;
+                                    break;
+                                }
+                            }
+
+                            // and the validMoveTiles are cleared
+                            clearAllowedTiles(); // for turning off the Overlay
+                            Board.emptyValidMoveTiles();
+                            BoomChess.reRenderGame();
+
+                        }
+                    });
+                }
                 root.add(tileWidget).size(tileSize);
             }
         }
