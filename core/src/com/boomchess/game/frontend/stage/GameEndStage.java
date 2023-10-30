@@ -11,8 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.frontend.stage.GameStage;
 
-import static com.boomchess.game.BoomChess.createMainMenuStage;
-import static com.boomchess.game.BoomChess.skin;
+import static com.boomchess.game.BoomChess.*;
 
 public class GameEndStage extends Stage{
 
@@ -28,10 +27,23 @@ public class GameEndStage extends Stage{
         final Table endRoot = new Table();
         endRoot.setFillParent(true);
 
-        // display the winner and a button to return to the main menu.
-        // TODO flip winColour if colour inverted
+        if(isColourChanged){
+            if(winnerTeamColour.equals("green")){
+                winnerTeamColour = "Blue";
+            }
+        }
 
-        Label winnerLabel = new Label("The " + winnerTeamColour + " Team won!", skin);
+        String coolShoutout;
+        if(isMedievalMode){
+            coolShoutout = "Huzzah! A King as died! Long live ... another King!\n Same same but different!";
+        } else {
+            coolShoutout = "Huzzah! A General as died! Long live ... another General we just promoted!\nSame same but different!";
+        }
+
+        /*
+        * Label to be created with WinnerTeamColour in mind, White Background and black font
+         */
+        Label winnerLabel = new Label("The " + winnerTeamColour + " Team won\n!" + coolShoutout, skin);
         winnerLabel.setColor(Color.BLACK);
         endRoot.add(winnerLabel).padBottom(20);
         endRoot.row();
