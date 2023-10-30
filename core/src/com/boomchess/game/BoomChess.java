@@ -767,6 +767,7 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static void createMainMenuStage() {
 		switchToStage(MenuStage.initializeUI());
+		gameEndStage.clear();
 	}
 
 	public static void createHelpStage() {
