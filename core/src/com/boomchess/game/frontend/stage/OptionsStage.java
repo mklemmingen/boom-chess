@@ -19,9 +19,27 @@ public class OptionsStage extends Stage{
         final Table root = new Table();
         root.setFillParent(true);
 
-        // button to change colour of green figurines to blue in modern mode
-
-        // TODO
+        // button to change bot difficulty
+        // text that displays a text saying "Bot Difficulty"
+        String currentDif = botDifficulty;
+        final TextButton botDifficultyText = new TextButton("Bot Difficulty: " + currentDif, skin);
+        root.add(botDifficultyText).padBottom(50);
+        botDifficultyText.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(botDifficulty.equals("easy")){
+                    botDifficulty = "medium";
+                }
+                else if(botDifficulty.equals("medium")){
+                    botDifficulty = "hard";
+                }
+                else if(botDifficulty.equals("hard")){
+                    botDifficulty = "easy";
+                }
+                BoomChess.createOptionsStage();
+            }
+        });
+        root.row();
 
         // text that displays a text saying "Number of Obstacles"
         final TextButton numberObstaclesText = new TextButton("Number of Obstacles 0-10", skin);

@@ -190,6 +190,8 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static Sound loadingSound;
 
+	public static String botDifficulty = "easy";
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -209,26 +211,26 @@ public class BoomChess extends ApplicationAdapter {
 
 		// loading all assets -----------------------------------------------------------------------------------
 
-		background = new Texture(Gdx.files.internal("background_5.png"));
+		background = new Texture(Gdx.files.internal("backgrounds/background_5.png"));
 
-		greenMove = new Image(new Texture(Gdx.files.internal("green_Move.png")));
-		redMove = new Image(new Texture(Gdx.files.internal("red_Move.png")));
-		blueMove = new Image(new Texture(Gdx.files.internal("blue_Move.png")));
+		greenMove = new Image(new Texture(Gdx.files.internal("moveLogos/green_Move.png")));
+		redMove = new Image(new Texture(Gdx.files.internal("moveLogos/red_Move.png")));
+		blueMove = new Image(new Texture(Gdx.files.internal("moveLogos/blue_Move.png")));
 
-		greenInfantry = new Texture(Gdx.files.internal("infantry_green_right.png"));
-		redInfantry = new Texture(Gdx.files.internal("infantry_red_left.png"));
-		greenCommando = new Texture(Gdx.files.internal("commando_green_right.png"));
-		redCommando = new Texture(Gdx.files.internal("commando_red_left.png"));
-		greenGeneral = new Texture(Gdx.files.internal("general_green_right.png"));
-		redGeneral = new Texture(Gdx.files.internal("general_red_left.png"));
-		greenWardog = new Texture(Gdx.files.internal("war_dog_green_right.png"));
-		redWardog = new Texture(Gdx.files.internal("war_dog_red_left.png"));
-		greenHelicopter = new Texture(Gdx.files.internal("helicopter_green_right.png"));
-		redHelicopter = new Texture(Gdx.files.internal("helicopter_red_left.png"));
-		greenTank = new Texture(Gdx.files.internal("tank_green_right.png"));
-		redTank = new Texture(Gdx.files.internal("tank_red_left.png"));
-		greenArtillery = new Texture(Gdx.files.internal("artillery_green_right.png"));
-		redArtillery = new Texture(Gdx.files.internal("artillery_red_left.png"));
+		greenInfantry = new Texture(Gdx.files.internal("greenTeam/infantry_green_right.png"));
+		redInfantry = new Texture(Gdx.files.internal("redTeam/infantry_red_left.png"));
+		greenCommando = new Texture(Gdx.files.internal("greenTeam/commando_green_right.png"));
+		redCommando = new Texture(Gdx.files.internal("redTeam/commando_red_left.png"));
+		greenGeneral = new Texture(Gdx.files.internal("greenTeam/general_green_right.png"));
+		redGeneral = new Texture(Gdx.files.internal("redTeam/general_red_left.png"));
+		greenWardog = new Texture(Gdx.files.internal("greenTeam/war_dog_green_right.png"));
+		redWardog = new Texture(Gdx.files.internal("redTeam/war_dog_red_left.png"));
+		greenHelicopter = new Texture(Gdx.files.internal("greenTeam/helicopter_green_right.png"));
+		redHelicopter = new Texture(Gdx.files.internal("redTeam/helicopter_red_left.png"));
+		greenTank = new Texture(Gdx.files.internal("greenTeam/tank_green_right.png"));
+		redTank = new Texture(Gdx.files.internal("redTeam/tank_red_left.png"));
+		greenArtillery = new Texture(Gdx.files.internal("greenTeam/artillery_green_right.png"));
+		redArtillery = new Texture(Gdx.files.internal("redTeam/artillery_red_left.png"));
 
 
 		blueArtillery = new Texture(Gdx.files.internal("blueTeam/artillery_blue_right.png"));
@@ -239,11 +241,11 @@ public class BoomChess extends ApplicationAdapter {
 		blueHelicopter = new Texture(Gdx.files.internal("blueTeam/helicopter_blue_right.png"));
 		blueTank = new Texture(Gdx.files.internal("blueTeam/tank_blue_right.png"));
 
-		xMarker = new Texture(Gdx.files.internal("xMarker.png"));
+		xMarker = new Texture(Gdx.files.internal("Misc/xMarker.png"));
 
 		boomLogo = new Image(new Texture(Gdx.files.internal("logo/Logo3.png")));
 
-		empty = new Texture(Gdx.files.internal("empty.png"));
+		empty = new Texture(Gdx.files.internal("Misc/empty.png"));
 
 		// Loading Texture of the map
 
@@ -252,20 +254,20 @@ public class BoomChess extends ApplicationAdapter {
 		medievalMaps = new RandomImage();
 		modernMaps = new RandomImage();
 
-		medievalMaps.addTexture("map2/game_map.png"); // colourful medieval map
-		modernMaps.addTexture("map2/game_map2.png"); // city map
-		modernMaps.addTexture("map2/game_map3.png"); // city map
-		medievalMaps.addTexture("map2/game_map4.png"); // colourful village map
-		medievalMaps.addTexture("map2/game_map5.png"); // colourful village map
-		modernMaps.addTexture("map2/game_map6.png"); // desert City map
-		modernMaps.addTexture("map2/game_map7.png"); // desert City map
+		medievalMaps.addTexture("map/map2/game_map.png"); // colourful medieval map
+		modernMaps.addTexture("map/map2/game_map2.png"); // city map
+		modernMaps.addTexture("map/map2/game_map3.png"); // city map
+		medievalMaps.addTexture("map/map2/game_map4.png"); // colourful village map
+		medievalMaps.addTexture("map/map2/game_map5.png"); // colourful village map
+		modernMaps.addTexture("map/map2/game_map6.png"); // desert City map
+		modernMaps.addTexture("map/map2/game_map7.png"); // desert City map
 
-		modernMaps.addTexture("map3/map1.png"); // cool black and white map
-		modernMaps.addTexture("map3/map2.png"); // cool black and white map
-		modernMaps.addTexture("map3/map3.png"); // cool black and white map
-		modernMaps.addTexture("map3/map4.png"); // cool black and white map
-		modernMaps.addTexture("map3/map5.png"); // cool black and white map
-		modernMaps.addTexture("map3/map6.png"); // cool black and white map
+		modernMaps.addTexture("map/map3/map1.png"); // cool black and white map
+		modernMaps.addTexture("map/map3/map2.png"); // cool black and white map
+		modernMaps.addTexture("map/map3/map3.png"); // cool black and white map
+		modernMaps.addTexture("map/map3/map4.png"); // cool black and white map
+		modernMaps.addTexture("map/map3/map5.png"); // cool black and white map
+		modernMaps.addTexture("map/map3/map6.png"); // cool black and white map
 
 		// load the Textures of the medieval game mode
 
@@ -648,7 +650,25 @@ public class BoomChess extends ApplicationAdapter {
 
 	private void processTurn() {
 		if (currentState == GameState.RED_TURN) {
-			if (legitTurn) {
+			if (!isBotMatch){
+				if (legitTurn) {
+					calculateDamage("red");
+					switchTurn(currentState);
+					legitTurn = false;
+				}
+			} else {
+				// switch case to make a bot decision for red team
+				switch (botDifficulty) {
+					case ("easy"):
+						BOT.easyBotMove();
+						break;
+					case ("medium"):
+						BOT.mediumBotMove();
+						break;
+					case ("hard"):
+						BOT.hardBotMove();
+						break;
+				}
 				calculateDamage("red");
 				switchTurn(currentState);
 				legitTurn = false;
