@@ -27,7 +27,6 @@ import com.boomchess.game.frontend.sound.RandomSound;
 import java.util.ArrayList;
 import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
 
-
 public class BoomChess extends ApplicationAdapter {
 
 	// used for essential resolution and drawing matters -------------------------------------------------------
