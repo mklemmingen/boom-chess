@@ -39,6 +39,8 @@ public class BOT {
         * the overall damage to the opponent
          */
 
+        // Pathfinding? for obstacles
+
 
         moveSoldierTo(SX, SY, x, y);
     }
