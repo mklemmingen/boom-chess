@@ -12,6 +12,7 @@ import com.boomchess.game.BoomChess;
 import com.boomchess.game.frontend.stage.GameStage;
 
 import static com.boomchess.game.BoomChess.*;
+import static com.boomchess.game.BoomChess.gameEndStage;
 
 public class GameEndStage extends Stage{
 
@@ -35,15 +36,15 @@ public class GameEndStage extends Stage{
 
         String coolShoutout;
         if(isMedievalMode){
-            coolShoutout = "Huzzah! A King as died! Long live ... another King!\n Same same but different!";
+            coolShoutout = "Huzzah! A King has found his final Rest!";
         } else {
-            coolShoutout = "Huzzah! A General as died! Long live ... another General we just promoted!\nSame same but different!";
+            coolShoutout = "Hell yeah! A General has been neutralised!";
         }
 
         /*
         * Label to be created with WinnerTeamColour in mind, White Background and black font
          */
-        Label winnerLabel = new Label("The " + winnerTeamColour + " Team won\n!" + coolShoutout, skin);
+        TextButton winnerLabel = new TextButton("The " + winnerTeamColour + " Team won\n" + coolShoutout, skin);
         winnerLabel.setColor(Color.BLACK);
         endRoot.add(winnerLabel).padBottom(20);
         endRoot.row();
