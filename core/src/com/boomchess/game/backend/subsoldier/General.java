@@ -23,7 +23,7 @@ public class General extends Soldier
         /*
          * Constructor for the General object, takes positional arguments and team color
          */
-        super(teamColor, 50);
+        super(teamColor, 1);
     }
 
     public Texture takeSelfie() {
