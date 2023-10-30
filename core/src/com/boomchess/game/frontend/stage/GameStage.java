@@ -21,11 +21,9 @@ import static com.boomchess.game.BoomChess.*;
 
 public class GameStage {
 
-    private Stage gameStage;
-    private final boolean isBotMatch;
+    private final Stage gameStage;
 
     public GameStage(boolean isBotMatch) {
-        this.isBotMatch = isBotMatch;
         this.gameStage = createGameStage(isBotMatch);
     }
 

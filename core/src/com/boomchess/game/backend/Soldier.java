@@ -1,10 +1,9 @@
 package com.boomchess.game.backend;
 
 import com.boomchess.game.backend.subsoldier.Empty;
-
 import java.util.ArrayList;
 
-public class Soldier {
+public abstract class Soldier {
     /*
     * Soldiers.java contains the creation of the 2D-Array in the method initialiseBoard() and acts as an object
     * for what goes into each position of the board.

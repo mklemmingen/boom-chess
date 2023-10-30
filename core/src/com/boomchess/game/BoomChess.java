@@ -24,9 +24,7 @@ import com.boomchess.game.frontend.picture.RandomImage;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
 import com.boomchess.game.frontend.stage.*;
 import com.boomchess.game.frontend.sound.RandomSound;
-
 import java.util.ArrayList;
-
 import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
 
 
@@ -785,9 +783,7 @@ public class BoomChess extends ApplicationAdapter {
 	public static void createGameEndStage (String winnerTeamColour){
 		// method for creating the stage for the game end ON TOP of the gameStage
 		// (changing InputProcessor to stop Game Progress)
-		Stage funcStage = new Stage();
-		funcStage = GameEndStage.initializeUI(winnerTeamColour);
-		gameEndStage = funcStage;
+		gameEndStage = GameEndStage.initializeUI(winnerTeamColour);
 		System.out.println("GameEndStage added");
 	}
 

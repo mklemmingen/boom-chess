@@ -1,18 +1,12 @@
 package com.boomchess.game.frontend.stage;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.boomchess.game.BoomChess;
-import com.boomchess.game.frontend.stage.GameStage;
 
 import static com.boomchess.game.BoomChess.*;
-import static com.boomchess.game.BoomChess.gameEndStage;
 
 public class GameEndStage extends Stage{
 
@@ -21,8 +15,6 @@ public class GameEndStage extends Stage{
         BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
 
         Stage gameEndStage = new Stage();
-
-        // TODO ADD WINNER EMBLEM AND BETTER LAYOUT/TRIGGER
 
         // Begin of GameEndLayout - Root Table arranges content automatically and adaptively as ui-structure
         final Table endRoot = new Table();
