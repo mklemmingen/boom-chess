@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
+import com.boomchess.game.frontend.stage.GameEndStage;
 import com.boomchess.game.frontend.picture.RandomImage;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
 import com.boomchess.game.frontend.stage.*;
@@ -191,6 +192,9 @@ public class BoomChess extends ApplicationAdapter {
 	public static Sound loadingSound;
 
 	public static String botDifficulty = "easy";
+
+	// stage for gameEnd
+	public static Stage gameEndStage;
 
 	// -----------------------------------------------------------------------------------------
 
@@ -492,6 +496,7 @@ public class BoomChess extends ApplicationAdapter {
 				tankSound.setVolume(soundVolume);
 				smallExplosionSound.setVolume(soundVolume);
 				bigExplosionSound.setVolume(soundVolume);
+				// TODO ADD MEDIEVAL GAME MODE SOUNDS
 			}
 		});
 
@@ -563,6 +568,10 @@ public class BoomChess extends ApplicationAdapter {
 		numberObstacle = 3;
 
 		loadingSound.stop();
+
+		// initialise the gameEndStage
+		gameEndStage = new Stage();
+
 		// ensures game starts in menu
 		createMainMenuStage();
 	}
@@ -644,6 +653,11 @@ public class BoomChess extends ApplicationAdapter {
 		deathExplosionStage.act(Gdx.graphics.getDeltaTime());
 		deathExplosionStage.draw();
 
+		// render the gameEndStage
+		gameEndStage.getViewport().apply();
+		gameEndStage.act();
+		gameEndStage.draw();
+
 		processTurn();
 
 	}
@@ -717,6 +731,7 @@ public class BoomChess extends ApplicationAdapter {
 		shapeRenderer.dispose();
 		dottedLineStage.dispose();
 		deathExplosionStage.dispose();
+		gameEndStage.dispose();
 
 		// dispose of all assets --- Textures do not natively get rubbish canned by Javas inbuilt collector
 		// Images do tho!
@@ -769,7 +784,10 @@ public class BoomChess extends ApplicationAdapter {
 	public static void createGameEndStage (String winnerTeamColour){
 		// method for creating the stage for the game end ON TOP of the gameStage
 		// (changing InputProcessor to stop Game Progress)
-		addToStage(GameEndStage.initializeUI(winnerTeamColour));
+		Stage funcStage = new Stage();
+		funcStage = GameEndStage.initializeUI(winnerTeamColour);
+		gameEndStage = funcStage;
+		System.out.println("GameEndStage added");
 	}
 
 	public static void createChallengeStage() {
@@ -779,11 +797,6 @@ public class BoomChess extends ApplicationAdapter {
 	public static void createMapStage() {
 		// method for creating the stage for the map that is rendered in variable mapStage
 		mapStage = MapStage.initializeUI();
-	}
-
-	public static void addToStage (Actor actorToAdd){
-		// method for adding a stage to the currentStage
-		currentStage.addActor(actorToAdd);
 	}
 
 	// method for setting the ArrayList of allowed tiles to move to and a method for clearing it to nothing

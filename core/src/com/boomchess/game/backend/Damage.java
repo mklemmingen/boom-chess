@@ -117,8 +117,11 @@ public class Damage {
 
         if (currentHealth <= 0) {
             if (gameBoard[positionDefX][positionDefY] instanceof General) {
+
+                // game End by Stage
                 String attackerColor = gameBoard[positionAttX][positionAttY].getTeamColor();
                 BoomChess.createGameEndStage(attackerColor);
+                System.out.println("A General has died!");
             }
             killPiece(positionDefX, positionDefY);
         } else {

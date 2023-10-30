@@ -294,6 +294,8 @@ public class GameStage {
                 // create a new gameBoard since game has ended
                 BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
                 setGameBoard();
+                // TODO ALLOW CLEAR
+                gameEndStage.clear();
             }
         });
 
