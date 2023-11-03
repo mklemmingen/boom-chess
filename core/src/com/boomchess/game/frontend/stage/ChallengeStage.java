@@ -34,7 +34,7 @@ public class ChallengeStage {
 
                 currentState = GameState.RED_TURN;
 
-                boolean isBotMatch = true;
+                isBotMatch = true;
 
                 // create the first gameBoard
                 Board.initialiseChallengeOne();

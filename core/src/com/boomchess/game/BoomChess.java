@@ -683,6 +683,7 @@ public class BoomChess extends ApplicationAdapter {
 				calculateDamage("red");
 				switchTurn(currentState);
 				legitTurn = false;
+				switchToStage(createGameStage(isBotMatch));
 			}
 		} else if (currentState == GameState.GREEN_TURN) {
 			if (legitTurn) {
