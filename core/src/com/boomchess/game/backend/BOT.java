@@ -9,14 +9,6 @@ public class BOT {
     * BOT.java is the object for the bot move calculations by difficulty in the game Boom Chess.
      */
 
-    // these variables hold the currently calculated Soldier Object, its current and future coordinates
-    private static Soldier soldier;
-    private static int SX;
-    private static int SY;
-    private static int x;
-    private static int y;
-    private static Random random;
-
 
     public static void easyBotMove(){
         /*
@@ -67,8 +59,8 @@ public class BOT {
         }
 
         // create SX and SY out of random Soldier
-        SX = soldierPos.getX();
-        SY = soldierPos.getY();
+        int SX = soldierPos.getX();
+        int SY = soldierPos.getY();
 
         ArrayList<Coordinates> possibleMoves = possibleMovesMap.get(soldierPos);
         Coordinates finalPos = new Coordinates();
@@ -78,8 +70,8 @@ public class BOT {
         possibleMoves.set(intRandom, finalPos);
 
         // x and y
-        x = finalPos.getX();
-        y = finalPos.getY();
+        int x = finalPos.getX();
+        int y = finalPos.getY();
 
         moveSoldierTo(SX, SY, x, y);
   }
@@ -91,7 +83,6 @@ public class BOT {
          */
 
 
-        moveSoldierTo(SX, SY, x, y);
     }
 
     public static void hardBotMove(){
@@ -104,7 +95,6 @@ public class BOT {
         // Pathfinding? for obstacles
 
 
-        moveSoldierTo(SX, SY, x, y);
     }
 
     public static void moveSoldierTo(int SX, int SY, int x, int y){
