@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Coordinates;
 
+
 /*
 * this class is the object for the dotted line that appears when a piece is selected. It acts as an Actor Object
 * on a Scene2DUI Stage
@@ -54,7 +55,18 @@ public class DottedLineActor extends Actor {
         batch.end(); // To stop the batch temporarily because we'll be using the ShapeRenderer
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
+        if (BoomChess.currentState == BoomChess.GameState.RED_TURN) {
+            if (BoomChess.isColourChanged){
+                shapeRenderer.setColor(Color.BLUE);
+            }
+            else {
+                shapeRenderer.setColor(Color.GREEN);
+
+            }
+        }
+        else {
+            shapeRenderer.setColor(Color.RED);
+        }
 
         // logic for drawing the dotted line starts here ---------------------------------------
 
