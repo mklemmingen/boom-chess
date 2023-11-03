@@ -1,5 +1,9 @@
 package com.boomchess.game.backend;
 
+import java.util.*;
+
+import static com.boomchess.game.BoomChess.batch;
+
 public class BOT {
     /*
     * BOT.java is the object for the bot move calculations by difficulty in the game Boom Chess.
@@ -11,6 +15,8 @@ public class BOT {
     private static int SY;
     private static int x;
     private static int y;
+    private static Random random;
+
 
     public static void easyBotMove(){
         /*
@@ -18,9 +24,65 @@ public class BOT {
         * it gives out a random move for the bot, trying to move all soldiers as close as possible to the enemy general
          */
 
+        Soldier[][] gameBoard = Board.getGameBoard();
+
+        Map<Coordinates, ArrayList<Coordinates>> possibleMovesMap = new HashMap<>();
+
+        // we iterate over the chessboard and add a possiblemove arraylist to all soldier coordinates
+        // if soldier red and any moves possible
+
+        int numRows = 8;
+        int numColumns = 9;
+
+        for (int j = 0; j < numRows; j++) {
+            for (int i = 0; i < numColumns; i++) {
+                if (gameBoard[i][j].getTeamColor().equals("red")){
+                    Coordinates currentPos = new Coordinates();
+                    currentPos.setCoordinates(i, j);
+                    ArrayList<Coordinates> moves = gameBoard[i][j].mathMove(i, j);
+                    if (moves.size() > 0) {
+                        possibleMovesMap.put(currentPos, moves);
+                    }
+                }
+            }
+        }
+
+        Random random = new Random(); // added instance of random
+        Set<Coordinates> keys = possibleMovesMap.keySet();
+        int max = keys.size();
+
+        // Generate the random int
+        int randomNum = random.nextInt(max);
+
+        // Convert key to list
+        List<Coordinates> keyList = new ArrayList<>(keys);
+
+        Coordinates soldierPos = new Coordinates();
+        // select key with randomNum
+        for (int m = 0; m<max; m++){
+            if(m == randomNum){
+                soldierPos = keyList.get(m);
+                break;
+            }
+        }
+
+        // create SX and SY out of random Soldier
+        SX = soldierPos.getX();
+        SY = soldierPos.getY();
+
+        ArrayList<Coordinates> possibleMoves = possibleMovesMap.get(soldierPos);
+        Coordinates finalPos = new Coordinates();
+
+        // new Random
+        int intRandom = random.nextInt(possibleMoves.size());
+        possibleMoves.set(intRandom, finalPos);
+
+        // x and y
+        x = finalPos.getX();
+        y = finalPos.getY();
 
         moveSoldierTo(SX, SY, x, y);
-    }
+  }
 
     public static void mediumBotMove(){
         /*

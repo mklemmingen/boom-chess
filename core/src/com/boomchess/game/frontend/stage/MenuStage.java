@@ -76,7 +76,7 @@ public class MenuStage extends Stage{
 
                 currentState = GameState.RED_TURN;
 
-                boolean isBotMatch = false;
+                isBotMatch = false;
 
                 // create the big game Board as an object of the Board class
                 Board.initialise();
@@ -102,7 +102,7 @@ public class MenuStage extends Stage{
 
                 currentState = GameState.RED_TURN;
 
-                boolean isBotMatch = true;
+                BoomChess.isBotMatch = true;
 
                 // create the big game Board as an object of the Board class
                 Board.initialise();
