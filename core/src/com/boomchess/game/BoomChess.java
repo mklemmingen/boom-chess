@@ -672,14 +672,18 @@ public class BoomChess extends ApplicationAdapter {
 				switch (botDifficulty) {
 					case ("easy"):
 						BOT.easyBotMove();
+						break;
 					case ("medium"):
 						BOT.mediumBotMove();
+						break;
 					case ("hard"):
 						BOT.hardBotMove();
+						break;
 				}
 				calculateDamage("red");
 				switchTurn(currentState);
 				legitTurn = false;
+				switchToStage(createGameStage(isBotMatch));
 			}
 		} else if (currentState == GameState.GREEN_TURN) {
 			if (legitTurn) {

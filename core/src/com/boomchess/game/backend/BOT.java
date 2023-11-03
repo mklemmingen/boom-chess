@@ -11,26 +11,18 @@ public class BOT {
 
 
     public static void easyBotMove(){
-        /*
-        * this method completes a random move for the bot
-        * it gives out a random move for the bot, trying to move all soldiers as close as possible to the enemy general
-         */
-
         Soldier[][] gameBoard = Board.getGameBoard();
 
         Map<Coordinates, ArrayList<Coordinates>> possibleMovesMap = new HashMap<>();
 
-        // we iterate over the chessboard and add a possiblemove arraylist to all soldier coordinates
-        // if soldier red and any moves possible
-
         int numRows = 8;
         int numColumns = 9;
 
-        for (int j = 0; j < numRows; j++) {
-            for (int i = 0; i < numColumns; i++) {
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
                 if (gameBoard[i][j].getTeamColor().equals("red")){
                     Coordinates currentPos = new Coordinates();
-                    currentPos.setCoordinates(i, j);
+                    currentPos.setCoordinates(i, j);// Initialize Coordinates directly with i, j
                     ArrayList<Coordinates> moves = gameBoard[i][j].mathMove(i, j);
                     if (moves.size() > 0) {
                         possibleMovesMap.put(currentPos, moves);
@@ -39,42 +31,30 @@ public class BOT {
             }
         }
 
-        Random random = new Random(); // added instance of random
+        Random random = new Random();
         Set<Coordinates> keys = possibleMovesMap.keySet();
         int max = keys.size();
 
-        // Generate the random int
-        int randomNum = random.nextInt(max);
+        if (max > 0) { // Check if there are any valid moves
+            int randomNum = random.nextInt(max);
+            List<Coordinates> keyList = new ArrayList<>(keys);
 
-        // Convert key to list
-        List<Coordinates> keyList = new ArrayList<>(keys);
+            Coordinates soldierPos = keyList.get(randomNum);
 
-        Coordinates soldierPos = new Coordinates();
-        // select key with randomNum
-        for (int m = 0; m<max; m++){
-            if(m == randomNum){
-                soldierPos = keyList.get(m);
-                break;
-            }
+            int SX = soldierPos.getX();
+            int SY = soldierPos.getY();
+
+            ArrayList<Coordinates> possibleMoves = possibleMovesMap.get(soldierPos);
+
+            int intRandom = random.nextInt(possibleMoves.size());
+            Coordinates finalPos = possibleMoves.get(intRandom);
+
+            int x = finalPos.getX();
+            int y = finalPos.getY();
+
+            moveSoldierTo(SX, SY, x, y);
         }
-
-        // create SX and SY out of random Soldier
-        int SX = soldierPos.getX();
-        int SY = soldierPos.getY();
-
-        ArrayList<Coordinates> possibleMoves = possibleMovesMap.get(soldierPos);
-        Coordinates finalPos = new Coordinates();
-
-        // new Random
-        int intRandom = random.nextInt(possibleMoves.size());
-        possibleMoves.set(intRandom, finalPos);
-
-        // x and y
-        int x = finalPos.getX();
-        int y = finalPos.getY();
-
-        moveSoldierTo(SX, SY, x, y);
-  }
+    }
 
     public static void mediumBotMove(){
         /*
