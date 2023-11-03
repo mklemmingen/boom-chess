@@ -54,7 +54,18 @@ public class DottedLineActor extends Actor {
         batch.end(); // To stop the batch temporarily because we'll be using the ShapeRenderer
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
+        if (BoomChess.currentState == BoomChess.GameState.RED_TURN) {
+            if (BoomChess.isColourChanged){
+                shapeRenderer.setColor(Color.BLUE);
+            }
+            else {
+                shapeRenderer.setColor(Color.GREEN);
+
+            }
+        }
+        else {
+            shapeRenderer.setColor(Color.RED);
+        }
 
         // logic for drawing the dotted line starts here ---------------------------------------
 
