@@ -2,8 +2,6 @@ package com.boomchess.game.backend;
 
 import java.util.*;
 
-import static com.boomchess.game.BoomChess.batch;
-
 public class BOT {
     /*
     * BOT.java is the object for the bot move calculations by difficulty in the game Boom Chess.
@@ -13,34 +11,39 @@ public class BOT {
     public static void easyBotMove(){
         Soldier[][] gameBoard = Board.getGameBoard();
 
+        // create a map of all the possible moves for the bot
         Map<Coordinates, ArrayList<Coordinates>> possibleMovesMap = new HashMap<>();
 
         int numRows = 8;
         int numColumns = 9;
 
+        // loop through all the soldiers on the board and get their possible moves
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
                 if (gameBoard[i][j].getTeamColor().equals("red")){
                     Coordinates currentPos = new Coordinates();
-                    currentPos.setCoordinates(i, j);// Initialize Coordinates directly with i, j
+                    currentPos.setCoordinates(i, j);// using i as x and j as y
                     ArrayList<Coordinates> moves = gameBoard[i][j].mathMove(i, j);
-                    if (moves.size() > 0) {
+                    if (!moves.isEmpty()) { // only if there are moves, put Soldier to map
                         possibleMovesMap.put(currentPos, moves);
                     }
                 }
             }
         }
 
+        // choose a random Soldier from the map
         Random random = new Random();
         Set<Coordinates> keys = possibleMovesMap.keySet();
         int max = keys.size();
 
         if (max > 0) { // Check if there are any valid moves
+            // new random number for selecting the move out of the soldiers ArrayList
             int randomNum = random.nextInt(max);
             List<Coordinates> keyList = new ArrayList<>(keys);
 
             Coordinates soldierPos = keyList.get(randomNum);
 
+            // create the Soldier coordinate variables
             int SX = soldierPos.getX();
             int SY = soldierPos.getY();
 
@@ -49,6 +52,7 @@ public class BOT {
             int intRandom = random.nextInt(possibleMoves.size());
             Coordinates finalPos = possibleMoves.get(intRandom);
 
+            // create the final coordinate variables
             int x = finalPos.getX();
             int y = finalPos.getY();
 
