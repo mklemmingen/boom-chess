@@ -405,6 +405,7 @@ public class BoomChess extends ApplicationAdapter {
 		playButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				// this is the Button for playing and pausing the music (it switches current State)
 				// if in game state - play background_music
 				if (currentState != GameState.NOT_IN_GAME) {
 					if(background_music.isPlaying()) {
@@ -576,13 +577,26 @@ public class BoomChess extends ApplicationAdapter {
 
 	public enum GameState {
 		// for determining the current state of the game
+		/*
+		* The game has 3 states: RED_TURN, GREEN_TURN, NOT_IN_GAME
+		* Using these states allows for smooth switching between game assets
+		* RED_TURN: the red player has their turn
+		* GREEN_TURN: the green player has their turn
+		* NOT_IN_GAME: the game is not in progress, in any menuStage
+		 */
+
 		RED_TURN, GREEN_TURN, NOT_IN_GAME
 	}
 
+	// the first state at game Start is NOT_IN_GAME
 	public static GameState currentState = GameState.NOT_IN_GAME;
 	
 	@Override
 	public void render() {
+		/*
+		* render is called every frame, main-game loop of the game, holds all stages in nested ifs and the processTurn
+		 */
+
 		ScreenUtils.clear(1, 0, 0, 1);
 		// used for the dotted line when damage occurs (clears screen)  ------------------------
 		Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -660,6 +674,10 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	private void processTurn() {
+		/*
+		* ProcessTurn is called at end of every Frame and triggers game progression if a Drag&Drop turn is legit /
+		* triggers the bot if isBotMatch and RED_MOVE
+		 */
 		if (currentState == GameState.RED_TURN) {
 			if (!isBotMatch){
 				if (legitTurn) {
@@ -697,8 +715,10 @@ public class BoomChess extends ApplicationAdapter {
 
 
 	private void calculateDamage(String teamColor) {
-		// method that goes through each tile of the board and if SoldierTeam is teamColor,
-		// lets it attack the surrounding tiles
+		/*
+		* method that goes through each tile of the board and if SoldierTeam is teamColor,
+		*  lets it attack the surrounding tiles
+		 */
 		Soldier[][] gameBoard = Board.getGameBoard();
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -712,6 +732,9 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	private void switchTurn(GameState state) {
+		/*
+		* switchTurn switches the public GameStage enum between RED and GREEN
+		 */
 		if (state == GameState.RED_TURN) {
 			currentState = GameState.GREEN_TURN;
 		} else {
@@ -721,6 +744,9 @@ public class BoomChess extends ApplicationAdapter {
 
 	@Override
 	public void dispose() {
+		/*
+		* dispose is used when the game is exited, disposes of all assets
+		 */
 		batch.dispose();
 		skin.dispose();
 		currentStage.dispose();
@@ -748,11 +774,35 @@ public class BoomChess extends ApplicationAdapter {
 		 xMarker.dispose();
 		 empty.dispose();
 		 hill.dispose();
+
+		 // dispose of all sound objects
+		 smallArmsSound.dispose();
+		 bigArmsSound.dispose();
+		 dogSound.dispose();
+		 helicopterSound.dispose();
+		 tankSound.dispose();
+		 smallExplosionSound.dispose();
+		 bigExplosionSound.dispose();
+		 archerSound.dispose();
+		 catapultSound.dispose();
+		 knightSound.dispose();
+		 magicSound.dispose();
+		 queenSound.dispose();
+		 kingSound.dispose();
+
+		 // dispose of all music
+		 background_music.dispose();
+		 menu_music.dispose();
+		 creditsMusic.dispose();
 	}
 
 	public static void switchToStage(Stage newStage) {
-		// this method removes the currentStage and loads a new one
-		// used in the Stage classes at the end to load the created Stages
+		/*
+		* this method removes the currentStage and loads a new one
+		* used generally in the Stage classes at the end to load the created Stages
+		* or combined with a return Stage createStage method
+		 */
+
 		if (currentStage != null){
 			currentStage.clear();}
 		currentStage = newStage;
@@ -760,44 +810,68 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	public static void reRenderGame(){
+		/*
+		* used to refresh the gameStage if a action has happened that edited the gameBoard.
+		 */
 		switchToStage(createGameStage(isBotMatch));
 	}
 
 	public static void createMainMenuStage() {
+		/*
+		* method for creating the stage for the main menu
+		 */
 		switchToStage(MenuStage.initializeUI());
 		gameEndStage.clear();
 	}
 
 	public static void createHelpStage() {
+		/*
+		* method for creating the stage for the help display
+		 */
 		switchToStage(HelpStage.initializeUI());
 	}
 
 	public static void createOptionsStage() {
+		/*
+		* method for creating the stage for the options display
+		 */
 		switchToStage(OptionsStage.initalizeUI());
 	}
 
 	public static void createCreditsStage() {
+		/*
+		* method for creating the stage for the credits display
+		 */
 		switchToStage(CreditsStage.initializeUI());
 	}
 
 	public static void createGameEndStage (String winnerTeamColour){
-		// method for creating the stage for the game end ON TOP of the gameStage
-		// (changing InputProcessor to stop Game Progress)
+		/*
+		* method for creating the stage for the game end ON TOP of the gameStage
+		* (changing InputProcessor to stop Game Progress)
+		 */
 		gameEndStage = GameEndStage.initializeUI(winnerTeamColour);
 		System.out.println("GameEndStage added");
 	}
 
 	public static void createChallengeStage() {
+		/*
+		* method for creating the stage for the challenge display
+		 */
 		switchToStage(ChallengeStage.initializeUI());
 	}
 
 	public static void createMapStage() {
-		// method for creating the stage for the map that is rendered in variable mapStage
+		/*
+		* method for creating the stage for the map that is rendered in variable mapStage
+		 */
 		mapStage = MapStage.initializeUI();
 	}
 
-	// method for setting the ArrayList of allowed tiles to move to and a method for clearing it to nothing
 	public static void setAllowedTiles (ArrayList<Coordinates> validMoveTiles) {
+		/*
+		* method for setting the ArrayList of allowed tiles to move to and a method for clearing it to nothing
+		 */
 
 		Board.setValidMoveTiles(validMoveTiles);
 		// renew the whole Stage inside possibleMovesOverlay to clear the old tiles
@@ -848,10 +922,16 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	public static void clearAllowedTiles () {
+		/*
+		* method for turning off the renderOverlay (boolean value changed and not display next render
+		 */
 		renderOverlay = false;
 	}
 
 	public static Coordinates calculateTileByPX(int pxCoordinateX, int pxCoordinateY) {
+		/*
+		* method for calculating the tile coordinates by pixel coordinates
+		 */
 
 		// BUGFIX! In LibGDX, the origin of the screen is the top left! i traditional, its bottom left!
 
@@ -892,9 +972,12 @@ public class BoomChess extends ApplicationAdapter {
 	// ------------------------------------------- DAMAGE ANIMATION METHODS -----------------------------------------
 	// --------------------------------------------------------------------------------------------------------------
 
-	// in this first method, the pixel coordinates of the center of a tile is calculated
-	// this will be used afterwards to create a dotted Line Animation from an attacker to a defender tile
 	public static Coordinates calculatePXbyTile(int tilePositionX, int tilePositionY){
+		/*
+		* in this first method, the pixel coordinates of the center of a tile is calculated
+		* this will be used afterwards to create a dotted Line Animation from an attacker to a defender tile
+		 */
+
 		Coordinates pxCoords = new Coordinates();
 		int tileWidth = 80, tileHeight = 80;
 
@@ -927,13 +1010,18 @@ public class BoomChess extends ApplicationAdapter {
 
 	// for adding a DottedLine to the dottedLineStage
 	public static void addDottedLine(float x1, float y1, float x2, float y2) {
+		/*
+		* uses a beginning coordinate and a end coordinate to create an Actor and add it to the LineStage
+		 */
 		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer);
 		dottedLineStage.addActor(lineActor);
 	}
 
-	// for the fitted viewport once the screen gets resized
 	@Override
 	public void resize(int width, int height) {
+		/*
+		* fits the stages to the screen each frame, fitting viewport
+		 */
 		currentStage.getViewport().update(width, height, true);
 		dottedLineStage.getViewport().update(width, height, true);
 		deathExplosionStage.getViewport().update(width, height, true);
@@ -943,6 +1031,9 @@ public class BoomChess extends ApplicationAdapter {
 	// ------------------------------------------- deathAnimation METHODS -------------------------------------------
 	// --------------------------------------------------------------------------------------------------------------
 	public static Coordinates calculatePXbyTileNonGDX(int tilePositionX, int tilePositionY){
+		/*
+		* calculates the most middle pixel of a tile of the chessBoard
+		 */
 		Coordinates pxCoords = new Coordinates();
 		int tileWidth = 80, tileHeight = 80;
 
@@ -973,6 +1064,9 @@ public class BoomChess extends ApplicationAdapter {
 		return pxCoords;
 	}
 	public static void addDeathAnimation(int x, int y) {
+		/*
+		* adds the DeathAnimation to the deathExplosionStage, adds this action to log
+		 */
 		DeathExplosionActor deathActor = new DeathExplosionActor(x, y);
 		deathExplosionStage.addActor(deathActor);
 		System.out.println("Exploded someone at position "+ x + "-" + y);
