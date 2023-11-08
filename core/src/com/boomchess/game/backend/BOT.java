@@ -115,14 +115,55 @@ public class BOT {
 
     public static void hardBotMove(){
         /*
-        * this method completes a random move for the bot
-        * It tries to move all soldiers as close as possible to the general while maximising
-        * the overall damage to the opponent
+        * Expands the mediumBot by adding a pathfinding as well as
+        * a more complex damage calculation by including the type of an opponent and exact max possible damage
          */
 
-        // Pathfinding? for obstacles
+        // TODO implement pathfinding
 
+        Soldier[][] gameBoard = Board.getGameBoard();
 
+        int numRows = 8;
+        int numColumns = 9;
+
+        // these values hold the current max score, the coordinates of the Soldier that has the max score,
+        // and the coordinates of the move that has the max score
+        int maxScore = 0;
+        Coordinates maxScoreSoldier = new Coordinates();
+        Coordinates maxScoreMove = new Coordinates();
+
+        // logic for going through the 2DArray
+        // loop through all the soldiers on the board and get their possible moves
+        // loop through all the soldiers on the board and get their possible moves
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+                if (gameBoard[i][j].getTeamColor().equals("red")){
+                    // create List of all Moves
+                    ArrayList<Coordinates> moves = gameBoard[i][j].mathMove(i, j);
+                    // loop through the created list
+                    // for each move, evaluate the move
+                    for(Coordinates move : moves){
+                        int moveX = move.getX();
+                        int moveY = move.getY();
+                        int score = MoveEvaluation.evaluateMove(gameBoard, moveX, moveY);
+                        // if the move has a higher score than the current max score, update the max score
+                        // and the Coordinates of the Soldier and the move
+                        if (score > maxScore){
+                            maxScore = score;
+                            maxScoreSoldier.setCoordinates(i, j);
+                            maxScoreMove.setCoordinates(moveX, moveY);
+                        }
+                    }
+                }
+            }
+        }
+
+        int SX = maxScoreSoldier.getX();
+        int SY = maxScoreSoldier.getY();
+        int x = maxScoreMove.getX();
+        int y = maxScoreMove.getY();
+
+        moveSoldierTo(SX, SY, x, y);
     }
 
     public static void moveSoldierTo(int SX, int SY, int x, int y){

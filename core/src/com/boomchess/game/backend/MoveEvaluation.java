@@ -25,10 +25,13 @@ public class MoveEvaluation {
     }
 
     private static int calculateProximityScore(Soldier[][] board, int X, int Y) {
-        // Implementation to calculate the score based on proximity to enemy pieces
-        // if the piece is close to enemy pieces, it is good
+        // Implementation to calculate the score based on proximity to enemy pieces by relativity to enemy general
+        // and the columns of the board
+        // if the piece is close to enemy pieces by general column, it is good
         // if the piece is close to enemy general, that is extra points
         // the more left the red piece is (x value is lower), the better, for game attack progression
+
+
 
         return 0; // Placeholder
     }
@@ -36,6 +39,8 @@ public class MoveEvaluation {
     private static int calculateDamageScore(Soldier[][] board, int X, int Y) {
         // Implementation to calculate the score based on potential damage
         // using the minimal damage dealt by the piece
+
+
 
         return 0; // Placeholder
     }
@@ -45,6 +50,8 @@ public class MoveEvaluation {
         // if the piece is clustered with other pieces of the same team, it is good
         // if the piece is close to its general, that is extra points
 
+
+
         return 0; // Placeholder
     }
 
@@ -53,8 +60,8 @@ public class MoveEvaluation {
         // meaning: if the piece is close to good enemy pieces, it is bad
         // if the piece is the friendly general, it is dreadful (the general is the most important piece)
 
+
+
         return 0; // Placeholder
     }
-
-    // Additional methods for each scoring component...
 }
