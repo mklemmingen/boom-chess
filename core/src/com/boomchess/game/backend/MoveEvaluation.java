@@ -42,7 +42,7 @@ public class MoveEvaluation {
 
         // per int below 8, the score is increased by 10
         int addThis = X - 8;
-        funcScore += addThis * 10;
+        funcScore += addThis * 5;
 
         // distance is the current reach of the search. 1 is the closest tiles, 2 adds one more, 3 ....
         int distance = 2;
