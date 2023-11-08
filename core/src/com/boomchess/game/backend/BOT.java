@@ -1,5 +1,7 @@
 package com.boomchess.game.backend;
 
+import com.boomchess.game.backend.subsoldier.General;
+
 import java.util.*;
 
 public class BOT {
@@ -7,6 +9,8 @@ public class BOT {
     * BOT.java is the object for the bot move calculations by difficulty in the game Boom Chess.
      */
 
+    // coordinate of enemy general
+    public static Coordinates generalPos = new Coordinates();
 
     public static void easyBotMove(){
         Soldier[][] gameBoard = Board.getGameBoard();
@@ -100,6 +104,11 @@ public class BOT {
                             maxScoreSoldier.setCoordinates(i, j);
                             maxScoreMove.setCoordinates(moveX, moveY);
                         }
+                    }
+                } else {
+                    // if not red, green, check if instance of General, if yes, save coordinates in public Coordinate
+                    if (gameBoard[i][j] instanceof General){
+                        generalPos.setCoordinates(i, j);
                     }
                 }
             }
