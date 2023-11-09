@@ -1,5 +1,6 @@
 package com.boomchess.game.backend;
 
+import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.subsoldier.*;
 
 import java.util.*;
@@ -186,6 +187,92 @@ public class BOT {
 
         }
 
+        // Distinguish from the medium BOT: IntelligentGeneral
+        // check the surrounding of friendlygeneral for enemies
+        // if there is an enemy, move the friendlygeneral in the opposite direction of the enemy,
+        // if there are any possible moves
+
+        // loop through surrounding by distance of 1
+        int startX = Math.max(0, friendlyGeneralX - 3);
+        int endX = Math.min(7, friendlyGeneralX + 3);
+
+        int startY = Math.max(0, friendlyGeneralY - 3);
+        int endY = Math.min(7, friendlyGeneralY + 3);
+
+        boolean breakLoop = false;
+        for (int i = startX; i <= endX; i++) { // X Coordinate Loop
+            for (int j = startY; j <= endY; j++) { // Y coordinate loop
+                if (i == friendlyGeneralX && j == friendlyGeneralY) continue; // Skip on checking the original piece
+                if (gameBoard[i][j].getTeamColor().equals("green")) {
+                    // move the friendly general in the opposite direction of the enemy
+
+                    // if there are any possible moves!
+
+                    // create List of all Moves
+                    ArrayList<Coordinates> moves =
+                            gameBoard[friendlyGeneralX][friendlyGeneralY].mathMove(friendlyGeneralX, friendlyGeneralY);
+
+                    if(moves.isEmpty()){ // if the general has nowhere to move, move away
+                        breakLoop = true;
+                        break;
+                    }
+
+                    // boolean that sets true if any move for the general is away from an enemy
+                    boolean moveAway = false;
+
+                    // loop through the created list
+                    // for each move, evaluate the move
+                    for (Coordinates move : moves) {
+
+                        int moveX = move.getX();
+                        int moveY = move.getY();
+
+                        // if the move is away from the enemy, allow calculation of score
+                        // calculate the direction of the move. Calculating from friendly General perspective
+                        int xDirectionOldToMove = DrMoveJudge.calculateOrientationValue(friendlyGeneralX, moveX);
+                        int yDirectionOldToMove = DrMoveJudge.calculateOrientationValue(friendlyGeneralY, moveY);
+                        int xDirectionOldToEnemy = DrMoveJudge.calculateOrientationValue(friendlyGeneralX, enemyGeneralX);
+                        int yDirectionOldToEnemy = DrMoveJudge.calculateOrientationValue(friendlyGeneralY, enemyGeneralY);
+
+                        if (!(xDirectionOldToMove == xDirectionOldToEnemy) &&
+                                !(yDirectionOldToMove == yDirectionOldToEnemy)) {
+                            // calculate score
+                            moveAway = true;
+
+                            int score;
+                            score = DrMoveJudge.evaluateMove(friendlyGeneralX, friendlyGeneralY, moveX, moveY,
+                                    enemyGeneralX, enemyGeneralY, friendlyGeneralX, friendlyGeneralY);
+
+                            // if the move has a higher score than the current max score, update the max score
+                            // and the Coordinates of the Soldier and the move
+
+                            if (score > maxScore) {
+                                maxScore = score;
+                                maxScoreSoldier.setCoordinates(friendlyGeneralX, friendlyGeneralY);
+                                maxScoreMove.setCoordinates(moveX, moveY);
+                            }
+                        }
+                    }
+
+                    if(moveAway) { // only if any of the moves were away from an enemy, move the general
+                        // stops the choosing of a null value
+
+                        int SX = maxScoreSoldier.getX();
+                        int SY = maxScoreSoldier.getY();
+                        int x = maxScoreMove.getX();
+                        int y = maxScoreMove.getY();
+
+                        moveSoldierTo(SX, SY, x, y);
+                        // end the whole method if this point has been reached
+                        return;
+                    }
+                }
+            }
+            if(breakLoop){break;}
+        }
+
+        // -----------------------------------------------------------------------------------
+
         // logic for going through the 2DArray
         // loop through all the soldiers on the board and get their possible moves
         // loop through all the soldiers on the board and get their possible moves
@@ -233,6 +320,10 @@ public class BOT {
          */
         Soldier[][] gameBoard = Board.getGameBoard();
         System.out.println("\nBot Moved" + gameBoard[SX][SY].getClass().getName() + " to " + x + " " + y + "\n");
+
+        // DottedLine between old coordnates and new coordinates
+        BoomChess.addDottedLine((float) SX, (float) SY, (float) x, (float) y);
+
         Board.update(SX, SY, x, y);
     }
 }

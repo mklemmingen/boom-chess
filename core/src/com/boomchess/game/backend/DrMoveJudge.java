@@ -79,13 +79,15 @@ public class DrMoveJudge {
         // determine the direction of the move by comparing the old and new coordinates by mapping the orientation into
         // positive || negative quadrants depending on relativity
 
-        int xDirectionOldToMove = calculateOrientationValue(X, oldx);
-        int yDirectionOldToMove = calculateOrientationValue(Y, oldy);
-        int xDirectionMoveToEnemy = calculateOrientationValue(enemyGeneralX, X);
-        int yDirectionMoveToEnemy = calculateOrientationValue(enemyGeneralY, Y);
+        // perspective of the old coordinates. move has to be in same direction as enemy general
+
+        int xDirectionOldToMove = calculateOrientationValue(oldx, X);
+        int yDirectionOldToMove = calculateOrientationValue(oldy, Y);
+        int xDirectionOldToEnemy = calculateOrientationValue(oldx, enemyGeneralX);
+        int yDirectionOldToEnemy = calculateOrientationValue(oldy, enemyGeneralY);
 
         // if the move is in the direction of the enemy general, we calculate the score
-        if (xDirectionOldToMove == xDirectionMoveToEnemy && yDirectionOldToMove == yDirectionMoveToEnemy){
+        if (xDirectionOldToMove == xDirectionOldToEnemy && yDirectionOldToMove == yDirectionOldToEnemy){
             int funcScore = 0; // Default score
 
             // the numbers of tiles in x and y that the piece X,Y is away from enemyGeneralX, enemyGeneralY is subtracted
@@ -233,7 +235,7 @@ public class DrMoveJudge {
         return funcScore;
     }
 
-    private static int calculateOrientationValue(int C, int newC){
+    public static int calculateOrientationValue(int C, int newC){
         // takes two Coordinates of one axis and displays their relative orientation by -1, native 0 or 1
 
         int DirectionCToNewC = C - newC;
