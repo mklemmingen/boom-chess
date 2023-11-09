@@ -245,10 +245,36 @@ public class GameStage {
 
         // create another stage for the back to main menu button
         Table backTable = new Table();
-        backTable.setSize(400, 80); // determines the frame size for the backTable (button: to main menu)
-        // bottom right the table in the parent container
-        backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 20);
+        if (!isBotMatch) {
+            backTable.setSize(400, 80); // determines the frame size for the backTable (button: to main menu)
+            // bottom right the table in the parent container
+            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 20);
+        } else {
+            backTable.setSize(400, 120);
+            // bottom right the table in the parent container
+            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 25);}
         gameStage.addActor(backTable); // Add the table to the stage
+
+        if(isBotMatch) {
+            backTable.row().padBottom(10);
+            // button to change bot difficulty
+            // text that displays a text saying "Bot Difficulty"
+            final TextButton botDifficultyText = new TextButton("Bot: " + botDifficulty, skin);
+            backTable.add(botDifficultyText);
+            botDifficultyText.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    if (botDifficulty.equals("easy")) {
+                        botDifficulty = "medium";
+                    } else if (botDifficulty.equals("medium")) {
+                        botDifficulty = "hard";
+                    } else if (botDifficulty.equals("hard")) {
+                        botDifficulty = "easy";
+                    }
+                    switchToStage(createGameStage(true));
+                }
+            });
+        }
 
         backTable.row().padBottom(10);
         // Button to change 1.Player Colour to blue

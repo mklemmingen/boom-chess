@@ -59,7 +59,7 @@ public class MenuStage extends Stage{
 
         root.row();
 
-        TextButton play2Button = new TextButton("Play a 2 Player Game", skin);
+        TextButton play2Button = new TextButton("Play 2 Player Game", skin);
         root.add(play2Button).padBottom(20);
 
         play2Button.addListener(new ChangeListener() {
@@ -86,8 +86,8 @@ public class MenuStage extends Stage{
         });
         root.row();
 
-        TextButton playBotButton = new TextButton("Play a Game Against the Computer", skin);
-        root.add(playBotButton).padBottom(20);
+        TextButton playBotButton = new TextButton("Play Against Computer: " + botDifficulty, skin);
+        root.add(playBotButton).padBottom(2);
         playBotButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -108,6 +108,27 @@ public class MenuStage extends Stage{
                 Board.initialise();
 
                 switchToStage(GameStage.createGameStage(isBotMatch));
+            }
+        });
+        root.row();
+
+        // button to change bot difficulty
+        // text that displays a text saying "Bot Difficulty"
+        final TextButton botDifficultyText = new TextButton("Change Bot", skin);
+        root.add(botDifficultyText).padBottom(20);
+        botDifficultyText.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(botDifficulty.equals("easy")){
+                    botDifficulty = "medium";
+                }
+                else if(botDifficulty.equals("medium")){
+                    botDifficulty = "hard";
+                }
+                else if(botDifficulty.equals("hard")){
+                    botDifficulty = "easy";
+                }
+                BoomChess.createMainMenuStage();
             }
         });
         root.row();
