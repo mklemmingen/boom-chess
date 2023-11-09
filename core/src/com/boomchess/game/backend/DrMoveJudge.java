@@ -164,7 +164,7 @@ public class DrMoveJudge {
         }
 
         if (numberOfEnemies > 0 && board[oldX][oldY] instanceof General){
-            funcScore += 2;
+            return -10;
         }
 
         if (numberOfEnemies <= 2 && numberOfEnemies >= 1){
