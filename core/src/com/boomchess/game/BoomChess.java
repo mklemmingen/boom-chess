@@ -1009,11 +1009,11 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	// for adding a DottedLine to the dottedLineStage
-	public static void addDottedLine(float x1, float y1, float x2, float y2) {
+	public static void addDottedLine(float x1, float y1, float x2, float y2, boolean isDamage) {
 		/*
 		* uses a beginning coordinate and a end coordinate to create an Actor and add it to the LineStage
 		 */
-		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer);
+		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer, isDamage);
 		dottedLineStage.addActor(lineActor);
 	}
 

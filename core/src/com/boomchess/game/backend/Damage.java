@@ -97,7 +97,7 @@ public class Damage {
         Soldier[][] gameBoard = Board.getGameBoard();
 
         // drawing the dotted line from the attacking piece to the defending piece
-        BoomChess.addDottedLine((float) positionAttX, (float) positionAttY, (float) positionDefX, (float) positionDefY);
+        BoomChess.addDottedLine((float) positionAttX, (float) positionAttY, (float) positionDefX, (float) positionDefY, true);
         System.out.println("\nThe dotted line has been drawn");
 
         // we need to get the current health of the defending piece

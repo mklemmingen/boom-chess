@@ -322,7 +322,7 @@ public class BOT {
         System.out.println("\nBot Moved" + gameBoard[SX][SY].getClass().getName() + " to " + x + " " + y + "\n");
 
         // DottedLine between old coordnates and new coordinates
-        BoomChess.addDottedLine((float) SX, (float) SY, (float) x, (float) y);
+        BoomChess.addDottedLine((float) SX, (float) SY, (float) x, (float) y, false);
 
         Board.update(SX, SY, x, y);
     }

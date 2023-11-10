@@ -26,7 +26,9 @@ public class DottedLineActor extends Actor {
     // this is the shapeRenderer that will be used to draw the dotted line
     private final ShapeRenderer shapeRenderer;
 
-    public DottedLineActor(float startX, float startY, float endX, float endY, ShapeRenderer shapeRenderer) {
+    private final boolean isDamage;
+
+    public DottedLineActor(float startX, float startY, float endX, float endY, ShapeRenderer shapeRenderer, boolean isDamage) {
         /*
         * used to create a DottedLineActor Object
          */
@@ -35,6 +37,7 @@ public class DottedLineActor extends Actor {
         this.endX = endX;
         this.endY = endY;
         this.shapeRenderer = shapeRenderer;
+        this.isDamage = isDamage;
     }
 
     @Override
@@ -55,17 +58,22 @@ public class DottedLineActor extends Actor {
         batch.end(); // To stop the batch temporarily because we'll be using the ShapeRenderer
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        if (BoomChess.currentState == BoomChess.GameState.RED_TURN) {
-            if (BoomChess.isColourChanged){
-                shapeRenderer.setColor(Color.BLUE);
-            }
-            else {
-                shapeRenderer.setColor(Color.GREEN);
 
+        // set the color of the shapeRenderer to the color of the attacking piece (if Move, set white)
+        if(isDamage) {
+            if (!(BoomChess.currentState == BoomChess.GameState.GREEN_TURN)) {
+                if (BoomChess.isColourChanged) {
+                    shapeRenderer.setColor(Color.BLUE);
+                } else {
+                    shapeRenderer.setColor(Color.GREEN);
+
+                }
+            } else {
+                shapeRenderer.setColor(Color.RED);
             }
         }
-        else {
-            shapeRenderer.setColor(Color.RED);
+        else{
+            shapeRenderer.setColor(Color.WHITE);
         }
 
         // logic for drawing the dotted line starts here ---------------------------------------
