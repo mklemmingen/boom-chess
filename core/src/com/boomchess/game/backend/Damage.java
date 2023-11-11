@@ -100,6 +100,9 @@ public class Damage {
         BoomChess.addDottedLine((float) positionAttX, (float) positionAttY, (float) positionDefX, (float) positionDefY, true);
         System.out.println("\nThe dotted line has been drawn");
 
+        // adding a hitmarker animation
+        BoomChess.addHitMarker(positionDefX, positionDefY);
+
         // we need to get the current health of the defending piece
         int currentHealth = gameBoard[positionDefX][positionDefY].getHealth();
 

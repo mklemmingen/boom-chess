@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
+import com.boomchess.game.frontend.actor.HitMarkerActor;
 import com.boomchess.game.frontend.stage.GameEndStage;
 import com.boomchess.game.frontend.picture.RandomImage;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
@@ -64,7 +65,7 @@ public class BoomChess extends ApplicationAdapter {
 	// stage we render the shapes on
 	private static Stage dottedLineStage;
 	// used for the deathExplosion ---------------------------------------------
-	private static Stage deathExplosionStage;
+	public static Stage deathExplosionStage;
 
 	// -------------------------------------------------------------------------------------------
 	// ---------------------------- Asset Manager -----------------------------------------------
@@ -184,7 +185,7 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static boolean isMedievalMode = false;
 
-	public static boolean isColourChanged = true;
+	public static boolean isColourChanged;
 
 	public static Sound loadingSound;
 
@@ -205,6 +206,8 @@ public class BoomChess extends ApplicationAdapter {
 		loadingSound = Gdx.audio.newSound(Gdx.files.internal("sounds/countdown.mp3"));
 		switchToStage(LoadingScreenStage.initalizeUI());
 
+		// for defaulting colour change
+		isColourChanged = false;
 
 		// skin of the UI --------------------
 		// skin (look) of the buttons via a prearranged json file
@@ -1013,7 +1016,8 @@ public class BoomChess extends ApplicationAdapter {
 		/*
 		* uses a beginning coordinate and a end coordinate to create an Actor and add it to the LineStage
 		 */
-		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer, isDamage);
+		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer, isDamage,
+				currentState, isColourChanged);
 		dottedLineStage.addActor(lineActor);
 	}
 
@@ -1070,5 +1074,14 @@ public class BoomChess extends ApplicationAdapter {
 		DeathExplosionActor deathActor = new DeathExplosionActor(x, y);
 		deathExplosionStage.addActor(deathActor);
 		System.out.println("Exploded someone at position "+ x + "-" + y);
+	}
+
+	public static void addHitMarker(int x, int y){
+		/*
+		 * adds the DeathAnimation to the deathExplosionStage, adds this action to log
+		 */
+		HitMarkerActor hitActor = new HitMarkerActor(x, y);
+		deathExplosionStage.addActor(hitActor);
+		System.out.println("Hit someone at position "+ x + "-" + y);
 	}
 }

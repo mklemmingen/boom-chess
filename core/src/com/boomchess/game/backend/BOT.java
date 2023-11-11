@@ -324,6 +324,8 @@ public class BOT {
         // DottedLine between old coordnates and new coordinates
         BoomChess.addDottedLine((float) SX, (float) SY, (float) x, (float) y, false);
 
+        // TODO ADD A MOVING OF THE ACTOR TO THE NEW POSITION ALONG THE DOTTED LINE
+
         Board.update(SX, SY, x, y);
     }
 }

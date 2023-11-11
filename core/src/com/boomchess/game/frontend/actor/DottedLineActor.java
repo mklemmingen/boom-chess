@@ -28,7 +28,12 @@ public class DottedLineActor extends Actor {
 
     private final boolean isDamage;
 
-    public DottedLineActor(float startX, float startY, float endX, float endY, ShapeRenderer shapeRenderer, boolean isDamage) {
+    // current State of the game
+    private final BoomChess.GameState currentState;
+    private final boolean coloursreversed;
+
+    public DottedLineActor(float startX, float startY, float endX, float endY, ShapeRenderer shapeRenderer, boolean isDamage, BoomChess.GameState currentState,
+                           boolean coloursreversed) {
         /*
         * used to create a DottedLineActor Object
          */
@@ -38,6 +43,8 @@ public class DottedLineActor extends Actor {
         this.endY = endY;
         this.shapeRenderer = shapeRenderer;
         this.isDamage = isDamage;
+        this.currentState = currentState;
+        this.coloursreversed = coloursreversed;
     }
 
     @Override
@@ -61,8 +68,9 @@ public class DottedLineActor extends Actor {
 
         // set the color of the shapeRenderer to the color of the attacking piece (if Move, set white)
         if(isDamage) {
-            if (!(BoomChess.currentState == BoomChess.GameState.GREEN_TURN)) {
-                if (BoomChess.isColourChanged) {
+            // turn the current game stage enum into a string
+            if (currentState.equals(BoomChess.GameState.GREEN_TURN)) {
+                if (coloursreversed) {
                     shapeRenderer.setColor(Color.BLUE);
                 } else {
                     shapeRenderer.setColor(Color.GREEN);
