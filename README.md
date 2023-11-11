@@ -202,6 +202,10 @@ Sources for tilesets:
 
 https://schwarnhild.itch.io/basic-tileset-and-asset-pack-32x32-pixels  (Royalty free as of 11.10.23)
 
+source for hitmarker
+
+https://www.freepik.com/free-vector/animation-sprite-sheet-bomb-explosion-sequence_29084609.htm#query=sprite%20sheets&position=12&from_view=keyword&track=ais
+
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Tutorial and Wiki Sources:
