@@ -2,6 +2,7 @@ package com.boomchess.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -193,6 +194,9 @@ public class BoomChess extends ApplicationAdapter {
 
 	// stage for gameEnd
 	public static Stage gameEndStage;
+	
+	// BotMove Input Processor
+	public static BotMove botMove;
 
 	// -----------------------------------------------------------------------------------------
 
@@ -573,6 +577,10 @@ public class BoomChess extends ApplicationAdapter {
 		// initialise the gameEndStage
 		gameEndStage = new Stage();
 
+		// create botMove
+
+		botMove = new BotMove();
+
 		// ensures game starts in menu
 		createMainMenuStage();
 	}
@@ -604,6 +612,8 @@ public class BoomChess extends ApplicationAdapter {
 		// used for the dotted line when damage occurs (clears screen)  ------------------------
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		switchInputProcessor();
 
 		batch.begin();
 		batch.draw(background, 0, 0);
@@ -690,21 +700,33 @@ public class BoomChess extends ApplicationAdapter {
 				}
 			} else {
 				// switch case to make a bot decision for red team
-				switch (botDifficulty) {
-					case ("easy"):
-						BOT.easyBotMove();
-						break;
-					case ("medium"):
-						BOT.mediumBotMove();
-						break;
-					case ("hard"):
-						BOT.hardBotMove();
-						break;
+				if (!(botMove.getIsMoving())) {
+					switch (botDifficulty) {
+						case ("easy"):
+							BOT.easyBotMove();
+							break;
+						case ("medium"):
+							BOT.mediumBotMove();
+							break;
+						case ("hard"):
+							BOT.hardBotMove();
+							break;
+					}
+					legitTurn = false;
+				} else {
+					// add delta float time to BotMove.update
+					botMove.update(Gdx.graphics.getDeltaTime()); // updates till moving has finished
 				}
-				calculateDamage("red");
-				switchTurn(currentState);
-				legitTurn = false;
-				switchToStage(createGameStage(isBotMatch));
+
+				if (botMove.movingFinished) { // if the bot moving has finished, render and attack
+					// update the gameBoard officially
+
+					Board.update(botMove.startX, botMove.startY, botMove.endX, botMove.endY);
+					switchToStage(createGameStage(isBotMatch));
+
+					calculateDamage("red");
+					switchTurn(currentState);
+				}
 			}
 		} else if (currentState == GameState.GREEN_TURN) {
 			if (legitTurn) {
@@ -714,8 +736,6 @@ public class BoomChess extends ApplicationAdapter {
 			}
 		}
 	}
-
-
 
 	private void calculateDamage(String teamColor) {
 		/*
@@ -809,7 +829,6 @@ public class BoomChess extends ApplicationAdapter {
 		if (currentStage != null){
 			currentStage.clear();}
 		currentStage = newStage;
-		Gdx.input.setInputProcessor(currentStage);
 	}
 
 	public static void reRenderGame(){
@@ -1083,5 +1102,16 @@ public class BoomChess extends ApplicationAdapter {
 		HitMarkerActor hitActor = new HitMarkerActor(x, y);
 		deathExplosionStage.addActor(hitActor);
 		System.out.println("Hit someone at position "+ x + "-" + y);
+	}
+
+	// for switching the input prcessor to the botMove
+	public void switchInputProcessor() {
+		if ((!isBotMatch) || (isBotMatch && (currentState == GameState.GREEN_TURN))) {
+			// Set to the player's input processor
+			Gdx.input.setInputProcessor(currentStage);
+		} else {
+			BotMove botMove = new BotMove();
+			Gdx.input.setInputProcessor(botMove);
+		}
 	}
 }

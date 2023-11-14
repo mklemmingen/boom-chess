@@ -321,11 +321,11 @@ public class BOT {
         Soldier[][] gameBoard = Board.getGameBoard();
         System.out.println("\nBot Moved" + gameBoard[SX][SY].getClass().getName() + " to " + x + " " + y + "\n");
 
-        // DottedLine between old coordnates and new coordinates
+        // DottedLine between old coordinates and new coordinates
         BoomChess.addDottedLine((float) SX, (float) SY, (float) x, (float) y, false);
 
-        // TODO ADD A MOVING OF THE ACTOR TO THE NEW POSITION ALONG THE DOTTED LINE
-
-        Board.update(SX, SY, x, y);
+        // create new BotMove object in BoomChess BotMove Variable
+        BoomChess.botMove = new BotMove();
+        BoomChess.botMove.startMove(SX, SY, x, y);
     }
 }

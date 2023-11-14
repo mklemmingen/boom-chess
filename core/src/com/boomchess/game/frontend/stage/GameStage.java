@@ -29,11 +29,6 @@ public class GameStage {
 
     public static Stage createGameStage(final boolean isBotMatch) {
 
-        if (isBotMatch){
-            System.out.println("Bot Match");
-            // TODO CREATE MULTIPLE BOT DIFFICULTIES
-        }
-
         BoomChess.showMove = true;
 
         // add the audio table to gameStage as Actor and position on the far right of the Screen
@@ -233,10 +228,40 @@ public class GameStage {
 
                         }
                     });
+                } else {
+                    // these are the drag listeners for the bot, meaning it is bot match and its greens turn
+                    tileWidget.addListener(new DragListener() {
+                        @Override
+                        public void dragStart(InputEvent event, float x, float y, int pointer) {
+                            // Code runs when dragging starts:
+                            System.out.println("\n Started dragging the actor!");
+
+                            tileWidget.toFront();
+                            // Bring the actor to the front, so it appears above other actors
+                            // as long as the mouse is pressed down, the actor is moved to the mouse position
+                            // we calculate the tiles it can move to and highlight these tiles with a slightly red hue
+                            // the calculated tiles are part of a ArrayList variable that is created at create
+                            // of the whole programm
+                            // and gets cleared once we touchDragged the actor to a new position
+                        }
+
+                        @Override
+                        public void drag(InputEvent event, float x, float y, int pointer) {
+                            // Code here will run during the dragging
+                            tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
+                            reRenderGame();
+                        }
+
+                        @Override
+                        public void dragStop(InputEvent event, float x, float y, int pointer) {
+                            // drag has stopped
+                        }
+                    });
                 }
                 root.add(tileWidget).size(tileSize);
             }
         }
+
         System.out.println("\n New Board has been rendered.");
         batch.end();
 
@@ -264,12 +289,16 @@ public class GameStage {
             botDifficultyText.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    if (botDifficulty.equals("easy")) {
-                        botDifficulty = "medium";
-                    } else if (botDifficulty.equals("medium")) {
-                        botDifficulty = "hard";
-                    } else if (botDifficulty.equals("hard")) {
-                        botDifficulty = "easy";
+                    switch (botDifficulty) {
+                        case "easy":
+                            botDifficulty = "medium";
+                            break;
+                        case "medium":
+                            botDifficulty = "hard";
+                            break;
+                        case "hard":
+                            botDifficulty = "easy";
+                            break;
                     }
                     switchToStage(createGameStage(true));
                 }
@@ -284,11 +313,7 @@ public class GameStage {
         changeColourButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (isColourChanged) {
-                    isColourChanged = false;
-                } else {
-                    isColourChanged = true;
-                }
+                isColourChanged = !isColourChanged;
                 switchToStage(createGameStage(isBotMatch));
             }
         });
