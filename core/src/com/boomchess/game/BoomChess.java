@@ -20,6 +20,7 @@ import com.boomchess.game.backend.*;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
 import com.boomchess.game.frontend.actor.HitMarkerActor;
+import com.boomchess.game.frontend.attackSequence;
 import com.boomchess.game.frontend.moveBotTile;
 import com.boomchess.game.frontend.stage.GameEndStage;
 import com.boomchess.game.frontend.picture.RandomImage;
@@ -211,6 +212,8 @@ public class BoomChess extends ApplicationAdapter {
 
 	// stage used for the moving bot soldier pictures
 	public static Stage botMovingStage;
+
+	public static attackSequence actionSequence; // for when the Sequence is running
 
 	// -----------------------------------------------------------------------------------------
 
@@ -607,6 +610,9 @@ public class BoomChess extends ApplicationAdapter {
 
 		botMovingStage = new Stage();
 
+		// our damage dealing scenarios
+		actionSequence = new attackSequence();
+
 		// ensures game starts in menu
 		createMainMenuStage();
 	}
@@ -711,6 +717,11 @@ public class BoomChess extends ApplicationAdapter {
 		gameEndStage.act();
 		gameEndStage.draw();
 
+		if (actionSequence.getdamageSequenceRunning()){
+			// update with time
+			actionSequence.playNext(Gdx.graphics.getDeltaTime());
+		}
+
 		processTurn();
 
 	}
@@ -809,6 +820,7 @@ public class BoomChess extends ApplicationAdapter {
 		*  lets it attack the surrounding tiles
 		 */
 		Soldier[][] gameBoard = Board.getGameBoard();
+		boolean addedSmth = false;
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 8; j++) {
 				Soldier soldier = gameBoard[i][j];
