@@ -600,6 +600,8 @@ public class BoomChess extends ApplicationAdapter {
 
 		tileSize = 80;
 
+		updateStagesViewports();
+
 		// ensures game starts in menu
 		createMainMenuStage();
 	}
@@ -757,6 +759,37 @@ public class BoomChess extends ApplicationAdapter {
 				legitTurn = false;
 			}
 		}
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		/*
+		 * fits the needed values when a resize has happened, when a resize has happened
+		 */
+
+		// TODO INSTEAD OF WORKING WITH PIXELS IN SCENE2DUI, work with relaitivity of the size of a tile,
+		// which is width/24
+
+		mapStage.getViewport().update(width, height, true);
+		moveLogoStage.getViewport().update(width, height, true);
+		possibleMoveOverlay.getViewport().update(width, height, true);
+		currentStage.getViewport().update(width, height, true);
+		dottedLineStage.getViewport().update(width, height, true);
+		deathExplosionStage.getViewport().update(width, height, true);
+		gameEndStage.getViewport().update(width, height, true);
+
+	}
+
+	private void updateStagesViewports() {
+		int width = Gdx.graphics.getWidth();
+		int height = Gdx.graphics.getHeight();
+		mapStage.getViewport().update(width, height, true);
+		moveLogoStage.getViewport().update(width, height, true);
+		possibleMoveOverlay.getViewport().update(width, height, true);
+		currentStage.getViewport().update(width, height, true);
+		dottedLineStage.getViewport().update(width, height, true);
+		deathExplosionStage.getViewport().update(width, height, true);
+		gameEndStage.getViewport().update(width, height, true);
 	}
 
 	private void calculateDamage(String teamColor) {
@@ -1060,16 +1093,6 @@ public class BoomChess extends ApplicationAdapter {
 		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer, isDamage,
 				currentState, isColourChanged);
 		dottedLineStage.addActor(lineActor);
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		/*
-		* fits the stages to the screen each frame, fitting viewport
-		 */
-		currentStage.getViewport().update(width, height, true);
-		dottedLineStage.getViewport().update(width, height, true);
-		deathExplosionStage.getViewport().update(width, height, true);
 	}
 
 	// --------------------------------------------------------------------------------------------------------------
