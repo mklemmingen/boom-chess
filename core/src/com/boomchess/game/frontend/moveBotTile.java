@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import static com.boomchess.game.BoomChess.*;
 import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
+import static jdk.jfr.internal.instrument.JDKEvents.remove;
 
 public class moveBotTile {
     /*
@@ -34,6 +35,7 @@ public class moveBotTile {
     public static boolean isMoving;
     public boolean movingFinished;
 
+    private static Image soldierImage;
     private static Stack soldierStack;
 
     public moveBotTile() {
@@ -79,10 +81,9 @@ public class moveBotTile {
 
         Soldier soldier = gameBoard[startX][startY];
         // load the corresponding image through the Soldier Take Selfie Method
-        Image soldierImage;
         if (soldier instanceof takeSelfieInterface) {
             soldierImage = new Image(((takeSelfieInterface) soldier).takeSelfie());
-            System.out.println("Image succesfully obtained from Soldier Object.\n");
+            System.out.println("Image successfully obtained from Soldier Object.\n");
         } else {
             System.out.println("Error: Soldier is not an instance of takeSelfieInterface!\n");
             soldierImage = new Image(empty);
@@ -99,7 +100,7 @@ public class moveBotTile {
         // add SoldierImage to the widget and fill it
         soldierStack.add(soldierImage);
 
-        BoomChess.deathExplosionStage.addActor(soldierStack);
+        BoomChess.botMovingStage.addActor(soldierStack);
 
         // setting boolean isMoving to true, since we started moving
         isMoving = true;
@@ -127,12 +128,16 @@ public class moveBotTile {
 
                 System.out.println("Moving, currently: " + currentX + " " + currentY);
 
+                // System out print of the current z layer and visibility
+                System.out.println("Current Z Layer: " + soldierStack.getZIndex());
+                System.out.println("Current Visibility: " + soldierStack.isVisible());
+
                 // call the renderAt method to render the image at the current position
                 renderAt(currentX, currentY);
             } else {
                 // Move completed
-                isMoving = false;
                 movingFinished = true;
+                isMoving = false;
                 BoomChess.resetEmptyCoordinate();
             }
         }
@@ -141,13 +146,11 @@ public class moveBotTile {
     private static void renderAt(int currentX, int currentY) {
         /*
          * This method is used to render the image at the current position
-         *
          */
 
         currentX -= (int) (tileSize/2);
         currentY -= (int) (tileSize/2);
 
-        soldierStack.toFront();
         soldierStack.setPosition(currentX, currentY);
     }
 

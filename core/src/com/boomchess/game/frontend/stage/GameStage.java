@@ -348,6 +348,8 @@ public class GameStage {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 deathExplosionStage.clear();
+                botMovingStage.clear();
+                reRenderGame();
                 gameEndStage.clear();
                 BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
                 createMainMenuStage();

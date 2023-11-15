@@ -209,6 +209,9 @@ public class BoomChess extends ApplicationAdapter {
 	public static int emptyX;
 	public static int emptyY;
 
+	// stage used for the moving bot soldier pictures
+	public static Stage botMovingStage;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -600,7 +603,9 @@ public class BoomChess extends ApplicationAdapter {
 
 		tileSize = 80;
 
-		updateStagesViewports();
+		// updateStagesViewports();
+
+		botMovingStage = new Stage();
 
 		// ensures game starts in menu
 		createMainMenuStage();
@@ -696,6 +701,11 @@ public class BoomChess extends ApplicationAdapter {
 		deathExplosionStage.act(Gdx.graphics.getDeltaTime());
 		deathExplosionStage.draw();
 
+		// stage for the moving bot soldiers
+		botMovingStage.getViewport().apply();
+		botMovingStage.act(Gdx.graphics.getDeltaTime());
+		botMovingStage.draw();
+
 		// render the gameEndStage
 		gameEndStage.getViewport().apply();
 		gameEndStage.act();
@@ -741,12 +751,13 @@ public class BoomChess extends ApplicationAdapter {
 					// update the gameBoard officially
 
 					Board.update(botMove.startX, botMove.startY, botMove.endX, botMove.endY);
+					botMovingStage.clear();
 					switchToStage(createGameStage(isBotMatch));
 
 					calculateDamage("red");
 					switchTurn(currentState);
 
-					deathExplosionStage.clear();
+					// deathExplosionStage.clear();
 
 					// draws new with switched State and clears the old
 					switchToStage(createGameStage(isBotMatch));
@@ -772,7 +783,7 @@ public class BoomChess extends ApplicationAdapter {
 
 		mapStage.getViewport().update(width, height, true);
 		moveLogoStage.getViewport().update(width, height, true);
-		possibleMoveOverlay.getViewport().update(width, height, true);
+		// possibleMoveOverlay.getViewport().update(width, height, true);
 		currentStage.getViewport().update(width, height, true);
 		dottedLineStage.getViewport().update(width, height, true);
 		deathExplosionStage.getViewport().update(width, height, true);
@@ -1092,6 +1103,7 @@ public class BoomChess extends ApplicationAdapter {
 		 */
 		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer, isDamage,
 				currentState, isColourChanged);
+		lineActor.setZIndex(1);
 		dottedLineStage.addActor(lineActor);
 	}
 
@@ -1136,6 +1148,7 @@ public class BoomChess extends ApplicationAdapter {
 		* adds the DeathAnimation to the deathExplosionStage, adds this action to log
 		 */
 		DeathExplosionActor deathActor = new DeathExplosionActor(x, y);
+		deathActor.setZIndex(1);
 		deathExplosionStage.addActor(deathActor);
 		System.out.println("Exploded someone at position "+ x + "-" + y);
 	}
@@ -1145,6 +1158,7 @@ public class BoomChess extends ApplicationAdapter {
 		 * adds the DeathAnimation to the deathExplosionStage, adds this action to log
 		 */
 		HitMarkerActor hitActor = new HitMarkerActor(x, y);
+		hitActor.setZIndex(1);
 		deathExplosionStage.addActor(hitActor);
 		System.out.println("Hit someone at position "+ x + "-" + y);
 	}
