@@ -22,7 +22,7 @@ public class DottedLineActor extends Actor {
     // this is the time that the dotted line has been on the screen
     private float elapsed;
     // this is the maximum duration that the dotted line will be on the screen
-    private static final float MAX_DURATION = 1.5f;
+    private static float MAX_DURATION = 1.5f;
     // this is the shapeRenderer that will be used to draw the dotted line
     private final ShapeRenderer shapeRenderer;
 
@@ -89,6 +89,22 @@ public class DottedLineActor extends Actor {
         // calculate Pixel Coordinates of attacker and defender
         Coordinates attacker = BoomChess.calculatePXbyTile((int) startX, (int) startY);
         Coordinates defender = BoomChess.calculatePXbyTile((int) endX, (int) endY);
+
+        // if we are not doing an attack line, but a move line, change the time
+
+        if (!isDamage) {
+            // set the maximum duration fitting the length of the way that the soldier moves
+            // per 50 pixel, add 0.5f to max duration
+            // Begin: calculate Vector:
+
+            Vector2 pointA = new Vector2(attacker.getX(), attacker.getY());
+            Vector2 pointB = new Vector2(defender.getX(), defender.getY());
+            Vector2 vectorAB = pointB.sub(pointA);
+
+            float lengthVec = vectorAB.len();
+            int timefactor = (int) lengthVec / 50;
+            MAX_DURATION = timefactor * 0.5f;
+        }
 
         // out of the Coordinate objects, get the PX
         float x1 = attacker.getX();

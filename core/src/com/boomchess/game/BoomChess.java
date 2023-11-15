@@ -20,6 +20,7 @@ import com.boomchess.game.backend.*;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
 import com.boomchess.game.frontend.actor.HitMarkerActor;
+import com.boomchess.game.frontend.moveBotTile;
 import com.boomchess.game.frontend.stage.GameEndStage;
 import com.boomchess.game.frontend.picture.RandomImage;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
@@ -33,6 +34,8 @@ public class BoomChess extends ApplicationAdapter {
 	// used for essential resolution and drawing matters -------------------------------------------------------
 	public static SpriteBatch batch;
 	// usage for Scene2DUI-skins and stages -------------------------------------------------------
+	// size of tiles on the board
+	public static float tileSize;
 	public static Skin skin;
 	public static Skin progressBarSkin;
 	public static float numberObstacle; // number of obstacles in the default game mode
@@ -193,6 +196,18 @@ public class BoomChess extends ApplicationAdapter {
 
 	// stage for gameEnd
 	public static Stage gameEndStage;
+	
+	// BotMove Input Processor
+	// public static BotMove botMove;
+
+	// botMove class
+	public static moveBotTile botMove;
+
+	// variables for empty coordinate for botmove
+
+	public static boolean useEmpty;
+	public static int emptyX;
+	public static int emptyY;
 
 	// -----------------------------------------------------------------------------------------
 
@@ -573,6 +588,20 @@ public class BoomChess extends ApplicationAdapter {
 		// initialise the gameEndStage
 		gameEndStage = new Stage();
 
+		// create botMove
+
+		// botMove = new BotMove();
+
+		// userInput = new UserInputProcessor();
+
+		Gdx.input.setInputProcessor(currentStage);
+
+		botMove = new moveBotTile();
+
+		tileSize = 80;
+
+		updateStagesViewports();
+
 		// ensures game starts in menu
 		createMainMenuStage();
 	}
@@ -690,21 +719,38 @@ public class BoomChess extends ApplicationAdapter {
 				}
 			} else {
 				// switch case to make a bot decision for red team
-				switch (botDifficulty) {
-					case ("easy"):
-						BOT.easyBotMove();
-						break;
-					case ("medium"):
-						BOT.mediumBotMove();
-						break;
-					case ("hard"):
-						BOT.hardBotMove();
-						break;
+				if (!(botMove.getIsMoving())) {
+					switch (botDifficulty) {
+						case ("easy"):
+							BOT.easyBotMove();
+							break;
+						case ("medium"):
+							BOT.mediumBotMove();
+							break;
+						case ("hard"):
+							BOT.hardBotMove();
+							break;
+					}
+					legitTurn = false;
+				} else {
+					// add delta float time to BotMove.update
+					botMove.update(Gdx.graphics.getDeltaTime()); // updates till moving has finished
 				}
-				calculateDamage("red");
-				switchTurn(currentState);
-				legitTurn = false;
-				switchToStage(createGameStage(isBotMatch));
+
+				if (botMove.movingFinished) { // if the bot moving has finished, render and attack
+					// update the gameBoard officially
+
+					Board.update(botMove.startX, botMove.startY, botMove.endX, botMove.endY);
+					switchToStage(createGameStage(isBotMatch));
+
+					calculateDamage("red");
+					switchTurn(currentState);
+
+					deathExplosionStage.clear();
+
+					// draws new with switched State and clears the old
+					switchToStage(createGameStage(isBotMatch));
+				}
 			}
 		} else if (currentState == GameState.GREEN_TURN) {
 			if (legitTurn) {
@@ -715,7 +761,36 @@ public class BoomChess extends ApplicationAdapter {
 		}
 	}
 
+	@Override
+	public void resize(int width, int height) {
+		/*
+		 * fits the needed values when a resize has happened, when a resize has happened
+		 */
 
+		// TODO INSTEAD OF WORKING WITH PIXELS IN SCENE2DUI, work with relaitivity of the size of a tile,
+		// which is width/24
+
+		mapStage.getViewport().update(width, height, true);
+		moveLogoStage.getViewport().update(width, height, true);
+		possibleMoveOverlay.getViewport().update(width, height, true);
+		currentStage.getViewport().update(width, height, true);
+		dottedLineStage.getViewport().update(width, height, true);
+		deathExplosionStage.getViewport().update(width, height, true);
+		gameEndStage.getViewport().update(width, height, true);
+
+	}
+
+	private void updateStagesViewports() {
+		int width = Gdx.graphics.getWidth();
+		int height = Gdx.graphics.getHeight();
+		mapStage.getViewport().update(width, height, true);
+		moveLogoStage.getViewport().update(width, height, true);
+		possibleMoveOverlay.getViewport().update(width, height, true);
+		currentStage.getViewport().update(width, height, true);
+		dottedLineStage.getViewport().update(width, height, true);
+		deathExplosionStage.getViewport().update(width, height, true);
+		gameEndStage.getViewport().update(width, height, true);
+	}
 
 	private void calculateDamage(String teamColor) {
 		/*
@@ -726,7 +801,7 @@ public class BoomChess extends ApplicationAdapter {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 8; j++) {
 				Soldier soldier = gameBoard[i][j];
-				// for checking if the piece is an artillery -> call checkSurroundingsArtiller
+				// for checking if the piece is an artillery -> call checkSurroundingsArtillery
 				if (soldier != null && soldier.getTeamColor().equals(teamColor)) {
 					Damage.checkSurroundings(i, j);
 				}
@@ -891,7 +966,6 @@ public class BoomChess extends ApplicationAdapter {
 				(Gdx.graphics.getHeight() - root.getHeight()) / 2f);
 
 		// for the size of the tiles
-		int tileSize = 80;
 		int numRows = 8;
 		int numColumns = 9;
 
@@ -1012,23 +1086,13 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	// for adding a DottedLine to the dottedLineStage
-	public static void addDottedLine(float x1, float y1, float x2, float y2, boolean isDamage) {
+	public static void addDottedLine(float x1, float y1, float x2, float y2, boolean isDamage){
 		/*
 		* uses a beginning coordinate and a end coordinate to create an Actor and add it to the LineStage
 		 */
 		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer, isDamage,
 				currentState, isColourChanged);
 		dottedLineStage.addActor(lineActor);
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		/*
-		* fits the stages to the screen each frame, fitting viewport
-		 */
-		currentStage.getViewport().update(width, height, true);
-		dottedLineStage.getViewport().update(width, height, true);
-		deathExplosionStage.getViewport().update(width, height, true);
 	}
 
 	// --------------------------------------------------------------------------------------------------------------
@@ -1083,5 +1147,16 @@ public class BoomChess extends ApplicationAdapter {
 		HitMarkerActor hitActor = new HitMarkerActor(x, y);
 		deathExplosionStage.addActor(hitActor);
 		System.out.println("Hit someone at position "+ x + "-" + y);
+	}
+
+	// ------------------- methods for setting a to be displayed as empty variable
+	public static void resetEmptyCoordinate() {
+		useEmpty = false;
+	}
+
+	public static void setEmptyCoordinate(int startX, int startY) {
+		useEmpty = true;
+		emptyX = startX;
+		emptyY = startY;
 	}
 }

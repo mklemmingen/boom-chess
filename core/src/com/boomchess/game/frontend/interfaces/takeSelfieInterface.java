@@ -1,4 +1,4 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.frontend.interfaces;
 
 import com.badlogic.gdx.graphics.Texture;
 

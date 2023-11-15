@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Soldier;
 import com.boomchess.game.backend.calculateDamageInterface;
-import com.boomchess.game.backend.defendAndBleedInterface;
-import com.boomchess.game.backend.takeSelfieInterface;
+import com.boomchess.game.backend.interfaces.defendAndBleedInterface;
+import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
 public class Artillery extends Soldier
         implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {

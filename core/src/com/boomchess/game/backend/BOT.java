@@ -2,6 +2,8 @@ package com.boomchess.game.backend;
 
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.subsoldier.*;
+import com.boomchess.game.frontend.input.BotMove;
+import com.boomchess.game.frontend.moveBotTile;
 
 import java.util.*;
 
@@ -321,11 +323,11 @@ public class BOT {
         Soldier[][] gameBoard = Board.getGameBoard();
         System.out.println("\nBot Moved" + gameBoard[SX][SY].getClass().getName() + " to " + x + " " + y + "\n");
 
-        // DottedLine between old coordnates and new coordinates
+        // DottedLine between old coordinates and new coordinates
         BoomChess.addDottedLine((float) SX, (float) SY, (float) x, (float) y, false);
 
-        // TODO ADD A MOVING OF THE ACTOR TO THE NEW POSITION ALONG THE DOTTED LINE
-
-        Board.update(SX, SY, x, y);
+        // create new BotMove object in BoomChess BotMove Variable
+        BoomChess.botMove = new moveBotTile();
+        BoomChess.botMove.startMove(SX, SY, x, y);
     }
 }
