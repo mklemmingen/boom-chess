@@ -1,14 +1,18 @@
 package com.boomchess.game.frontend;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Board;
 import com.boomchess.game.backend.Coordinates;
 import com.boomchess.game.backend.Soldier;
-
-import com.boomchess.game.backend.Soldier;
 import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
-import java.awt.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
+import static com.boomchess.game.BoomChess.*;
+import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
 
 public class moveBotTile {
     /*
@@ -30,11 +34,10 @@ public class moveBotTile {
     public static boolean isMoving;
     public boolean movingFinished;
 
-    public static Image soldierImage;
+    private static Stack soldierStack;
 
     public moveBotTile() {
         elapsedTime = 0;
-        moveDuration = 1.5f; // Duration of the move in seconds
         isMoving = false;
         movingFinished = false;
     }
@@ -51,23 +54,57 @@ public class moveBotTile {
         this.endX = endX;
         this.endY = endY;
 
-        Soldier[][] gameBoard = Board.getGameBoard();
+        // manipulate variables for GameStage that select an empty texture for a certain coordinate
+        BoomChess.setEmptyCoordinate(startX, startY);
 
-        soldierImage = new Image(gameBoard[startX][startY].takeSelfie());
+        // rerender GameStage with new Empty Variables
+        switchToStage(createGameStage(isBotMatch));
 
+        // set the maximum duration fitting the length of the way that the soldier moves
+        // per 50 pixel, add 0.5f to max duration
+        // Begin: calculate Vector:
         startPx = BoomChess.calculatePXbyTile(startX, startY);
         endPx = BoomChess.calculatePXbyTile(endX, endY);
+
+        Vector2 pointA = new Vector2(startPx.getX(), startPx.getY());
+        Vector2 pointB = new Vector2(endPx.getX(), endPx.getY());
+        Vector2 vectorAB = pointB.sub(pointA);
+
+        float lengthVec = vectorAB.len();
+        int timefactor = (int) lengthVec / 50;
+        moveDuration = timefactor * 0.5f;
+
+
+        Soldier[][] gameBoard = Board.getGameBoard();
+
+        Soldier soldier = gameBoard[startX][startY];
+        // load the corresponding image through the Soldier Take Selfie Method
+        Image soldierImage;
+        if (soldier instanceof takeSelfieInterface) {
+            soldierImage = new Image(((takeSelfieInterface) soldier).takeSelfie());
+            System.out.println("Image succesfully obtained from Soldier Object.\n");
+        } else {
+            System.out.println("Error: Soldier is not an instance of takeSelfieInterface!\n");
+            soldierImage = new Image(empty);
+        }
+
+        soldierStack = new Stack();
+
+        soldierStack.setSize(BoomChess.tileSize, BoomChess.tileSize);
+        soldierStack.setVisible(true);
+
+        soldierImage.setSize(BoomChess.tileSize, BoomChess.tileSize);
+        soldierImage.setVisible(true);
+
+        // add SoldierImage to the widget and fill it
+        soldierStack.add(soldierImage);
+
+        BoomChess.deathExplosionStage.addActor(soldierStack);
 
         // setting boolean isMoving to true, since we started moving
         isMoving = true;
         // setting elapsedTime to zero, since time got set to zero
         elapsedTime = 0;
-
-        Coordinates startPx = BoomChess.calculatePXbyTile(startX, startY);
-
-        // render at position
-        renderAt(startPx.getX(), startPx.getY());
-
     }
 
     // method for updating the move
@@ -96,6 +133,7 @@ public class moveBotTile {
                 // Move completed
                 isMoving = false;
                 movingFinished = true;
+                BoomChess.resetEmptyCoordinate();
             }
         }
     }
@@ -103,18 +141,18 @@ public class moveBotTile {
     private static void renderAt(int currentX, int currentY) {
         /*
          * This method is used to render the image at the current position
+         *
          */
 
-        // clears the used Stage at each call
-        BoomChess.deathExplosionStage.clear();
-        // then adds the image to the stage at the px position
-        BoomChess.deathExplosionStage.addActor(soldierImage.setPosition(currentX, currentY));
+        currentX -= (int) (tileSize/2);
+        currentY -= (int) (tileSize/2);
 
+        soldierStack.toFront();
+        soldierStack.setPosition(currentX, currentY);
     }
 
     public boolean getIsMoving() {
         return isMoving;
     }
-
 
 }

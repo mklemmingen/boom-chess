@@ -17,11 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
-import com.boomchess.game.frontend.input.BotMove;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
 import com.boomchess.game.frontend.actor.HitMarkerActor;
-import com.boomchess.game.frontend.input.UserInputProcessor;
 import com.boomchess.game.frontend.moveBotTile;
 import com.boomchess.game.frontend.stage.GameEndStage;
 import com.boomchess.game.frontend.picture.RandomImage;
@@ -36,6 +34,8 @@ public class BoomChess extends ApplicationAdapter {
 	// used for essential resolution and drawing matters -------------------------------------------------------
 	public static SpriteBatch batch;
 	// usage for Scene2DUI-skins and stages -------------------------------------------------------
+	// size of tiles on the board
+	public static float tileSize;
 	public static Skin skin;
 	public static Skin progressBarSkin;
 	public static float numberObstacle; // number of obstacles in the default game mode
@@ -203,8 +203,11 @@ public class BoomChess extends ApplicationAdapter {
 	// botMove class
 	public static moveBotTile botMove;
 
-	// Player Input Processor
-	// public static UserInputProcessor userInput;
+	// variables for empty coordinate for botmove
+
+	public static boolean useEmpty;
+	public static int emptyX;
+	public static int emptyY;
 
 	// -----------------------------------------------------------------------------------------
 
@@ -593,6 +596,10 @@ public class BoomChess extends ApplicationAdapter {
 
 		Gdx.input.setInputProcessor(currentStage);
 
+		botMove = new moveBotTile();
+
+		tileSize = 80;
+
 		// ensures game starts in menu
 		createMainMenuStage();
 	}
@@ -736,6 +743,11 @@ public class BoomChess extends ApplicationAdapter {
 
 					calculateDamage("red");
 					switchTurn(currentState);
+
+					deathExplosionStage.clear();
+
+					// draws new with switched State and clears the old
+					switchToStage(createGameStage(isBotMatch));
 				}
 			}
 		} else if (currentState == GameState.GREEN_TURN) {
@@ -746,18 +758,6 @@ public class BoomChess extends ApplicationAdapter {
 			}
 		}
 	}
-
-	/* old method for switching the input processor to the userInput, used in conceptual bot tile moving by drag
-	// for switching the input prcessor to the botMove
-	public static void switchInputProcessor() {
-		if ((!isBotMatch) || (isBotMatch && (currentState == GameState.GREEN_TURN))) {
-			// Set to the player's input processor
-			Gdx.input.setInputProcessor(userInput);
-		} else {
-			Gdx.input.setInputProcessor(botMove);
-		}
-	}
-	*/
 
 	private void calculateDamage(String teamColor) {
 		/*
@@ -851,6 +851,7 @@ public class BoomChess extends ApplicationAdapter {
 		if (currentStage != null){
 			currentStage.clear();}
 		currentStage = newStage;
+		Gdx.input.setInputProcessor(currentStage);
 	}
 
 	public static void reRenderGame(){
@@ -932,7 +933,6 @@ public class BoomChess extends ApplicationAdapter {
 				(Gdx.graphics.getHeight() - root.getHeight()) / 2f);
 
 		// for the size of the tiles
-		int tileSize = 80;
 		int numRows = 8;
 		int numColumns = 9;
 
@@ -1053,7 +1053,7 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	// for adding a DottedLine to the dottedLineStage
-	public static void addDottedLine(float x1, float y1, float x2, float y2, boolean isDamage) {
+	public static void addDottedLine(float x1, float y1, float x2, float y2, boolean isDamage){
 		/*
 		* uses a beginning coordinate and a end coordinate to create an Actor and add it to the LineStage
 		 */
@@ -1124,5 +1124,16 @@ public class BoomChess extends ApplicationAdapter {
 		HitMarkerActor hitActor = new HitMarkerActor(x, y);
 		deathExplosionStage.addActor(hitActor);
 		System.out.println("Hit someone at position "+ x + "-" + y);
+	}
+
+	// ------------------- methods for setting a to be displayed as empty variable
+	public static void resetEmptyCoordinate() {
+		useEmpty = false;
+	}
+
+	public static void setEmptyCoordinate(int startX, int startY) {
+		useEmpty = true;
+		emptyX = startX;
+		emptyY = startY;
 	}
 }

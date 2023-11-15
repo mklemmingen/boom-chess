@@ -89,12 +89,20 @@ public class GameStage {
 
                 Image solPiece;
 
-                // load the corresponding image through the Soldier Take Selfie Method
-                if (soldier instanceof takeSelfieInterface) {
-                    solPiece = new Image(((takeSelfieInterface) soldier).takeSelfie());
+                // if the current coordinate is the empty Variable coordinates and its
+                // useEmpty = true, the solPiece has an Image of Empty, if not continue to rest
+
+                if(useEmpty && (j == emptyY && i == emptyX)){
+                    System.out.println("Added Empty Picture to start location.");
+                    solPiece = new Image(empty);
                 } else {
-                    System.out.println("Error: Soldier is not an instance of takeSelfieInterface!");
-                    solPiece = new Image(empty); // Ensure "empty" is properly defined before this line.
+                    // load the corresponding image through the Soldier Take Selfie Method
+                    if (soldier instanceof takeSelfieInterface) {
+                        solPiece = new Image(((takeSelfieInterface) soldier).takeSelfie());
+                    } else {
+                        System.out.println("Error: Soldier is not an instance of takeSelfieInterface!");
+                        solPiece = new Image(empty);
+                    }
                 }
 
                 // try getHealth, is null, make health to -1
@@ -339,12 +347,12 @@ public class GameStage {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                deathExplosionStage.clear();
+                gameEndStage.clear();
+                BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
                 createMainMenuStage();
                 // create a new gameBoard since game has ended
-                BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
                 setGameBoard();
-                // TODO ALLOW CLEAR
-                gameEndStage.clear();
             }
         });
 
@@ -358,7 +366,6 @@ public class GameStage {
     public Stage getStage() {
         return gameStage;
     }
-
 
 }
 

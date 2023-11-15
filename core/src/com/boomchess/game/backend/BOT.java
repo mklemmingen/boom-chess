@@ -3,6 +3,7 @@ package com.boomchess.game.backend;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.subsoldier.*;
 import com.boomchess.game.frontend.input.BotMove;
+import com.boomchess.game.frontend.moveBotTile;
 
 import java.util.*;
 
@@ -326,7 +327,7 @@ public class BOT {
         BoomChess.addDottedLine((float) SX, (float) SY, (float) x, (float) y, false);
 
         // create new BotMove object in BoomChess BotMove Variable
-        BoomChess.botMove = new BotMove();
+        BoomChess.botMove = new moveBotTile();
         BoomChess.botMove.startMove(SX, SY, x, y);
     }
 }
