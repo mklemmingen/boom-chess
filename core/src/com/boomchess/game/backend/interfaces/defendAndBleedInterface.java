@@ -1,4 +1,6 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.backend.interfaces;
+
+import com.boomchess.game.backend.Soldier;
 
 public interface defendAndBleedInterface {
     /*

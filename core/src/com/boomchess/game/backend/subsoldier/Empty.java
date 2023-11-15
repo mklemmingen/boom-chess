@@ -3,7 +3,7 @@ package com.boomchess.game.backend.subsoldier;
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Soldier;
-import com.boomchess.game.backend.takeSelfieInterface;
+import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
 public class Empty extends Soldier
         implements takeSelfieInterface {

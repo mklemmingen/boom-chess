@@ -2,7 +2,6 @@ package com.boomchess.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -18,9 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
+import com.boomchess.game.frontend.input.BotMove;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
 import com.boomchess.game.frontend.actor.HitMarkerActor;
+import com.boomchess.game.frontend.input.UserInputProcessor;
+import com.boomchess.game.frontend.moveBotTile;
 import com.boomchess.game.frontend.stage.GameEndStage;
 import com.boomchess.game.frontend.picture.RandomImage;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
@@ -196,7 +198,13 @@ public class BoomChess extends ApplicationAdapter {
 	public static Stage gameEndStage;
 	
 	// BotMove Input Processor
-	public static BotMove botMove;
+	// public static BotMove botMove;
+
+	// botMove class
+	public static moveBotTile botMove;
+
+	// Player Input Processor
+	// public static UserInputProcessor userInput;
 
 	// -----------------------------------------------------------------------------------------
 
@@ -579,7 +587,11 @@ public class BoomChess extends ApplicationAdapter {
 
 		// create botMove
 
-		botMove = new BotMove();
+		// botMove = new BotMove();
+
+		// userInput = new UserInputProcessor();
+
+		Gdx.input.setInputProcessor(currentStage);
 
 		// ensures game starts in menu
 		createMainMenuStage();
@@ -612,8 +624,6 @@ public class BoomChess extends ApplicationAdapter {
 		// used for the dotted line when damage occurs (clears screen)  ------------------------
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		switchInputProcessor();
 
 		batch.begin();
 		batch.draw(background, 0, 0);
@@ -737,6 +747,18 @@ public class BoomChess extends ApplicationAdapter {
 		}
 	}
 
+	/* old method for switching the input processor to the userInput, used in conceptual bot tile moving by drag
+	// for switching the input prcessor to the botMove
+	public static void switchInputProcessor() {
+		if ((!isBotMatch) || (isBotMatch && (currentState == GameState.GREEN_TURN))) {
+			// Set to the player's input processor
+			Gdx.input.setInputProcessor(userInput);
+		} else {
+			Gdx.input.setInputProcessor(botMove);
+		}
+	}
+	*/
+
 	private void calculateDamage(String teamColor) {
 		/*
 		* method that goes through each tile of the board and if SoldierTeam is teamColor,
@@ -746,7 +768,7 @@ public class BoomChess extends ApplicationAdapter {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 8; j++) {
 				Soldier soldier = gameBoard[i][j];
-				// for checking if the piece is an artillery -> call checkSurroundingsArtiller
+				// for checking if the piece is an artillery -> call checkSurroundingsArtillery
 				if (soldier != null && soldier.getTeamColor().equals(teamColor)) {
 					Damage.checkSurroundings(i, j);
 				}
@@ -1102,16 +1124,5 @@ public class BoomChess extends ApplicationAdapter {
 		HitMarkerActor hitActor = new HitMarkerActor(x, y);
 		deathExplosionStage.addActor(hitActor);
 		System.out.println("Hit someone at position "+ x + "-" + y);
-	}
-
-	// for switching the input prcessor to the botMove
-	public void switchInputProcessor() {
-		if ((!isBotMatch) || (isBotMatch && (currentState == GameState.GREEN_TURN))) {
-			// Set to the player's input processor
-			Gdx.input.setInputProcessor(currentStage);
-		} else {
-			BotMove botMove = new BotMove();
-			Gdx.input.setInputProcessor(botMove);
-		}
 	}
 }

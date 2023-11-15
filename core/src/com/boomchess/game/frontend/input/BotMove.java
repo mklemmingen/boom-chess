@@ -1,9 +1,10 @@
-package com.boomchess.game.backend;
+package com.boomchess.game.frontend.input;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.Coordinates;
 
 public class BotMove implements InputProcessor {
     /*

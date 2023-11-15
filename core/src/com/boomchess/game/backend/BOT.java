@@ -2,6 +2,7 @@ package com.boomchess.game.backend;
 
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.subsoldier.*;
+import com.boomchess.game.frontend.input.BotMove;
 
 import java.util.*;
 

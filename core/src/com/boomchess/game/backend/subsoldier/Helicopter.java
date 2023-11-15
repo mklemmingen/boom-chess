@@ -3,6 +3,8 @@ package com.boomchess.game.backend.subsoldier;
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.*;
+import com.boomchess.game.backend.interfaces.defendAndBleedInterface;
+import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
 import java.util.ArrayList;
 
