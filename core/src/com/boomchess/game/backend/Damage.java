@@ -8,6 +8,7 @@ import com.boomchess.game.backend.subsoldier.Artillery;
 import com.boomchess.game.backend.subsoldier.Empty;
 import com.boomchess.game.backend.subsoldier.General;
 import com.boomchess.game.backend.subsoldier.Hill;
+import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.stage.GameStage;
 
 import static com.boomchess.game.BoomChess.actionSequence;
@@ -62,7 +63,6 @@ public class Damage {
         int startY = Math.max(0, y - distance);
         int endY = Math.min(7, y + distance);
 
-        boolean addedSmth = false;
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {
                 if (i == x && j == y) continue; // Skip on checking the original piece
@@ -71,15 +71,10 @@ public class Damage {
                             String hurtColor = gameBoard[i][j].getTeamColor();
                         if (!hurtColor.equals(attackColor)) {
                             dealBigBoom(x, y, i, j);
-                            addedSmth = true;
                         }
                     }
                 }
             }
-        }
-        if (addedSmth) {
-            // start the Damage Sequence!
-            actionSequence.startSequences();
         }
     }
 
@@ -106,15 +101,9 @@ public class Damage {
         Soldier[][] gameBoard = Board.getGameBoard();
 
         // drawing the dotted line from the attacking piece to the defending piece
+        BoomChess.addDottedLine(positionAttX, positionAttY, positionDefX, positionDefY, true);
         // adding a hitmarker animation
-
-        Coordinates dottedLineStart = new Coordinates();
-        dottedLineStart.setCoordinates(positionAttX, positionAttY);
-        Coordinates dottedLineEnd = new Coordinates();
-        dottedLineEnd.setCoordinates(positionDefX, positionDefY);
-
-        actionSequence.addSequences(dottedLineStart, dottedLineEnd, dottedLineEnd,
-                false, true);
+        BoomChess.addHitMarker(positionDefX, positionDefY);
 
         // we need to get the current health of the defending piece
         int currentHealth = gameBoard[positionDefX][positionDefY].getHealth();
@@ -149,13 +138,12 @@ public class Damage {
     private static void killPiece(int positionX, int positionY) {
         // this method is called when a soldier is killed
         // it empties the tile the soldier was standing on
-        // and sets the taken boolean to false
 
-        Coordinates exploLoc = new Coordinates();
-        exploLoc.setCoordinates(positionX, positionY);
+       BoomChess.addDeathAnimation(positionX, positionY);
 
-        actionSequence.addSequences(null, null, exploLoc,
-                true, false);
+        Soldier[][] gameBoard = Board.getGameBoard();
+        gameBoard[positionX][positionY] = new Empty("empty");
+
         System.out.print("\nDeath animation has been added on the corpse! Oh no!");
     }
 }

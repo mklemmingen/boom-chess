@@ -20,7 +20,7 @@ public class DeathExplosionActor extends Actor {
     // this is the time that the animation has been on the screen
     private float elapsed = 0;
     // this is the maximum duration that the animation will be on the screen
-    private static final float MAX_DURATION = 5.0f;
+    private static final float MAX_DURATION = 1.5f;
     private static final int FRAME_COLS = 8; // Number of columns in animations/explosions.png sprite sheet
     private static final int FRAME_ROWS = 6; // Number of rows
     private final Animation<TextureRegion> explosionAnimation;

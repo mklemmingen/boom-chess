@@ -67,7 +67,7 @@ public class BoomChess extends ApplicationAdapter {
 	// Shape Renderer for easy drawing of lines
 	private static ShapeRenderer shapeRenderer;
 	// stage we render the shapes on
-	private static Stage dottedLineStage;
+	public static Stage dottedLineStage;
 	// used for the deathExplosion ---------------------------------------------
 	public static Stage deathExplosionStage;
 
@@ -717,9 +717,10 @@ public class BoomChess extends ApplicationAdapter {
 		gameEndStage.act();
 		gameEndStage.draw();
 
-		if (actionSequence.getdamageSequenceRunning()){
-			// update with time
-			actionSequence.playNext(Gdx.graphics.getDeltaTime());
+		if (!(actionSequence.getAttackList().isEmpty()) || actionSequence.getIndex() < actionSequence.getAttackList().size()-1) {
+			// update the method playNext
+			actionSequence.playNext(System.currentTimeMillis());
+			return;
 		}
 
 		processTurn();
@@ -819,8 +820,8 @@ public class BoomChess extends ApplicationAdapter {
 		* method that goes through each tile of the board and if SoldierTeam is teamColor,
 		*  lets it attack the surrounding tiles
 		 */
+
 		Soldier[][] gameBoard = Board.getGameBoard();
-		boolean addedSmth = false;
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 8; j++) {
 				Soldier soldier = gameBoard[i][j];
@@ -1116,7 +1117,7 @@ public class BoomChess extends ApplicationAdapter {
 		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer, isDamage,
 				currentState, isColourChanged);
 		lineActor.setZIndex(1);
-		dottedLineStage.addActor(lineActor);
+		actionSequence.addSequence(lineActor);
 	}
 
 	// --------------------------------------------------------------------------------------------------------------
@@ -1161,7 +1162,7 @@ public class BoomChess extends ApplicationAdapter {
 		 */
 		DeathExplosionActor deathActor = new DeathExplosionActor(x, y);
 		deathActor.setZIndex(1);
-		deathExplosionStage.addActor(deathActor);
+		actionSequence.addSequence(deathActor);
 		System.out.println("Exploded someone at position "+ x + "-" + y);
 	}
 
@@ -1171,7 +1172,7 @@ public class BoomChess extends ApplicationAdapter {
 		 */
 		HitMarkerActor hitActor = new HitMarkerActor(x, y);
 		hitActor.setZIndex(1);
-		deathExplosionStage.addActor(hitActor);
+		actionSequence.addSequence(hitActor);
 		System.out.println("Hit someone at position "+ x + "-" + y);
 	}
 
