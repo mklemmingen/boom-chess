@@ -10,24 +10,27 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
+import com.boomchess.game.frontend.AttackSequence;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
 import com.boomchess.game.frontend.actor.HitMarkerActor;
-import com.boomchess.game.frontend.attackSequence;
 import com.boomchess.game.frontend.moveBotTile;
-import com.boomchess.game.frontend.stage.GameEndStage;
 import com.boomchess.game.frontend.picture.RandomImage;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
-import com.boomchess.game.frontend.stage.*;
 import com.boomchess.game.frontend.sound.RandomSound;
+import com.boomchess.game.frontend.stage.*;
+
 import java.util.ArrayList;
+
 import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
 
 public class BoomChess extends ApplicationAdapter {
@@ -213,7 +216,7 @@ public class BoomChess extends ApplicationAdapter {
 	// stage used for the moving bot soldier pictures
 	public static Stage botMovingStage;
 
-	public static attackSequence actionSequence; // for when the Sequence is running
+	public static AttackSequence actionSequence; // for when the Sequence is running
 
 	// -----------------------------------------------------------------------------------------
 
@@ -320,11 +323,8 @@ public class BoomChess extends ApplicationAdapter {
 		obstacleTextures.addTexture("obstacles/obstacle4.png");
 		obstacleTextures.addTexture("obstacles/obstacle5.png");
 		obstacleTextures.addTexture("obstacles/obstacle6.png");
-		obstacleTextures.addTexture("obstacles/obstacle7.png");
 		obstacleTextures.addTexture("obstacles/obstacle8.png");
 		obstacleTextures.addTexture("obstacles/obstacle9.png");
-		obstacleTextures.addTexture("obstacles/obstacle10.png");
-		obstacleTextures.addTexture("obstacles/obstacle11.png");
 
 		// load the sound effects into respective Objects --------------------------------------
 
@@ -611,7 +611,7 @@ public class BoomChess extends ApplicationAdapter {
 		botMovingStage = new Stage();
 
 		// our damage dealing scenarios
-		actionSequence = new attackSequence();
+		actionSequence = new AttackSequence();
 
 		// ensures game starts in menu
 		createMainMenuStage();
@@ -640,10 +640,7 @@ public class BoomChess extends ApplicationAdapter {
 		* render is called every frame, main-game loop of the game, holds all stages in nested ifs and the processTurn
 		 */
 
-		ScreenUtils.clear(1, 0, 0, 1);
-		// used for the dotted line when damage occurs (clears screen)  ------------------------
 		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
 		batch.draw(background, 0, 0);
@@ -717,9 +714,9 @@ public class BoomChess extends ApplicationAdapter {
 		gameEndStage.act();
 		gameEndStage.draw();
 
-		if (!(actionSequence.getAttackList().isEmpty()) || actionSequence.getIndex() < actionSequence.getAttackList().size()-1) {
+		if (actionSequence.getDamageSequenceRunning()){
 			// update the method playNext
-			actionSequence.playNext(System.currentTimeMillis());
+			actionSequence.playNext(Gdx.graphics.getDeltaTime());
 			return;
 		}
 
@@ -768,11 +765,6 @@ public class BoomChess extends ApplicationAdapter {
 
 					calculateDamage("red");
 					switchTurn(currentState);
-
-					// deathExplosionStage.clear();
-
-					// draws new with switched State and clears the old
-					switchToStage(createGameStage(isBotMatch));
 				}
 			}
 		} else if (currentState == GameState.GREEN_TURN) {
@@ -831,6 +823,7 @@ public class BoomChess extends ApplicationAdapter {
 				}
 			}
 		}
+		actionSequence.startSequences();
 	}
 
 	private void switchTurn(GameState state) {
@@ -1110,14 +1103,19 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	// for adding a DottedLine to the dottedLineStage
-	public static void addDottedLine(float x1, float y1, float x2, float y2, boolean isDamage){
+	public static void addDottedLine(int x1, int y1, int x2, int y2, boolean isDamage){
 		/*
 		* uses a beginning coordinate and a end coordinate to create an Actor and add it to the LineStage
 		 */
 		DottedLineActor lineActor = new DottedLineActor(x1, y1, x2, y2, shapeRenderer, isDamage,
 				currentState, isColourChanged);
 		lineActor.setZIndex(1);
-		actionSequence.addSequence(lineActor);
+
+		if(isDamage) { // if it is a damage dotted line and not a white bot move line
+			actionSequence.addSequence(lineActor);
+		} else {
+			dottedLineStage.addActor(lineActor);
+		}
 	}
 
 	// --------------------------------------------------------------------------------------------------------------

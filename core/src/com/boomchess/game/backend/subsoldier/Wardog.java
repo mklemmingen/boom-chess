@@ -2,14 +2,18 @@ package com.boomchess.game.backend.subsoldier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
-import com.boomchess.game.backend.*;
+import com.boomchess.game.backend.Board;
+import com.boomchess.game.backend.Coordinates;
+import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.backend.interfaces.calculateDamageInterface;
 import com.boomchess.game.backend.interfaces.defendAndBleedInterface;
+import com.boomchess.game.frontend.interfaces.makeASoundInterface;
 import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
 import java.util.ArrayList;
 
 public class Wardog extends Soldier
-        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface, makeASoundInterface {
     /*
      * Wardog.java is the object for the chess piece General in the game Boom Chess.
      * It holds the specific movement patterns for this piece, mathMove,
@@ -170,5 +174,13 @@ public class Wardog extends Soldier
 
         System.out.println("Wardog defendAndBleed: " + damage);
         return damage;
+    }
+
+    public void makeASound(){
+        if(BoomChess.isMedievalMode){
+            BoomChess.dogSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.magicSound.play(BoomChess.soundVolume);
+        }
     }
 }

@@ -2,14 +2,18 @@ package com.boomchess.game.backend.subsoldier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
-import com.boomchess.game.backend.*;
+import com.boomchess.game.backend.Board;
+import com.boomchess.game.backend.Coordinates;
+import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.backend.interfaces.calculateDamageInterface;
 import com.boomchess.game.backend.interfaces.defendAndBleedInterface;
+import com.boomchess.game.frontend.interfaces.makeASoundInterface;
 import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
 import java.util.ArrayList;
 
 public class Commando extends Soldier
-        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface, makeASoundInterface {
     /*
      * Commando.java is the object for the chess piece Commando in the game Boom Chess.
      * It holds the specific movement patterns for this piece, the special damage it can deal and the initial health.
@@ -66,12 +70,6 @@ public class Commando extends Soldier
 
         if(soldierDefend instanceof Tank){
             randomDamage += 10;
-        }
-
-        if(BoomChess.isMedievalMode){
-            BoomChess.queenSound.play(BoomChess.soundVolume);
-        } else {
-            BoomChess.bigArmsSound.play(BoomChess.soundVolume);
         }
 
         return randomDamage;
@@ -259,6 +257,14 @@ public class Commando extends Soldier
 
         System.out.println("The " + soldierAttack + " has dealt " + damage + " damage to the Commando.");
         return damage / factor;
+    }
+
+    public void makeASound(){
+        if(BoomChess.isMedievalMode){
+            BoomChess.queenSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.bigArmsSound.play(BoomChess.soundVolume);
+        }
     }
 }
 

@@ -324,7 +324,7 @@ public class BOT {
         System.out.println("\nBot Moved" + gameBoard[SX][SY].getClass().getName() + " to " + x + " " + y + "\n");
 
         // DottedLine between old coordinates and new coordinates
-        BoomChess.addDottedLine((float) SX, (float) SY, (float) x, (float) y, false);
+        BoomChess.addDottedLine(SX, SY, x, y, false);
 
         // create new BotMove object in BoomChess BotMove Variable
         BoomChess.botMove = new moveBotTile();

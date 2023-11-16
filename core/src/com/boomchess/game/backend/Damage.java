@@ -3,15 +3,12 @@ package com.boomchess.game.backend;
 // import the General, Helicopter, Infantry, Tank, Wardog Classes of other files
 
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.interfaces.calculateDamageInterface;
 import com.boomchess.game.backend.interfaces.defendAndBleedInterface;
 import com.boomchess.game.backend.subsoldier.Artillery;
 import com.boomchess.game.backend.subsoldier.Empty;
 import com.boomchess.game.backend.subsoldier.General;
 import com.boomchess.game.backend.subsoldier.Hill;
-import com.boomchess.game.frontend.actor.DeathExplosionActor;
-import com.boomchess.game.frontend.stage.GameStage;
-
-import static com.boomchess.game.BoomChess.actionSequence;
 
 
 public class Damage {
@@ -139,7 +136,7 @@ public class Damage {
         // this method is called when a soldier is killed
         // it empties the tile the soldier was standing on
 
-       BoomChess.addDeathAnimation(positionX, positionY);
+        BoomChess.addDeathAnimation(positionX, positionY);
 
         Soldier[][] gameBoard = Board.getGameBoard();
         gameBoard[positionX][positionY] = new Empty("empty");
