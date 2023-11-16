@@ -6,7 +6,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.boomchess.game.BoomChess;
+import com.boomchess.game.backend.Board;
 import com.boomchess.game.backend.Coordinates;
+import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.frontend.interfaces.makeASoundInterface;
+
+import static com.boomchess.game.BoomChess.isBotMatch;
+import static com.boomchess.game.BoomChess.switchToStage;
+import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
 
 
 /*
@@ -15,14 +22,16 @@ import com.boomchess.game.backend.Coordinates;
 */
 public class DottedLineActor extends Actor {
     // these values are the beginning and the end of the dotted Line
-    private final float startX;
-    private final float startY;
-    private final float endX;
-    private final float endY;
+
+
+    private final int startX;
+    private final int startY;
+    private final int endX;
+    private final int endY;
     // this is the time that the dotted line has been on the screen
     private float elapsed;
     // this is the maximum duration that the dotted line will be on the screen
-    private static float MAX_DURATION = 1.5f;
+    private static float MAX_DURATION = 1.25f;
     // this is the shapeRenderer that will be used to draw the dotted line
     private final ShapeRenderer shapeRenderer;
 
@@ -32,7 +41,8 @@ public class DottedLineActor extends Actor {
     private final BoomChess.GameState currentState;
     private final boolean coloursreversed;
 
-    public DottedLineActor(float startX, float startY, float endX, float endY, ShapeRenderer shapeRenderer, boolean isDamage, BoomChess.GameState currentState,
+    public DottedLineActor(int startX, int startY, int endX, int endY, ShapeRenderer shapeRenderer,
+                           boolean isDamage, BoomChess.GameState currentState,
                            boolean coloursreversed) {
         /*
         * used to create a DottedLineActor Object
@@ -56,6 +66,9 @@ public class DottedLineActor extends Actor {
         super.act(delta);
         elapsed += delta;
         if (elapsed > MAX_DURATION) {
+            if(!isDamage){
+                switchToStage(createGameStage(isBotMatch));
+            }
             remove(); // This will remove the actor from the stage
         }
     }
@@ -103,7 +116,7 @@ public class DottedLineActor extends Actor {
 
             float lengthVec = vectorAB.len();
             int timefactor = (int) lengthVec / 50;
-            MAX_DURATION = timefactor * 0.5f;
+            MAX_DURATION = timefactor * 0.75f;
         }
 
         // out of the Coordinate objects, get the PX
@@ -146,5 +159,17 @@ public class DottedLineActor extends Actor {
         shapeRenderer.end();
 
         batch.begin(); // Restart the batch for subsequent actors or UI elements
+    }
+
+    public void makeSound(){
+        // calls the soldier object at the start position of the dotted line and plays its makeASound Method
+        Soldier[][] board = Board.getGameBoard();
+
+        Soldier mySoldata = board[(int) startX][(int) startY];
+
+
+        if (mySoldata instanceof makeASoundInterface) {
+            ((makeASoundInterface) mySoldata).makeASound();
+        }
     }
 }

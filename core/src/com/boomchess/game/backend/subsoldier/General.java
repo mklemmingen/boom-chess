@@ -3,12 +3,13 @@ package com.boomchess.game.backend.subsoldier;
 import com.badlogic.gdx.graphics.Texture;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Soldier;
-import com.boomchess.game.backend.calculateDamageInterface;
+import com.boomchess.game.backend.interfaces.calculateDamageInterface;
 import com.boomchess.game.backend.interfaces.defendAndBleedInterface;
+import com.boomchess.game.frontend.interfaces.makeASoundInterface;
 import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
 public class General extends Soldier
-        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface {
+        implements takeSelfieInterface, calculateDamageInterface, defendAndBleedInterface, makeASoundInterface {
     /*
      * General.java is the object for the chess piece General in the game Boom Chess.
      * It holds the specific movement patterns for this piece, mathMove,
@@ -62,12 +63,6 @@ public class General extends Soldier
         // we achieve this randomisation using random.Math`s floor and random methods
         // that generate a random number between 0 and 1 that we multiply
 
-        if(BoomChess.isMedievalMode){
-            BoomChess.kingSound.play(BoomChess.soundVolume);
-        } else {
-            BoomChess.smallArmsSound.play(BoomChess.soundVolume);
-        }
-
         return (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
     }
 
@@ -76,5 +71,13 @@ public class General extends Soldier
 
         System.out.println("The General is in a Bunker and only takes half damage!");
         return damage/2;
+    }
+
+    public void makeASound(){
+        if(BoomChess.isMedievalMode){
+            BoomChess.kingSound.play(BoomChess.soundVolume);
+        } else {
+            BoomChess.smallArmsSound.play(BoomChess.soundVolume);
+        }
     }
 }

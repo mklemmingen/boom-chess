@@ -74,7 +74,7 @@ public class moveBotTile {
 
         float lengthVec = vectorAB.len();
         int timefactor = (int) lengthVec / 50;
-        moveDuration = timefactor * 0.5f;
+        moveDuration = timefactor * 0.75f;
 
 
         Soldier[][] gameBoard = Board.getGameBoard();
