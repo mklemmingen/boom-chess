@@ -6,6 +6,7 @@ import com.boomchess.game.BoomChess;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
 import com.boomchess.game.frontend.actor.HitMarkerActor;
+import com.boomchess.game.frontend.stage.MenuStage;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,8 @@ public class AttackSequence {
          */
 
         if(attackList.isEmpty()){
-            // if the checkSurroundings has not found any pieces to attack, then return
+            // if the checkSurroundings has not found any pieces to attack, switchTurn then return
+            continueGame();
             return;
         }
 
@@ -58,13 +60,18 @@ public class AttackSequence {
          */
 
         if (currentIndex >= lengthOfAttackList){
+
             // if the current index is greater than the length of the attack list,
             // then we are at the end of the sequence
 
             attackList = new ArrayList<Actor>(); // reset the attackList
             damageSequenceRunning = false;
-            switchToStage(createGameStage(isBotMatch));
             // this causes the object to not be called till start turns true
+
+            continueGame();
+
+            System.out.println("Action Sequence has ENDED! All actions have been completed! Cut!");
+
             return;
         }
 
@@ -86,13 +93,24 @@ public class AttackSequence {
     private void actActor(){
         // if statement of instance of either HitMarkerActor or DeathExplosionActor or DottedLineActor
 
+        // this ensures that if the player has gone back to the menu, the sequence will not continue
+        if (BoomChess.currentStage instanceof MenuStage){
+            // clear all the actors in the attackList
+            attackList = new ArrayList<Actor>();
+            // clear all the stages
+            deathExplosionStage.clear();
+            dottedLineStage.clear();
+            // set damageSequenceRunning to false
+            damageSequenceRunning = false;
+            return;
+        }
+
         if (currentIndex >= lengthOfAttackList){
             // if the current index is greater than the length of the attack list,
             // then we are at the end of the sequence
 
             attackList = new ArrayList<Actor>(); // reset the attackList
             damageSequenceRunning = false;
-            // this causes the object to not be called till start turns true
             return;
         }
 
@@ -107,12 +125,12 @@ public class AttackSequence {
             // if it is a DeathExplosionActor, add it to the deathExplosionStage
             BoomChess.bigExplosionSound.play(BoomChess.soundVolume);
             deathExplosionStage.addActor(actorBuddy);
-            timePerBreak = 4f;
+            timePerBreak = 3f;
         } else if (actorBuddy instanceof DottedLineActor) {
             // if it is a DottedLineActor, add it to the GameStage
             ((DottedLineActor) actorBuddy).makeSound();
             dottedLineStage.addActor(actorBuddy);
-            timePerBreak = 1f;
+            timePerBreak = 0.5f;
         } else {
             // simulate throwing an error for the log
             System.out.println("attackSequence.playNext() has an unknown actor type");
@@ -125,6 +143,13 @@ public class AttackSequence {
 
     public boolean getDamageSequenceRunning(){
         return damageSequenceRunning;
+    }
+
+    private void continueGame(){
+        // in the case that the actionSequence were run through, this switches the turn to the next player
+        BoomChess.switchTurn(currentState);
+        // render the gameBoard as a on-screen update
+        reRenderGame();
     }
 
 }

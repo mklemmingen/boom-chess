@@ -10,9 +10,12 @@ import com.boomchess.game.backend.Board;
 import com.boomchess.game.backend.Coordinates;
 import com.boomchess.game.backend.Soldier;
 import com.boomchess.game.frontend.interfaces.makeASoundInterface;
+import com.boomchess.game.frontend.stage.MenuStage;
 
-import static com.boomchess.game.BoomChess.isBotMatch;
-import static com.boomchess.game.BoomChess.switchToStage;
+import java.util.ArrayList;
+
+import static com.boomchess.game.BoomChess.*;
+import static com.boomchess.game.BoomChess.dottedLineStage;
 import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
 
 
@@ -63,11 +66,18 @@ public class DottedLineActor extends Actor {
         * this method is called every frame to update the DottedLineActor Object and overrides the standard act method
         * so that the dotted line will be removed after a certain amount of time
          */
+
+        // this ensures that if the player has gone back to the menu, the sequence will not continue
+        if (BoomChess.currentStage instanceof MenuStage){
+            remove(); // This will remove the actor from the stage
+            return;
+        }
+
         super.act(delta);
         elapsed += delta;
         if (elapsed > MAX_DURATION) {
             if(!isDamage){
-                switchToStage(createGameStage(isBotMatch));
+                reRenderGame();
             }
             remove(); // This will remove the actor from the stage
         }

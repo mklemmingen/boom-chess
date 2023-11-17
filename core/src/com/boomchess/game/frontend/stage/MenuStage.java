@@ -65,8 +65,6 @@ public class MenuStage extends Stage{
         play2Button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // create the first gameBoard
-                GameStage.setGameBoard();
 
                 // stop menu music and start background_music
                 menu_music.stop();
@@ -81,6 +79,7 @@ public class MenuStage extends Stage{
                 // create the big game Board as an object of the Board class
                 Board.initialise();
 
+                inGame = true;
                 switchToStage(GameStage.createGameStage(isBotMatch));
             }
         });
@@ -92,7 +91,7 @@ public class MenuStage extends Stage{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // create the first gameBoard
-                setGameBoard();
+                Board.initialise();
 
                 // stop menu music and start background_music
                 menu_music.stop();
@@ -107,6 +106,7 @@ public class MenuStage extends Stage{
                 // create the big game Board as an object of the Board class
                 Board.initialise();
 
+                inGame = true;
                 switchToStage(GameStage.createGameStage(isBotMatch));
             }
         });

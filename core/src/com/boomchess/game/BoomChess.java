@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
 import com.boomchess.game.frontend.AttackSequence;
@@ -43,7 +41,7 @@ public class BoomChess extends ApplicationAdapter {
 	public static Skin skin;
 	public static Skin progressBarSkin;
 	public static float numberObstacle; // number of obstacles in the default game mode
-	private static Stage currentStage;
+	public static Stage currentStage;
 
 	// for the Move Overlay ------------------------------------------------------
 	public static boolean showMove = false;
@@ -218,6 +216,15 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static AttackSequence actionSequence; // for when the Sequence is running
 
+	// for the textures of the loadingScreen
+
+	public static RandomImage loadingScreenTextures;
+	private static Stage loadingStage;
+	private static boolean loadingScreenIsRunning = true;
+	
+	// for the return to menu button, we have to have a boolean keeping processTurn from running if not true
+	public static boolean inGame = false;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -227,8 +234,14 @@ public class BoomChess extends ApplicationAdapter {
 		batch = new SpriteBatch();
 
 		// loading Screen is going till loading complete and main menu starts ----------------------------
+
+		loadingScreenTextures = new RandomImage();
+		loadingScreenTextures.addTexture("loadingScreen/loadingScreen.png");
+		loadingScreenTextures.addTexture("loadingScreen/loadingScreen2.png");
+		loadingScreenTextures.addTexture("loadingScreen/loadingScreen3.png");
 		loadingSound = Gdx.audio.newSound(Gdx.files.internal("sounds/countdown.mp3"));
-		switchToStage(LoadingScreenStage.initalizeUI());
+		currentStage = new Stage();
+		loadingStage = LoadingScreenStage.initalizeUI();
 
 		// for defaulting colour change
 		isColourChanged = false;
@@ -613,6 +626,7 @@ public class BoomChess extends ApplicationAdapter {
 		// our damage dealing scenarios
 		actionSequence = new AttackSequence();
 
+		loadingScreenIsRunning = false;
 		// ensures game starts in menu
 		createMainMenuStage();
 	}
@@ -646,7 +660,11 @@ public class BoomChess extends ApplicationAdapter {
 		batch.draw(background, 0, 0);
 		batch.end();
 
-
+		if (loadingScreenIsRunning){
+			loadingStage.act();
+			loadingStage.draw();
+			return;
+		}
 		// start of the turn based system ----------------------------
 		if (showMove){
 
@@ -720,8 +738,7 @@ public class BoomChess extends ApplicationAdapter {
 			return;
 		}
 
-		processTurn();
-
+		if(inGame){processTurn();}
 	}
 
 	private void processTurn() {
@@ -733,7 +750,6 @@ public class BoomChess extends ApplicationAdapter {
 			if (!isBotMatch){
 				if (legitTurn) {
 					calculateDamage("red");
-					switchTurn(currentState);
 					legitTurn = false;
 				}
 			} else {
@@ -757,20 +773,19 @@ public class BoomChess extends ApplicationAdapter {
 				}
 
 				if (botMove.movingFinished) { // if the bot moving has finished, render and attack
-					// update the gameBoard officially
 
+					// update the gameBoard officially, not with botMove Trick
 					Board.update(botMove.startX, botMove.startY, botMove.endX, botMove.endY);
-					botMovingStage.clear();
-					switchToStage(createGameStage(isBotMatch));
+					botMovingStage.clear(); // clear the Stage so that moveSoldier is gone
+					reRenderGame();
 
+					// calculate damage, starts consequence
 					calculateDamage("red");
-					switchTurn(currentState);
 				}
 			}
 		} else if (currentState == GameState.GREEN_TURN) {
 			if (legitTurn) {
 				calculateDamage("green");
-				switchTurn(currentState);
 				legitTurn = false;
 			}
 		}
@@ -826,7 +841,7 @@ public class BoomChess extends ApplicationAdapter {
 		actionSequence.startSequences();
 	}
 
-	private void switchTurn(GameState state) {
+	public static void switchTurn(GameState state) {
 		/*
 		* switchTurn switches the public GameStage enum between RED and GREEN
 		 */
@@ -835,6 +850,7 @@ public class BoomChess extends ApplicationAdapter {
 		} else {
 			currentState = GameState.RED_TURN;
 		}
+		reRenderGame();
 	}
 
 	@Override
@@ -908,6 +924,9 @@ public class BoomChess extends ApplicationAdapter {
 		/*
 		* used to refresh the gameStage if a action has happened that edited the gameBoard.
 		 */
+		if(currentState == GameState.NOT_IN_GAME || !(inGame)) {
+			return;
+		}
 		switchToStage(createGameStage(isBotMatch));
 	}
 
