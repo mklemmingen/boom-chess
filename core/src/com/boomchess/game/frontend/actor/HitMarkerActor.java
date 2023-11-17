@@ -16,18 +16,18 @@ public class HitMarkerActor extends Actor {
     // this is the time that the animation has been on the screen
     private float elapsed = 0;
     // this is the maximum duration that the animation will be on the screen
-    private static final float MAX_DURATION = 0.25f;
-    private static final int FRAME_COLS = 7; // Number of columns in animations/explosions.png sprite sheet
-    private static final int FRAME_ROWS = 1; // Number of rows
+    private static final float MAX_DURATION = 0.75f;
+    private static final int FRAME_COLS = 4; // Number of columns in animations/explosions.png sprite sheet
+    private static final int FRAME_ROWS = 4; // Number of rows
     private final Animation<TextureRegion> explosionAnimation;
-    private static final float SCALE_FACTOR = 0.3f;  // sclaing factor to make explosion smaller
+    private static final float SCALE_FACTOR = 0.7f;  // sclaing factor to make explosion smaller
 
     public HitMarkerActor(int X, int Y) {
         this.X = X;
         this.Y = Y;
 
         // loading the sprite sheet as a Texture
-        Texture explosionSheet = new Texture(Gdx.files.internal("animations/hitmarker.png"));
+        Texture explosionSheet = new Texture(Gdx.files.internal("animations/hitmarker1.png"));
         // splitting the Sprite Sheet into individual frames
         TextureRegion[][] tmp = TextureRegion.split(explosionSheet,
                 explosionSheet.getWidth() / FRAME_COLS,
@@ -65,8 +65,8 @@ public class HitMarkerActor extends Actor {
         float x1 = defender.getX();
         float y1 = defender.getY();
         // to factor in the scaling of the explosion
-        x1 += 30;
-        y1 += 10;
+        x1 += BoomChess.tileSize/4;
+        y1 += BoomChess.tileSize/4;
 
         TextureRegion currentFrame = explosionAnimation.getKeyFrame(elapsed, false);
 

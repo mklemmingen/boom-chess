@@ -60,7 +60,7 @@ public class moveBotTile {
         BoomChess.setEmptyCoordinate(startX, startY);
 
         // rerender GameStage with new Empty Variables
-        switchToStage(createGameStage(isBotMatch));
+        reRenderGame();
 
         // set the maximum duration fitting the length of the way that the soldier moves
         // per 50 pixel, add 0.5f to max duration

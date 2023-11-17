@@ -39,6 +39,7 @@ public class ChallengeStage {
                 // create the first gameBoard
                 Board.initialiseChallengeOne();
 
+                inGame = true;
                 switchToStage(GameStage.createGameStage(isBotMatch));
             }
         });

@@ -322,7 +322,7 @@ public class GameStage {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 isColourChanged = !isColourChanged;
-                switchToStage(createGameStage(isBotMatch));
+                reRenderGame();
             }
         });
 
@@ -349,12 +349,14 @@ public class GameStage {
             public void changed(ChangeEvent event, Actor actor) {
                 deathExplosionStage.clear();
                 botMovingStage.clear();
-                reRenderGame();
+                dottedLineStage.clear();
                 gameEndStage.clear();
+
                 BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
+                
+                inGame = false;
+                
                 createMainMenuStage();
-                // create a new gameBoard since game has ended
-                setGameBoard();
             }
         });
 
