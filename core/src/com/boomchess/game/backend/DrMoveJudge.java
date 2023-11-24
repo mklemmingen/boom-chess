@@ -55,7 +55,7 @@ public class DrMoveJudge {
         // check if the move is to a hill
         // loop through surrounding by distance of 1
         int startX = Math.max(0, X - 1);
-        int endX = Math.min(7, X + 1);
+        int endX = Math.min(8, X + 1);
 
         int startY = Math.max(0, Y - 1);
         int endY = Math.min(7, Y + 1);
