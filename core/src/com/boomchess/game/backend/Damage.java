@@ -55,7 +55,7 @@ public class Damage {
         int distance = gameBoard[x][y] instanceof Artillery ? 2 : 1;
 
         int startX = Math.max(0, x - distance);
-        int endX = Math.min(7, x + distance);
+        int endX = Math.min(8, x + distance);
 
         int startY = Math.max(0, y - distance);
         int endY = Math.min(7, y + distance);
