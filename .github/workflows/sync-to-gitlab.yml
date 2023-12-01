@@ -17,16 +17,15 @@ jobs:
       - name: Set up Git
         run: |
           git config --global user.email "martin.lauterbach@student.reutlingen-university.de"
-          git config --global user.name "Marty"
+          git config --global user.name "Marty, Auto-Pipeline"
 
       - name: Add GitLab remote and push
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         run: |
           git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.reutlingen-university.de/lauterba/boom-chess.git
-          git fetch gitlab master:gitlab-master
-          git merge gitlab-master --allow-unrelated-histories
-          git push gitlab HEAD:master
+          git checkout -b gitlab-master
+          git push gitlab HEAD:master --force
 
 
 
