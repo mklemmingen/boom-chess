@@ -1,0 +1,33 @@
+name: Sync to GitLab
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # fetch all history
+
+      - name: Set up Git
+        run: |
+          git config --global user.email "martin.lauterbach@student.reutlingen-university.de"
+          git config --global user.name "Marty"
+
+      - name: Add GitLab remote and push
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        run: |
+          git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.reutlingen-university.de/lauterba/boom-chess.git
+          git fetch gitlab master:gitlab-master
+          git merge gitlab-master --allow-unrelated-histories
+          git push gitlab HEAD:master
+
+
+
+
