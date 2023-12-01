@@ -26,7 +26,7 @@ public class RandomImage {
     }
 
     public Texture getRandomTexture() {
-        if (textures.size() == 0) {
+        if (textures.isEmpty()) {
             throw new IllegalStateException("No textures available. " +
                     "Add textures using addTexture() before calling getRandomTexture().");
         }

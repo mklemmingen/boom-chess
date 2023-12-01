@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -17,12 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
-import com.boomchess.game.frontend.AttackSequence;
+import com.boomchess.game.frontend.actor.AttackSequence;
 import com.boomchess.game.frontend.actor.DeathExplosionActor;
 import com.boomchess.game.frontend.actor.DottedLineActor;
 import com.boomchess.game.frontend.actor.HitMarkerActor;
-import com.boomchess.game.frontend.moveBotTile;
+import com.boomchess.game.frontend.actor.moveBotTile;
 import com.boomchess.game.frontend.picture.RandomImage;
+import com.boomchess.game.frontend.screen.RelativeResizer;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
 import com.boomchess.game.frontend.sound.RandomSound;
 import com.boomchess.game.frontend.stage.*;
@@ -198,9 +198,6 @@ public class BoomChess extends ApplicationAdapter {
 
 	// stage for gameEnd
 	public static Stage gameEndStage;
-	
-	// BotMove Input Processor
-	// public static BotMove botMove;
 
 	// botMove class
 	public static moveBotTile botMove;
@@ -225,6 +222,10 @@ public class BoomChess extends ApplicationAdapter {
 	// for the return to menu button, we have to have a boolean keeping processTurn from running if not true
 	public static boolean inGame = false;
 
+	// boolean for knowing if switchTurn has been used and then using this boolean to change the logo
+	// at the top right at the correct time
+	private static boolean switchTurnUsed = true;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -245,6 +246,9 @@ public class BoomChess extends ApplicationAdapter {
 
 		// for defaulting colour change
 		isColourChanged = false;
+
+		// initialises the tile size for relative positioning of stages
+		RelativeResizer.init(); // sets public tilesize variable
 
 		// skin of the UI --------------------
 		// skin (look) of the buttons via a prearranged json file
@@ -380,7 +384,6 @@ public class BoomChess extends ApplicationAdapter {
 		dogSound.addSound("sounds/Dogs/dog_barking.mp3");
 
 		helicopterSound = new RandomSound();
-		helicopterSound.addSound("sounds/helicopter-rotor-loop.mp3");
 
 		tankSound = new RandomSound();
 		tankSound.addSound("sounds/tank-engine.mp3");
@@ -540,11 +543,6 @@ public class BoomChess extends ApplicationAdapter {
 		volumeLabel = new Label("Music", skin);
 		soundVolumeLabel = new Label("Sound", skin);
 
-		// -----------------------------------------------------------------------------------------
-		// creation of the camera fitting to the set resolution in DesktopLauncher
-
-		OrthographicCamera camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1536, 880);
 
 		// for the dotted Line when damage occurs -----------------------------------------------
 
@@ -554,31 +552,6 @@ public class BoomChess extends ApplicationAdapter {
 		// for the deathExplosion ---------------------------------------------------------------
 		deathExplosionStage = new Stage(new ScreenViewport());
 
-		// --------- Audio Table and Stage ------------
-
-		audioTable = new Table();
-		audioTable.setPosition(125, 150);
-
-		// Buttons
-		audioTable.add(playButton);
-		audioTable.add(muteButton);
-		audioTable.row();
-
-		// Volume Slider
-		// Label colour #4242E7
-		volumeLabel.setColor(Color.valueOf("#4242E7"));
-		audioTable.add(volumeLabel).size(50, 20).padRight(40);
-		audioTable.add(volumeSlider);
-		audioTable.row();
-
-		// Sound Volume Slider
-		// Label colour #4242E7
-		soundVolumeLabel.setColor(Color.valueOf("#4242E7"));
-		audioTable.add(soundVolumeLabel).size(50, 20).padRight(40);
-		audioTable.add(soundVolumeSlider);
-		audioTable.row();
-
-		audioTable.add(skipButton).padTop(10).padLeft(40);
 		// -----------------------------------------------------------------------------
 		/*
 		 * creation of the stages for the menu - this allows the Scene2D.ui to be used for quick swapping of screens
@@ -607,19 +580,15 @@ public class BoomChess extends ApplicationAdapter {
 		// initialise the gameEndStage
 		gameEndStage = new Stage();
 
-		// create botMove
+		// intialise the possibleMoveOverlay
+		possibleMoveOverlay = new Stage();
 
-		// botMove = new BotMove();
-
-		// userInput = new UserInputProcessor();
-
+		// sets the InputProcessor, a Gdx Tool for handling userinput, to the currentStage, since its the only
+		// stage that needs input. Use multiplexer if multiple needed, then change back to single InputProcess.
 		Gdx.input.setInputProcessor(currentStage);
 
+		// initialise the botMove, a simulator for the schein-animation of the bot soldier along the white line
 		botMove = new moveBotTile();
-
-		tileSize = 80;
-
-		// updateStagesViewports();
 
 		botMovingStage = new Stage();
 
@@ -629,6 +598,9 @@ public class BoomChess extends ApplicationAdapter {
 		loadingScreenIsRunning = false;
 		// ensures game starts in menu
 		createMainMenuStage();
+
+		// resize all stages for the beginning
+		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 
@@ -656,6 +628,21 @@ public class BoomChess extends ApplicationAdapter {
 
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 
+		// check to make sure the screen hasn't resized
+		if(RelativeResizer.ensure()) {
+			// if so, adapts tileSize already in RelativeResizer, we need to re-render the currentStage
+			if(inGame){
+				reRenderGame();
+			} else { // creates a main menu stage as a failsafe
+				createMainMenuStage();
+			}
+			audioTable.setPosition(tileSize*2, tileSize*2+tileSize/3);
+			// sets viewport correctly
+			resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			// true, since we are simply resizing the map
+			mapStage = MapStage.initializeUI(true);
+		}
+
 		batch.begin();
 		batch.draw(background, 0, 0);
 		batch.end();
@@ -671,26 +658,13 @@ public class BoomChess extends ApplicationAdapter {
 			// for the map
 			mapStage.act();
 			mapStage.draw();
-			moveLogoStage.clear();
 
-
-			// this method adds a new stage to the currentStage
-			// Image of the currentMover
-			Table currentMover = new Table();
-			currentMover.setSize(250, 125);
-			// set position to the upper far left corner of the screen
-			currentMover.setPosition(30, Gdx.graphics.getHeight() - 150);
-
-			if (currentState == GameState.RED_TURN) {
-				currentMover.addActor(redMove);
-			} else if (currentState == GameState.GREEN_TURN) {
-				if (!isColourChanged) {
-					currentMover.addActor(greenMove);
-				} else {
-					currentMover.addActor(blueMove);
-				}
+			// for the move Logo, if the turn has switched, clear the stage, change logo
+			if(switchTurnUsed) {
+				moveLogoStage.clear(); // to ensure no double overlay
+				updateMoveLogo();
+				switchTurnUsed = false;
 			}
-			moveLogoStage.addActor(currentMover);
 
 			moveLogoStage.act();
 			moveLogoStage.draw();
@@ -702,33 +676,25 @@ public class BoomChess extends ApplicationAdapter {
 			possibleMoveOverlay.draw();
 		}
 
-		// for the audio table - add it to currentStage
-		currentStage.addActor(audioTable);
-
 		// for the stages, displays only stage assigned as currentStage, see method switchToStage
-		currentStage.getViewport().apply();
 		currentStage.act();
 		currentStage.draw();
 
 		// for the dotted line when damage occurs -----------------------------------------------
 		// Render the dottedLineStage
-		dottedLineStage.getViewport().apply();
 		dottedLineStage.act(Gdx.graphics.getDeltaTime());
 		dottedLineStage.draw();
 
 		// for the deathExplosion --------------------------------------------------------------
 		// Render the deathExplosionStage
-		deathExplosionStage.getViewport().apply();
 		deathExplosionStage.act(Gdx.graphics.getDeltaTime());
 		deathExplosionStage.draw();
 
 		// stage for the moving bot soldiers
-		botMovingStage.getViewport().apply();
 		botMovingStage.act(Gdx.graphics.getDeltaTime());
 		botMovingStage.draw();
 
 		// render the gameEndStage
-		gameEndStage.getViewport().apply();
 		gameEndStage.act();
 		gameEndStage.draw();
 
@@ -796,23 +762,6 @@ public class BoomChess extends ApplicationAdapter {
 		/*
 		 * fits the needed values when a resize has happened, when a resize has happened
 		 */
-
-		// TODO INSTEAD OF WORKING WITH PIXELS IN SCENE2DUI, work with relaitivity of the size of a tile,
-		// which is width/24
-
-		mapStage.getViewport().update(width, height, true);
-		moveLogoStage.getViewport().update(width, height, true);
-		// possibleMoveOverlay.getViewport().update(width, height, true);
-		currentStage.getViewport().update(width, height, true);
-		dottedLineStage.getViewport().update(width, height, true);
-		deathExplosionStage.getViewport().update(width, height, true);
-		gameEndStage.getViewport().update(width, height, true);
-
-	}
-
-	private void updateStagesViewports() {
-		int width = Gdx.graphics.getWidth();
-		int height = Gdx.graphics.getHeight();
 		mapStage.getViewport().update(width, height, true);
 		moveLogoStage.getViewport().update(width, height, true);
 		possibleMoveOverlay.getViewport().update(width, height, true);
@@ -820,6 +769,7 @@ public class BoomChess extends ApplicationAdapter {
 		dottedLineStage.getViewport().update(width, height, true);
 		deathExplosionStage.getViewport().update(width, height, true);
 		gameEndStage.getViewport().update(width, height, true);
+		botMovingStage.getViewport().update(width, height, true);
 	}
 
 	private void calculateDamage(String teamColor) {
@@ -850,6 +800,7 @@ public class BoomChess extends ApplicationAdapter {
 		} else {
 			currentState = GameState.RED_TURN;
 		}
+		switchTurnUsed = true;
 		reRenderGame();
 	}
 
@@ -917,7 +868,67 @@ public class BoomChess extends ApplicationAdapter {
 		if (currentStage != null){
 			currentStage.clear();}
 		currentStage = newStage;
+		addAudioTable();
 		Gdx.input.setInputProcessor(currentStage);
+	}
+
+	private static void addAudioTable(){
+		/*
+		* method for adding the audio table to the currentStage
+		 */
+		// --------- Audio Table ------------
+		audioTable = new Table();
+		audioTable.setPosition(tileSize*2, tileSize*2);
+
+		// Buttons
+		audioTable.add(playButton);
+		audioTable.add(muteButton);
+		audioTable.row();
+
+		// Volume Slider
+		// Label colour #4242E7
+		volumeLabel.setColor(Color.valueOf("#4242E7"));
+		audioTable.add(volumeLabel).size(tileSize/2, tileSize/4).padRight(tileSize/2);
+		audioTable.add(volumeSlider);
+		audioTable.row();
+
+		// Sound Volume Slider
+		// Label colour #4242E7
+		soundVolumeLabel.setColor(Color.valueOf("#4242E7"));
+		audioTable.add(soundVolumeLabel).size(tileSize/2, tileSize/4).padRight(tileSize/2);
+		audioTable.add(soundVolumeSlider);
+		audioTable.row();
+
+		audioTable.add(skipButton).padTop(tileSize/8).padLeft(tileSize/2);
+
+		currentStage.addActor(audioTable);
+	}
+
+	private void updateMoveLogo() {
+		// this method adds a new stage to the currentStage
+		// Image of the currentMover
+		Table currentMover = new Table();
+
+		float width = tileSize * 3;
+		float height = tileSize * 1.5f;
+		currentMover.setSize(width, height);
+
+		// Position at upper left corner
+		float xPosition = 0; // Left edge of the screen
+		float yPosition = Gdx.graphics.getHeight() - height;// Subtract height of the mover, positioning it at the top
+		currentMover.setPosition(xPosition, yPosition);
+
+
+		if (currentState == GameState.RED_TURN) {
+			currentMover.addActor(redMove);
+		} else if (currentState == GameState.GREEN_TURN) {
+			if (!isColourChanged) {
+				currentMover.addActor(greenMove);
+			} else {
+				currentMover.addActor(blueMove);
+			}
+		}
+		moveLogoStage.addActor(currentMover);
 	}
 
 	public static void reRenderGame(){
@@ -979,7 +990,8 @@ public class BoomChess extends ApplicationAdapter {
 		/*
 		* method for creating the stage for the map that is rendered in variable mapStage
 		 */
-		mapStage = MapStage.initializeUI();
+		// boolean false, since we are creating a fully new instance and are not resizing
+		mapStage = MapStage.initializeUI(false);
 	}
 
 	public static void setAllowedTiles (ArrayList<Coordinates> validMoveTiles) {
@@ -995,7 +1007,7 @@ public class BoomChess extends ApplicationAdapter {
 
 		Table root = new Table();
 
-		root.setSize(720, 640);
+		root.setSize(tileSize*9, tileSize*8);
 		root.center(); // Center the Overlay exactly above the gameBoard in the parent container (stage)
 		// refine the position of the root Table, since the orthoCamera is centered on a screen that may change size
 		root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
@@ -1058,8 +1070,8 @@ public class BoomChess extends ApplicationAdapter {
 
 		// we then calculate the upper left corner of the gameBoard by subtracting the screenWidth and screenHeight by
 		// the gameBoard width and height and then dividing it by 2a
-		int upperLeftCornerX = (screenWidth - 720) / 2;
-		int upperLeftCornerY = (screenHeight - 640) / 2;
+		int upperLeftCornerX = (screenWidth - (int) tileSize*9) / 2;
+		int upperLeftCornerY = (screenHeight - (int) tileSize*8) / 2;
 
 		// Adjust the pxCoordinate by adding 1 to ensure boundary pixels are correctly classified.
 		int adjustedPxX = pxCoordinateX + 1;
@@ -1070,8 +1082,8 @@ public class BoomChess extends ApplicationAdapter {
 
 		// we then calculate the tileX and tileY by subtracting the upperLeftCornerX and upperLeftCornerY from the
 		// adjustedPxX and adjustedPxY and dividing it by the tile size
-		int tileX = (adjustedPxX - upperLeftCornerX) / 80;
-		int tileY = (adjustedPxY - upperLeftCornerY) / 80;
+		int tileX = (adjustedPxX - upperLeftCornerX) / (int) tileSize;
+		int tileY = (adjustedPxY - upperLeftCornerY) / (int) tileSize;
 
 		// we then set the tileX and tileY in the iconTileCoordinate object
 		iconTileCoordinate.setX(tileX);
@@ -1092,11 +1104,10 @@ public class BoomChess extends ApplicationAdapter {
 		 */
 
 		Coordinates pxCoords = new Coordinates();
-		int tileWidth = 80, tileHeight = 80;
 
 		// we calculate the board dimensions based on tile dimensions and the number of tiles
-		float boardWidth = 9 * tileWidth;
-		float boardHeight = 8 * tileHeight;
+		float boardWidth = 9 * tileSize;
+		float boardHeight = 8 * tileSize;
 
 		// we use the same way as in calculateTileByPX to get the Screen Parameters
 		int screenWidth = Gdx.graphics.getWidth();
@@ -1110,8 +1121,8 @@ public class BoomChess extends ApplicationAdapter {
 		int invertedTilePositionY = 7 - tilePositionY;
 
 		// we calculate the pixel coordinates of any tile
-		float tilePixelX = boardStartX + tilePositionX * tileWidth + ((float) tileWidth / 2);
-		float tilePixelY = boardStartY + invertedTilePositionY * tileHeight + ((float) tileHeight / 2);
+		float tilePixelX = boardStartX + tilePositionX * tileSize + (tileSize / 2);
+		float tilePixelY = boardStartY + invertedTilePositionY * tileSize + ( tileSize / 2);
 
 
 
@@ -1145,11 +1156,10 @@ public class BoomChess extends ApplicationAdapter {
 		* calculates the most middle pixel of a tile of the chessBoard
 		 */
 		Coordinates pxCoords = new Coordinates();
-		int tileWidth = 80, tileHeight = 80;
 
 		// we calculate the board dimensions based on tile dimensions and the number of tiles
-		float boardWidth = 9 * tileWidth;
-		float boardHeight = 8 * tileHeight;
+		float boardWidth = 9 * tileSize;
+		float boardHeight = 8 * tileSize;
 
 		// we use the same way as in calculateTileByPX to get the Screen Parameters
 		int screenWidth = Gdx.graphics.getWidth();
@@ -1163,8 +1173,8 @@ public class BoomChess extends ApplicationAdapter {
 		int invertedTilePositionY = 7 - tilePositionY;
 
 		// we calculate the pixel coordinates of any tile
-		float tilePixelX = boardStartX + tilePositionX * tileWidth;
-		float tilePixelY = boardStartY + invertedTilePositionY * tileHeight;
+		float tilePixelX = boardStartX + tilePositionX * tileSize;
+		float tilePixelY = boardStartY + invertedTilePositionY * tileSize;
 
 
 

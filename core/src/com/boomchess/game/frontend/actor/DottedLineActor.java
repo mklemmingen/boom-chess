@@ -137,8 +137,8 @@ public class DottedLineActor extends Actor {
 
 
         // set dotLength and spaceLength
-        float dotLength = 10;
-        float spaceLength = 5;
+        float dotLength = tileSize/8;
+        float spaceLength = tileSize/16;
 
         // to calculate the distance between the coordinates, create a simple Vector2 object
         float distance = Vector2.dst(x1, y1, x2, y2);
@@ -154,7 +154,7 @@ public class DottedLineActor extends Actor {
             float endX = x + (x2 - x1) * dotLength / distance;
             float endY = y + (y2 - y1) * dotLength / distance;
 
-            shapeRenderer.rectLine(x, y, endX, endY, 5);  // 5 is the thickness of the line
+            shapeRenderer.rectLine(x, y, endX, endY, tileSize/16);  // 5 is the thickness of the line
         }
 
         // logic for drawing the dottedLine stops here ------------------------------------------
@@ -165,7 +165,7 @@ public class DottedLineActor extends Actor {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.BLUE); // Color of your choice
         Coordinates center = BoomChess.calculatePXbyTile((int) startX, (int) startY);
-        shapeRenderer.circle(center.getX(), center.getY(), 5);  // Draws a small circle
+        shapeRenderer.circle(center.getX(), center.getY(), tileSize/16);  // Draws a small circle
         shapeRenderer.end();
 
         batch.begin(); // Restart the batch for subsequent actors or UI elements
@@ -175,7 +175,7 @@ public class DottedLineActor extends Actor {
         // calls the soldier object at the start position of the dotted line and plays its makeASound Method
         Soldier[][] board = Board.getGameBoard();
 
-        Soldier mySoldata = board[(int) startX][(int) startY];
+        Soldier mySoldata = board[startX][startY];
 
 
         if (mySoldata instanceof makeASoundInterface) {

@@ -38,7 +38,7 @@ public class GameEndStage extends Stage{
          */
         TextButton winnerLabel = new TextButton("The " + winnerTeamColour + " Team won\n" + coolShoutout, skin);
         winnerLabel.setColor(Color.BLACK);
-        endRoot.add(winnerLabel).padBottom(20);
+        endRoot.add(winnerLabel).padBottom(tileSize/4);
         endRoot.row();
 
     gameEndStage.addActor(endRoot);

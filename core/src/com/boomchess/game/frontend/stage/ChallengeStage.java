@@ -21,7 +21,7 @@ public class ChallengeStage {
 
         // button to start the first challenge
         TextButton challenge1Button = new TextButton("Challenge 1", skin);
-        root.add(challenge1Button).padBottom(20);
+        root.add(challenge1Button).padBottom(tileSize/4);
         challenge1Button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
@@ -48,7 +48,7 @@ public class ChallengeStage {
 
         // back button to return to the main menu
         TextButton backButton = new TextButton("Back", skin);
-        root.add(backButton).padBottom(20);
+        root.add(backButton).padBottom(tileSize/4);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {

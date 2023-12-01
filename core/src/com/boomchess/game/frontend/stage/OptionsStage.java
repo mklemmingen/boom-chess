@@ -23,7 +23,7 @@ public class OptionsStage extends Stage{
         // text that displays a text saying "Bot Difficulty"
         String currentDif = botDifficulty;
         final TextButton botDifficultyText = new TextButton("Bot Difficulty: " + currentDif, skin);
-        root.add(botDifficultyText).padBottom(50);
+        root.add(botDifficultyText).padBottom(tileSize/2);
         botDifficultyText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -43,14 +43,14 @@ public class OptionsStage extends Stage{
 
         // text that displays a text saying "Number of Obstacles"
         final TextButton numberObstaclesText = new TextButton("Number of Obstacles 0-10", skin);
-        root.add(numberObstaclesText).padBottom(10);
+        root.add(numberObstaclesText).padBottom(tileSize/8);
         root.row();
 
         // slider for setting the number of obstacles in the initial no mans land
         final Slider obstacleSlider;
         obstacleSlider = new Slider(0, 10, 1f, false, skin);
         obstacleSlider.setValue(numberObstacle);
-        root.add(obstacleSlider).padBottom(50);
+        root.add(obstacleSlider).padBottom(tileSize/2);
         obstacleSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -68,7 +68,7 @@ public class OptionsStage extends Stage{
             currentMode = "Green";
         }
         TextButton modeButton = new TextButton("Switch 1.Player Colour: " + currentMode, skin);
-        root.add(modeButton).padBottom(50);
+        root.add(modeButton).padBottom(tileSize/2);
         modeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
@@ -85,7 +85,7 @@ public class OptionsStage extends Stage{
 
         // back button to return to the main menu
         TextButton backButton = new TextButton("Back", skin);
-        root.add(backButton).padBottom(20);
+        root.add(backButton).padBottom(tileSize/4);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {

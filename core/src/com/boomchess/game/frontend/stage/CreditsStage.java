@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.boomchess.game.BoomChess;
 
 import static com.boomchess.game.BoomChess.skin;
+import static com.boomchess.game.BoomChess.tileSize;
 
 public class CreditsStage {
 
@@ -26,7 +27,7 @@ public class CreditsStage {
 
         // back button to return to the main menu
         TextButton backButton = new TextButton("Back", skin);
-        root.add(backButton).padBottom(20);
+        root.add(backButton).padBottom(tileSize/4);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {

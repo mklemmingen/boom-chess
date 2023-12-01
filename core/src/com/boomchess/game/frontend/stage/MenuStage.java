@@ -34,11 +34,12 @@ public class MenuStage extends Stage{
         menuStage.addActor(root);
 
         final Image title = boomLogo;
-        root.add(title).top().padBottom(20);
+        title.setSize(tileSize*4, tileSize*4);
+        root.add(title).top().padBottom(tileSize/4);
         root.row();
 
         TextButton helpButton = new TextButton("Help!", skin);
-        root.add(helpButton).padBottom(20);
+        root.add(helpButton).padBottom(tileSize/4);
         // if help button is pressed, create a new stage for the help information
         helpButton.addListener(new ChangeListener() {
             @Override
@@ -49,7 +50,7 @@ public class MenuStage extends Stage{
         root.row();
 
         TextButton ChallengesButton = new TextButton("Challenges", skin);
-        root.add(ChallengesButton).padBottom(20);
+        root.add(ChallengesButton).padBottom(tileSize/4);
         ChallengesButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -60,7 +61,7 @@ public class MenuStage extends Stage{
         root.row();
 
         TextButton play2Button = new TextButton("Play 2 Player Game", skin);
-        root.add(play2Button).padBottom(20);
+        root.add(play2Button).padBottom(tileSize/4);
 
         play2Button.addListener(new ChangeListener() {
             @Override
@@ -86,7 +87,7 @@ public class MenuStage extends Stage{
         root.row();
 
         TextButton playBotButton = new TextButton("Play Against Computer: " + botDifficulty, skin);
-        root.add(playBotButton).padBottom(2);
+        root.add(playBotButton).padBottom(tileSize/40);
         playBotButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -115,7 +116,7 @@ public class MenuStage extends Stage{
         // button to change bot difficulty
         // text that displays a text saying "Bot Difficulty"
         final TextButton botDifficultyText = new TextButton("Change Bot", skin);
-        root.add(botDifficultyText).padBottom(20);
+        root.add(botDifficultyText).padBottom(tileSize/4);
         botDifficultyText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -142,7 +143,7 @@ public class MenuStage extends Stage{
             currentMode = "Modern";
         }
         TextButton modeButton = new TextButton("Switch Mode: " + currentMode, skin);
-        root.add(modeButton).padBottom(20);
+        root.add(modeButton).padBottom(tileSize/4);
         modeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
@@ -160,7 +161,7 @@ public class MenuStage extends Stage{
         root.row();
 
         TextButton optionsButton = new TextButton("Options", skin);
-        root.add(optionsButton).padBottom(20);
+        root.add(optionsButton).padBottom(tileSize/4);
         optionsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -170,7 +171,7 @@ public class MenuStage extends Stage{
         root.row();
 
         TextButton creditsButton = new TextButton("Credits", skin);
-        root.add(creditsButton).padBottom(20);
+        root.add(creditsButton).padBottom(tileSize/4);
         creditsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -180,7 +181,7 @@ public class MenuStage extends Stage{
         root.row();
 
         TextButton exitButton = new TextButton("Exit", skin);
-        root.add(exitButton).padBottom(20).padRight(2);
+        root.add(exitButton).padBottom(tileSize/40).padRight(tileSize/4);
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

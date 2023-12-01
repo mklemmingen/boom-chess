@@ -59,15 +59,14 @@ public class GameStage {
         // Begin of GameLayout - Root Table arranges content automatically and adaptively as ui-structure
         Table root = new Table();
 
-        root.setSize(720, 640);
+        root.setSize(tileSize*9, tileSize*8);
         root.center(); // Center the gameBoard in the parent container (stage)
-        // refine the position of the root Table, since the orthoCamera is centered on a screen that may change size
+        // refine the position of the root Table
         root.setPosition((Gdx.graphics.getWidth() - root.getWidth()) / 2f,
                 (Gdx.graphics.getHeight() - root.getHeight()) / 2f);
 
 
         // for the size of the tiles
-        int tileSize = 80;
         int numRows = 8;
         int numColumns = 9;
 
@@ -79,10 +78,10 @@ public class GameStage {
             for (int i = 0; i < numColumns; i++) {
 
                 // create a new box like widget at each position of the board and add it to the root table
-                // it is 80x80 pixels, holds the image of the piece at that position and is movable to other positions
+                // it is tileSize amount of pixels, holds the image of the piece at that position
+                // and is movable to other positions
                 // if soldierType is a general, use an animation instead of an Image SolPiece
 
-                // TODO GENERAL ANIMATION
 
                 Soldier[][] gameBoard = Board.getGameBoard();
                 final Soldier soldier = gameBoard[i][j];
@@ -115,7 +114,7 @@ public class GameStage {
                 }
 
                 // draw the image at the correct position
-                solPiece.setSize(80, 80);
+                solPiece.setSize(tileSize, tileSize);
                 solPiece.setScaling(Scaling.fit);
 
                 final Stack tileWidget = new Stack();
@@ -134,7 +133,7 @@ public class GameStage {
                     // draw the health bar
                     final ProgressBar healthBar = new ProgressBar(0f, 60f, 1f, false,
                             progressBarSkin);
-                    healthBar.setSize(0.025F, 0.1F);
+                    healthBar.setSize(tileSize/3200, tileSize/800);
 
                     healthBar.setValue(health);
                     tileWidget.add(healthBar);
@@ -279,17 +278,17 @@ public class GameStage {
         // create another stage for the back to main menu button
         Table backTable = new Table();
         if (!isBotMatch) {
-            backTable.setSize(400, 80); // determines the frame size for the backTable (button: to main menu)
+            backTable.setSize(tileSize*5, tileSize); // determines the frame size for the backTable (button: to main menu)
             // bottom right the table in the parent container
-            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 20);
+            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/4);
         } else {
-            backTable.setSize(400, 120);
+            backTable.setSize(tileSize*5, tileSize*2);
             // bottom right the table in the parent container
-            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), 25);}
+            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/4);}
         gameStage.addActor(backTable); // Add the table to the stage
 
         if(isBotMatch) {
-            backTable.row().padBottom(10);
+            backTable.row().padBottom(tileSize/8);
             // button to change bot difficulty
             // text that displays a text saying "Bot Difficulty"
             final TextButton botDifficultyText = new TextButton("Bot: " + botDifficulty, skin);
@@ -313,7 +312,7 @@ public class GameStage {
             });
         }
 
-        backTable.row().padBottom(10);
+        backTable.row().padBottom(tileSize/8);
         // Button to change 1.Player Colour to blue
         TextButton changeColourButton = new TextButton("Switch 1P Skin", skin);
         changeColourButton.align(Align.bottomRight);
@@ -326,7 +325,7 @@ public class GameStage {
             }
         });
 
-        backTable.row().padBottom(10);
+        backTable.row().padBottom(tileSize/8);
         // change Map
         TextButton changeMapButton = new TextButton("Change Map", skin);
         changeMapButton.align(Align.bottomRight);
@@ -338,7 +337,7 @@ public class GameStage {
                 createGameStage(isBotMatch);
             }
         });
-        backTable.row().padBottom(10);
+        backTable.row().padBottom(tileSize/8);
 
         // Exit to Main Menu button to return to the main menu
         TextButton menuButton = new TextButton("Return to Main Menu", skin);

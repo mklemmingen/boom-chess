@@ -55,13 +55,13 @@ public class MusicPlaylist {
 
 
     public void pause() {
-        if (songs.size() > 0) {
+        if (!songs.isEmpty()) {
             songs.get(currentIndex).pause();
         }
     }
 
     public void resume() {
-        if (songs.size() > 0) {
+        if (!songs.isEmpty()) {
             songs.get(currentIndex).play();
         }
     }
@@ -77,14 +77,14 @@ public class MusicPlaylist {
     }
 
     public void stop() {
-        if (songs.size() > 0) {
+        if (!songs.isEmpty()) {
             songs.get(currentIndex).stop();
         }
     }
 
     public void setVolume(float volume){
         // can take but must not take a int value, if there is one, it is taken as the volume for setVolume
-        if (songs.size() > 0) {
+        if (!songs.isEmpty()) {
             songs.get(currentIndex).setVolume(volume);
         }
     }
@@ -99,7 +99,7 @@ public class MusicPlaylist {
     /*
     * isPlaying returns a boolean value of whether a song is playing.
     */
-        if (songs.size() > 0) {
+        if (!songs.isEmpty()) {
             return songs.get(currentIndex).isPlaying();
         }
         return false;

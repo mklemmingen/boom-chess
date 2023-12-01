@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Coordinates;
 
+import static com.boomchess.game.BoomChess.tileSize;
+
 /*
  * this class is the object for the dotted line that appears when a piece is selected. It acts as an Actor Object
  * on a Scene2DUI Stage
@@ -68,8 +70,8 @@ public class DeathExplosionActor extends Actor {
         float x1 = corpse.getX();
         float y1 = corpse.getY();
         // to factor in the scaling of the explosion
-        x1 -= 20;
-        y1 -= 20;
+        x1 -= tileSize/4;
+        y1 -= tileSize/4;
 
         TextureRegion currentFrame = explosionAnimation.getKeyFrame(elapsed, false);
 

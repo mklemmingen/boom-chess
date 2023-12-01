@@ -11,13 +11,17 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.BoomChess;
 
 import static com.boomchess.game.BoomChess.skin;
+import static com.boomchess.game.BoomChess.tileSize;
 
 public class MapStage {
     /*
     * MapStage delivers the map to the user by creating one and calling upon certain established parameters of BoomChess
      */
 
-    public static Stage initializeUI() {
+    // parameter holds last used random image
+    private static Image currentMap;
+
+    public static Stage initializeUI(boolean isResized) {
         /*
          * initializeUI is called when the mapStage should be created
          */
@@ -25,12 +29,17 @@ public class MapStage {
         Stage mapStage = new Stage(new ScreenViewport());
 
         // select map out of the list of maps
+        // the boolean isResized ensures that the mapImage is not changed when the screen is resized
         Image map;
-        if (BoomChess.isMedievalMode){
-            map = new Image(BoomChess.medievalMaps.getRandomTexture());
-        } else { // if not medieval mode
-            map = new Image(BoomChess.modernMaps.getRandomTexture());
+        if(!isResized) {
+            if (BoomChess.isMedievalMode) {
+                currentMap = new Image(BoomChess.medievalMaps.getRandomTexture());
+            } else { // if not medieval mode
+                currentMap = new Image(BoomChess.modernMaps.getRandomTexture());
+            }
         }
+        map = currentMap;
+        map.setSize(tileSize*9, tileSize*8);
         // Center the map on the screen
         map.setPosition((float) Gdx.graphics.getWidth() /2 - map.getWidth()/2,
                 (float) Gdx.graphics.getHeight() /2 - map.getHeight()/2);
