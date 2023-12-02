@@ -1,8 +1,12 @@
 package com.boomchess.game.frontend.actor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Array;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Coordinates;
 import com.boomchess.game.frontend.picture.SpeechBubbles;
@@ -69,7 +73,7 @@ public class AttackSequence {
 
             continueGame();
 
-            System.out.println("Action Sequence has ENDED! All actions have been completed! Cut!");
+            System.out.println("Action Sequence has ENDED! All actions have been completed! Cut! \n");
 
             return;
         }
@@ -128,21 +132,32 @@ public class AttackSequence {
             // if it is a DeathExplosionActor, add it to the deathExplosionStage
             BoomChess.bigExplosionSound.play(BoomChess.soundVolume);
             deathExplosionStage.addActor(actorBuddy);
-            //adds a death kill speech bubble to the attacker
-            timePerBreak = 2f;
+            // calls upon a function that adds a red-cross above the dead piece till gameStage is reloaded
+            BoomChess.addCrossOfDeath(((DeathExplosionActor) actorBuddy).X, ((DeathExplosionActor) actorBuddy).Y);
+            timePerBreak = 3f;
+
+            // since we add a speech bubble in damage directly after creating the deathExplosion, we can instantly add
+            // the speech bubble to the stage
+            currentIndex += 1;
+            actorBuddy = attackList.get(currentIndex);
+            if (actorBuddy instanceof Bubble) {
+                // if it is a Bubble, add it to the speechBubbleStage
+                ((Bubble) actorBuddy).makeSound(); // plays radio chatter
+                speechBubbleStage.addActor(actorBuddy);
+            }
         } else if (actorBuddy instanceof DottedLineActor) {
             // if it is a DottedLineActor, add it to the GameStage
             ((DottedLineActor) actorBuddy).makeSound();
             dottedLineStage.addActor(actorBuddy);
-            timePerBreak = 1f;
+            timePerBreak = 0.6f;
         } else if (actorBuddy instanceof Bubble) {
             // if it is a Bubble, add it to the speechBubbleStage
             ((Bubble) actorBuddy).makeSound(); // plays radio chatter
             speechBubbleStage.addActor(actorBuddy);
-            timePerBreak = 2f;
+            timePerBreak = 0.25f;
         } else {
             // simulate throwing an error for the log
-            System.out.println("attackSequence.playNext() has an unknown actor type");
+            System.out.println("attackSequence.playNext() has an unknown actor type in the attackList! \n");
         }
 
         currentIndex += 1;

@@ -235,6 +235,14 @@ public class BoomChess extends ApplicationAdapter {
 
 	// for the sounds of the speechBubbles
 	public static RandomSound speechSounds;
+	public static RandomSound radioChatter;
+
+	// boolean if beep (speech) used
+	public static boolean isBeepMode = false;
+
+	public static Stage crossOfDeathStage;
+
+	public static Texture crossOfDeathTexture;
 
 	// -----------------------------------------------------------------------------------------
 
@@ -365,6 +373,9 @@ public class BoomChess extends ApplicationAdapter {
 		killSpeeches.addTexture("speechbubbles/kill4.png");
 		killSpeeches.addTexture("speechbubbles/kill5.png");
 
+		// Texture of the red cross of death
+		crossOfDeathTexture = new Texture(Gdx.files.internal("Misc/crossOfDeath.png"));
+
 		// load the sound effects into respective Objects --------------------------------------
 
 		smallArmsSound = new RandomSound();
@@ -417,7 +428,17 @@ public class BoomChess extends ApplicationAdapter {
 
 		// speech bubble pop up sounds
 		speechSounds = new RandomSound();
-		speechSounds.addSound("sounds/arcadecoin.mp3");
+		speechSounds.addSound("sounds/coin/arcadecoin.mp3");
+		speechSounds.addSound("sounds/coin/coin2.mp3");
+		speechSounds.addSound("sounds/coin/coin6.mp3");
+
+
+
+		radioChatter = new RandomSound();
+		radioChatter.addSound("sounds/radio/speech1.mp3");
+		radioChatter.addSound("sounds/radio/speech3.mp3");
+		radioChatter.addSound("sounds/radio/speech7.mp3");
+
 
 		// load the sounds for the medieval mode
 
@@ -560,7 +581,14 @@ public class BoomChess extends ApplicationAdapter {
 				tankSound.setVolume(soundVolume);
 				smallExplosionSound.setVolume(soundVolume);
 				bigExplosionSound.setVolume(soundVolume);
-				// TODO ADD MEDIEVAL GAME MODE SOUNDS
+				archerSound.setVolume(soundVolume);
+				catapultSound.setVolume(soundVolume);
+				knightSound.setVolume(soundVolume);
+				magicSound.setVolume(soundVolume);
+				queenSound.setVolume(soundVolume);
+				kingSound.setVolume(soundVolume);
+				speechSounds.setVolume(soundVolume);
+				radioChatter.setVolume(soundVolume);
 			}
 		});
 
@@ -625,6 +653,9 @@ public class BoomChess extends ApplicationAdapter {
 
 		// create the speechBubbleStage
 		speechBubbleStage = new Stage();
+
+		// create the crossOfDeathStage
+		crossOfDeathStage = new Stage();
 
 		// ensures game starts in menu
 		createMainMenuStage();
@@ -709,6 +740,10 @@ public class BoomChess extends ApplicationAdapter {
 		// for the stages, displays only stage assigned as currentStage, see method switchToStage
 		currentStage.act();
 		currentStage.draw();
+
+		// for the crossOfDeathStage
+		crossOfDeathStage.act();
+		crossOfDeathStage.draw();
 
 		// for the dotted line when damage occurs -----------------------------------------------
 		// Render the dottedLineStage
@@ -1016,7 +1051,7 @@ public class BoomChess extends ApplicationAdapter {
 		* (changing InputProcessor to stop Game Progress)
 		 */
 		gameEndStage = GameEndStage.initializeUI(winnerTeamColour);
-		System.out.println("GameEndStage added");
+		System.out.println("GameEndStage added \n");
 	}
 
 	public static void createChallengeStage() {
@@ -1230,7 +1265,7 @@ public class BoomChess extends ApplicationAdapter {
 		DeathExplosionActor deathActor = new DeathExplosionActor(x, y);
 		deathActor.setZIndex(1);
 		actionSequence.addSequence(deathActor);
-		System.out.println("Exploded someone at position "+ x + "-" + y);
+		System.out.println("Exploded someone at position "+ x + "-" + y + "\n");
 	}
 
 	public static void addHitMarker(int x, int y){
@@ -1240,7 +1275,7 @@ public class BoomChess extends ApplicationAdapter {
 		HitMarkerActor hitActor = new HitMarkerActor(x, y);
 		hitActor.setZIndex(1);
 		actionSequence.addSequence(hitActor);
-		System.out.println("Hit someone at position "+ x + "-" + y);
+		System.out.println("Hit someone at position "+ x + "-" + y + "\n");
 	}
 
 	// ------------------- methods for setting a to be displayed as empty variable
@@ -1281,5 +1316,19 @@ public class BoomChess extends ApplicationAdapter {
 			}
 		}
 		return null;
+	}
+
+	//------------------------------------------------------------------
+	// ------------------- methods for adding a crossOfDeath to the crossOfDeathStage
+	//------------------------------------------------------------------
+
+	public static void addCrossOfDeath(int x, int y) {
+		Image cross = new Image(BoomChess.crossOfDeathTexture);
+		Coordinates coordinates = BoomChess.calculatePXbyTile(x, y);
+        cross.setPosition((float) coordinates.getX() - (tileSize / 2),
+				(float) coordinates.getY() - (tileSize / 2));
+		cross.setSize(tileSize, tileSize);
+		BoomChess.crossOfDeathStage.addActor(cross);
+		System.out.println("Added Cross of Death at tile: " + x + ", " + y + "\n");
 	}
 }

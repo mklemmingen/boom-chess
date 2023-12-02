@@ -30,7 +30,12 @@ public class SpeechBubbles {
         // find the general coordinates to add a speech bubble to him
         if(currentState == GameState.GREEN_TURN){
             // if it is green's turn, find the general coordinates of green
-            generalCoordinates = BoomChess.findGeneral(true);
+            if(!isBotMatch) {
+                generalCoordinates = BoomChess.findGeneral(true);
+            }
+            else{
+                return; // we dont need a bot to tell us that an attack is incoming
+            }
         }
         else{
             // if it is red's turn, find the general coordinates of red
@@ -38,9 +43,11 @@ public class SpeechBubbles {
         }
 
         // create bubble
-        assert generalCoordinates != null;
-        createBubble(alarm, generalCoordinates.getX() + (tileSize / 16),
-                generalCoordinates.getY() + tileSize / 4);
+        if(generalCoordinates != null) { // cant find general if the general has died.
+                                         // Do not create a bubble if that is the case
+            createBubble(alarm, generalCoordinates.getX() + (tileSize / 16),
+                    generalCoordinates.getY() + tileSize / 4);
+        }
     }
 
     // this function creates a Stack Object that creates a random speech bubble of defeating the enemy
@@ -79,7 +86,7 @@ public class SpeechBubbles {
         bubble.setZIndex(1);
         // add the Bubble Object to the current Action Sequence Object in BoomChess
         actionSequence.addSequence(bubble);
-        System.out.println("Added a Speech Bubble at Screen Coords: " + pxX + ", " + pxY);
+        System.out.println("Added a Speech Bubble at Screen Coords: " + pxX + ", " + pxY + "\n");
     }
 
 

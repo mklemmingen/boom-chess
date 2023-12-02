@@ -222,7 +222,8 @@ public class Board {
 
         // we update a board by switching the two objects of the Soldier 2D-Array
 
-        System.out.println("\n Updating board " + positionX + "_" + positionY + " to " + newPositionX + "_" + newPositionY);
+        System.out.println("\n Updating board " + positionX + "_" + positionY + " to " +
+                newPositionX + "_" + newPositionY + "\n");
 
         Soldier temp = board[positionX][positionY];
         board[positionX][positionY] = board[newPositionX][newPositionY];

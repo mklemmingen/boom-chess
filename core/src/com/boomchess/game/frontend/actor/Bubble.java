@@ -73,9 +73,12 @@ public class Bubble extends Actor {
     public void makeSound(){
         // plays some cool sounds
 
-        speechSounds.play(soundVolume);
-
-        // TODO add some more sounds
+        if(BoomChess.isBeepMode) {
+            speechSounds.play(soundVolume);
+        } else{
+            // play radio chatter
+            radioChatter.play(soundVolume);
+        }
     }
 
 }

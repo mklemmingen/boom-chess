@@ -28,9 +28,9 @@ public class GameEndStage extends Stage{
 
         String coolShoutout;
         if(isMedievalMode){
-            coolShoutout = "Huzzah! A King has found his final Rest!";
+            coolShoutout = "Huzzah! A King has found his final Rest!\n";
         } else {
-            coolShoutout = "Hell yeah! A General has been neutralised!";
+            coolShoutout = "Hell yeah! A General has been neutralised!\n";
         }
 
         /*
@@ -42,7 +42,7 @@ public class GameEndStage extends Stage{
         endRoot.row();
 
     gameEndStage.addActor(endRoot);
-    System.out.println("GameEndStage initialized");
+    System.out.println("GameEndStage initialized\n");
     return gameEndStage;
     }
 }

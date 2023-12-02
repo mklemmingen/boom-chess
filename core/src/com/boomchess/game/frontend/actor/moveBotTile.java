@@ -124,10 +124,6 @@ public class moveBotTile {
 
                 System.out.println("Moving, currently: " + currentX + " " + currentY);
 
-                // System out print of the current z layer and visibility
-                System.out.println("Current Z Layer: " + soldierStack.getZIndex());
-                System.out.println("Current Visibility: " + soldierStack.isVisible());
-
                 // call the renderAt method to render the image at the current position
                 renderAt(currentX, currentY);
             } else {

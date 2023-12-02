@@ -14,6 +14,7 @@ import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Board;
 import com.boomchess.game.backend.Coordinates;
 import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.frontend.actor.AttackSequence;
 import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
 import java.util.ArrayList;
@@ -30,6 +31,10 @@ public class GameStage {
 
     public static Stage createGameStage(final boolean isBotMatch) {
 
+        // clears the crossOfDeathStage
+        crossOfDeathStage.clear();
+
+        // allows the game have a MoveLogo
         BoomChess.showMove = true;
 
         // add the audio table to gameStage as Actor and position on the far right of the Screen
@@ -93,14 +98,14 @@ public class GameStage {
                 // useEmpty = true, the solPiece has an Image of Empty, if not continue to rest
 
                 if(useEmpty && (j == emptyY && i == emptyX)){
-                    System.out.println("Added Empty Picture to start location.");
+                    System.out.println("Added Empty Picture to start location.\n");
                     solPiece = new Image(empty);
                 } else {
                     // load the corresponding image through the Soldier Take Selfie Method
                     if (soldier instanceof takeSelfieInterface) {
                         solPiece = new Image(((takeSelfieInterface) soldier).takeSelfie());
                     } else {
-                        System.out.println("Error: Soldier is not an instance of takeSelfieInterface!");
+                        System.out.println("Error: Soldier is not an instance of takeSelfieInterface!\n");
                         solPiece = new Image(empty);
                     }
                 }
@@ -110,7 +115,7 @@ public class GameStage {
                 if (!(soldier == null)) {
                     health = soldier.getHealth(); // use the 'soldier' object since it's the same as gameBoard[X][Y]
                 } else {
-                    System.out.println("Error: Soldier is null in GameStage getHealth!");
+                    System.out.println("Error: Soldier is null in GameStage getHealth!\n");
                     health = -1;
                 }
 
@@ -166,7 +171,7 @@ public class GameStage {
                         @Override
                         public void dragStart(InputEvent event, float x, float y, int pointer) {
                             // Code runs when dragging starts:
-                            System.out.println("\n Started dragging the actor!");
+                            System.out.println("Started dragging the actor!\n");
 
                             // Get the team color of the current tile
                             Soldier[][] gameBoard = Board.getGameBoard();
@@ -176,7 +181,7 @@ public class GameStage {
                             if ((currentState == BoomChess.GameState.RED_TURN && !tileTeamColor.equals("red")) ||
                                     (currentState == BoomChess.GameState.GREEN_TURN && !tileTeamColor.equals("green"))) {
                                 event.cancel();
-                                System.out.println("\n It's not your turn!");
+                                System.out.println("It's not your turn!\n");
                                 BoomChess.reRenderGame();
                                 return;
                             }
@@ -209,13 +214,17 @@ public class GameStage {
                             // Convert the position to stage (screen) coordinates
                             Vector2 screenCoords = tileWidget.localToStageCoordinates(localCoords);
 
-                            System.out.println("\n Drag stopped at screen position: " + screenCoords.x + ", " + screenCoords.y);
+                            System.out.println("\n Drag stopped at screen position: " + screenCoords.x + ", "
+                                    + screenCoords.y + "\n");
 
                             Coordinates currentCoord = calculateTileByPX((int) screenCoords.x, (int) screenCoords.y);
 
-                            // for loop through validMoveTiles, at each tile we check for equality of currentCoord with the Coordinate
-                            // in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true, we set the
-                            // validMove Variable to true, call on the update method of the Board class and break the for loop
+                            // for loop through validMoveTiles, at each tile we check for equality of currentCoord
+                            // with the Coordinate
+                            // in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true,
+                            // we set the
+                            // validMove Variable to true, call on the update method of the Board class and break
+                            // the for loop
                             // then clear the Board.
 
 
@@ -242,7 +251,7 @@ public class GameStage {
                         @Override
                         public void dragStart(InputEvent event, float x, float y, int pointer) {
                             // Code runs when dragging starts:
-                            System.out.println("\n Started dragging the actor!");
+                            System.out.println("Started dragging the actor!\n");
 
                             tileWidget.toFront();
                             // Bring the actor to the front, so it appears above other actors
@@ -270,18 +279,19 @@ public class GameStage {
             }
         }
 
-        System.out.println("\n New Board has been rendered.");
+        System.out.println("New Board has been rendered.\n");
         batch.end();
 
         gameStage.addActor(root);
 
 
-        // create another stage for the back to main menu button
+        // create another table for the option buttons
+
         Table backTable = new Table();
         if (!isBotMatch) {
-            backTable.setSize(tileSize*5, tileSize); // determines the frame size for the backTable (button: to main menu)
+            backTable.setSize(tileSize*5, tileSize*1.5f); // determines the frame size for the backTable (button: to main menu)
             // bottom right the table in the parent container
-            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/4);
+            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/3);
         } else {
             backTable.setSize(tileSize*5, tileSize*2);
             // bottom right the table in the parent container
@@ -326,6 +336,25 @@ public class GameStage {
             }
         });
 
+        // button to change the beep mode of the speech bubbles isBeepMode true or false
+        backTable.row().padBottom(tileSize/8);
+        String currentBeepMode;
+        if(isBeepMode){
+            currentBeepMode = "Arcade";
+        }
+        else{
+            currentBeepMode = "Radio";
+        }
+        TextButton beepModeButton = new TextButton("Exclamations: " + currentBeepMode, skin);
+        backTable.add(beepModeButton);
+        beepModeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                isBeepMode = !isBeepMode;
+                reRenderGame();
+            }
+        });
+
         backTable.row().padBottom(tileSize/8);
         // change Map
         TextButton changeMapButton = new TextButton("Change Map", skin);
@@ -351,6 +380,9 @@ public class GameStage {
                 botMovingStage.clear();
                 dottedLineStage.clear();
                 gameEndStage.clear();
+                speechBubbleStage.clear();
+
+                actionSequence = new AttackSequence();
 
                 BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
                 

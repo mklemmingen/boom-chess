@@ -133,7 +133,7 @@ public class Tank extends Soldier
         if (soldierAttack instanceof Wardog){
             return damage - 5;
         }
-        System.out.println("The tank has been damaged for " + damage + " points by " + soldierAttack + ".");
+        System.out.println("The tank has been damaged for " + damage + " points by " + soldierAttack + ".\n");
         return damage;
     }
 

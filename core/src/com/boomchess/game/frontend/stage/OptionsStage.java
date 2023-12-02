@@ -80,6 +80,25 @@ public class OptionsStage extends Stage{
         });
         root.row();
 
+        // button to change the beep mode of the speech bubbles isBeepMode true or false
+        String currentBeepMode;
+        if(isBeepMode){
+            currentBeepMode = "Arcade";
+        }
+        else{
+            currentBeepMode = "Battlefield";
+        }
+        TextButton beepModeButton = new TextButton("Speech Bubbles: " + currentBeepMode, skin);
+        root.add(beepModeButton).padBottom(tileSize/2);
+        beepModeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                isBeepMode = !isBeepMode;
+                BoomChess.createOptionsStage();
+            }
+        });
+
+
         // back button to return to the main menu
         TextButton backButton = new TextButton("Back", skin);
         root.add(backButton).padBottom(tileSize/4);
