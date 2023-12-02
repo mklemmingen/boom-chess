@@ -129,7 +129,10 @@ public class Damage {
                 BoomChess.createGameEndStage(attackerColor);
                 System.out.println("A General has died!");
             }
+            // if the defending piece is not a general, we can just kill it
             killPiece(positionDefX, positionDefY);
+            // add a speech bubble to the attacker
+            SpeechBubbles.createSpeechDefeatEnemy(positionAttX, positionAttY);
         } else {
             // set the new health of the piece to the currentHealth variable
             gameBoard[positionDefX][positionDefY].setHealth(currentHealth);

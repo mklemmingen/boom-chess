@@ -19,6 +19,7 @@ import com.boomchess.game.backend.*;
 import com.boomchess.game.backend.subsoldier.General;
 import com.boomchess.game.frontend.actor.*;
 import com.boomchess.game.frontend.picture.RandomImage;
+import com.boomchess.game.frontend.picture.SpeechBubbles;
 import com.boomchess.game.frontend.screen.RelativeResizer;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
 import com.boomchess.game.frontend.sound.RandomSound;
@@ -229,6 +230,12 @@ public class BoomChess extends ApplicationAdapter {
 	// random texture object of kill speech bubbles
 	public static RandomImage killSpeeches;
 
+	// for the speech bubbles in general, we need to build a stage especially for them
+	public static Stage speechBubbleStage;
+
+	// for the sounds of the speechBubbles
+	public static RandomSound speechSounds;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -407,6 +414,10 @@ public class BoomChess extends ApplicationAdapter {
 
 		bigExplosionSound = new RandomSound();
 		bigExplosionSound.addSound("sounds/boom.mp3");
+
+		// speech bubble pop up sounds
+		speechSounds = new RandomSound();
+		speechSounds.addSound("sounds/arcadecoin.mp3");
 
 		// load the sounds for the medieval mode
 
@@ -611,6 +622,10 @@ public class BoomChess extends ApplicationAdapter {
 		actionSequence = new AttackSequence();
 
 		loadingScreenIsRunning = false;
+
+		// create the speechBubbleStage
+		speechBubbleStage = new Stage();
+
 		// ensures game starts in menu
 		createMainMenuStage();
 
@@ -709,6 +724,10 @@ public class BoomChess extends ApplicationAdapter {
 		botMovingStage.act(Gdx.graphics.getDeltaTime());
 		botMovingStage.draw();
 
+		// stage for the speech bubbles
+		speechBubbleStage.act(Gdx.graphics.getDeltaTime());
+		speechBubbleStage.draw();
+
 		// render the gameEndStage
 		gameEndStage.act();
 		gameEndStage.draw();
@@ -803,6 +822,9 @@ public class BoomChess extends ApplicationAdapter {
 				}
 			}
 		}
+		// add a attack incoming bubble from SpeechBubbles
+		SpeechBubbles.createSpeechAttackIncoming();
+		// start the actionSequence, since Damage has checked all of the board
 		actionSequence.startSequences();
 	}
 
@@ -833,6 +855,9 @@ public class BoomChess extends ApplicationAdapter {
 		dottedLineStage.dispose();
 		deathExplosionStage.dispose();
 		gameEndStage.dispose();
+		speechBubbleStage.dispose();
+		botMovingStage.dispose();
+		loadingStage.dispose();
 
 		// dispose of all assets --- Textures do not natively get rubbish canned by Javas inbuilt collector
 		// Images do tho!

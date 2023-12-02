@@ -49,9 +49,6 @@ public class AttackSequence {
         damageSequenceRunning = true;
         lengthOfAttackList = attackList.size();
 
-        // adds an actor to the gameStage that displays "Attack in Progress"!
-        SpeechBubbles.createSpeechAttackIncoming();
-
         actActor();
     }
 
@@ -102,6 +99,10 @@ public class AttackSequence {
             // clear all the stages
             deathExplosionStage.clear();
             dottedLineStage.clear();
+            // clear the botMovingStage
+            botMovingStage.clear();
+            // clear the speechBubbleStage
+            speechBubbleStage.clear();
             // set damageSequenceRunning to false
             damageSequenceRunning = false;
             return;
@@ -122,20 +123,23 @@ public class AttackSequence {
             // if it is a HitMarkerActor, add it to the GameStage
             smallExplosionSound.play(soundVolume);
             deathExplosionStage.addActor(actorBuddy);
-            timePerBreak = 0.25f;
+            timePerBreak = 1f;
         } else if (actorBuddy instanceof DeathExplosionActor) {
             // if it is a DeathExplosionActor, add it to the deathExplosionStage
             BoomChess.bigExplosionSound.play(BoomChess.soundVolume);
             deathExplosionStage.addActor(actorBuddy);
             //adds a death kill speech bubble to the attacker
-            SpeechBubbles.createSpeechDefeatEnemy(((DeathExplosionActor) actorBuddy).X,
-                    ((DeathExplosionActor) actorBuddy).Y);
-            timePerBreak = 3f;
+            timePerBreak = 2f;
         } else if (actorBuddy instanceof DottedLineActor) {
             // if it is a DottedLineActor, add it to the GameStage
             ((DottedLineActor) actorBuddy).makeSound();
             dottedLineStage.addActor(actorBuddy);
-            timePerBreak = 0.5f;
+            timePerBreak = 1f;
+        } else if (actorBuddy instanceof Bubble) {
+            // if it is a Bubble, add it to the speechBubbleStage
+            ((Bubble) actorBuddy).makeSound(); // plays radio chatter
+            speechBubbleStage.addActor(actorBuddy);
+            timePerBreak = 2f;
         } else {
             // simulate throwing an error for the log
             System.out.println("attackSequence.playNext() has an unknown actor type");

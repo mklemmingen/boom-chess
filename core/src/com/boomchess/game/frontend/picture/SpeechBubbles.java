@@ -4,6 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Coordinates;
+import com.boomchess.game.frontend.actor.Bubble;
+import com.boomchess.game.frontend.actor.DeathExplosionActor;
 
 import static com.boomchess.game.BoomChess.*;
 
@@ -21,27 +23,24 @@ public class SpeechBubbles {
 
         Image alarmImage = new Image(BoomChess.alarmTexture);
 
-        alarmImage.setSize(tileSize*1, tileSize*0.5f);
-        alarm.add(alarmImage);
-        alarm.setSize(tileSize*1, tileSize*0.5f);
+        editImageStack(alarmImage, alarm);
 
         Coordinates generalCoordinates;
 
         // find the general coordinates to add a speech bubble to him
         if(currentState == GameState.GREEN_TURN){
             // if it is green's turn, find the general coordinates of green
-            generalCoordinates = BoomChess.findGeneral(false);
+            generalCoordinates = BoomChess.findGeneral(true);
         }
         else{
             // if it is red's turn, find the general coordinates of red
-            generalCoordinates = BoomChess.findGeneral(true);
+            generalCoordinates = BoomChess.findGeneral(false);
         }
 
-        //set position
+        // create bubble
         assert generalCoordinates != null;
-        alarm.setPosition(generalCoordinates.getX() + (tileSize / 16), generalCoordinates.getY() + tileSize / 4);
-
-        deathExplosionStage.addActor(alarm);
+        createBubble(alarm, generalCoordinates.getX() + (tileSize / 16),
+                generalCoordinates.getY() + tileSize / 4);
     }
 
     // this function creates a Stack Object that creates a random speech bubble of defeating the enemy
@@ -52,16 +51,35 @@ public class SpeechBubbles {
          */
         Stack defeatEnemy = new Stack();
         Image defeatEnemyImage = new Image(BoomChess.killSpeeches.getRandomTexture());
-        defeatEnemyImage.setSize(tileSize * 1.5f, tileSize * 0.75f);
-        defeatEnemy.add(defeatEnemyImage);
-        defeatEnemy.setSize(tileSize * 1.5f, tileSize * 0.75f);
+        editImageStack(defeatEnemyImage, defeatEnemy);
 
         //adds a death kill speech bubble to the attacker
         Coordinates deathCoordinates = calculatePXbyTile(x, y);
-        //set position
-        defeatEnemy.setPosition(deathCoordinates.getX(), deathCoordinates.getY());
 
-        deathExplosionStage.addActor(defeatEnemy);
+        // create bubble
+        createBubble(defeatEnemy, deathCoordinates.getX(), deathCoordinates.getY());
+    }
+
+    private static void editImageStack(Image image, Stack stack){
+        /*
+        This function scales the image and stack of each bubble according to the current tile size
+         */
+        image.setSize(tileSize*1, tileSize*0.5f);
+        stack.setSize(tileSize*1, tileSize*0.5f);
+        stack.add(image);
+    }
+
+    private static void createBubble(Stack stack, float pxX, float pxY){
+        /*
+        This function creates a Bubble Object that is added to the current Action Sequence Object in BoomChess
+         */
+
+        // create a Bubble Object with the parameters
+        Bubble bubble = new Bubble(stack, pxX, pxY);
+        bubble.setZIndex(1);
+        // add the Bubble Object to the current Action Sequence Object in BoomChess
+        actionSequence.addSequence(bubble);
+        System.out.println("Added a Speech Bubble at Screen Coords: " + pxX + ", " + pxY);
     }
 
 
