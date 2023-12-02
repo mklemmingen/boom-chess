@@ -21,6 +21,8 @@ public class Commando extends Soldier
      * The method defaultCommando resets the health to the initial amount.
      */
 
+    public static int standardHealth = 40;
+
     public Commando(String teamColor) {
         /*
          * Constructor for the Commando object, takes positional arguments and team color
@@ -73,6 +75,10 @@ public class Commando extends Soldier
         }
 
         return randomDamage;
+    }
+
+    public int getStandardHealth(){
+        return standardHealth;
     }
 
     @Override

@@ -17,6 +17,8 @@ public class General extends Soldier
      * and the initial health. getHealth
      */
 
+    public static int standardHealth = 50;
+
 
     public General(String teamColor) {
         /*
@@ -64,6 +66,10 @@ public class General extends Soldier
         // that generate a random number between 0 and 1 that we multiply
 
         return (int) (minValue + Math.floor((maxValue - minValue + 1) * Math.random()));
+    }
+
+    public int getStandardHealth(){
+        return standardHealth;
     }
 
     public int defendAndBleed(int damage, Soldier soldierAttack) {

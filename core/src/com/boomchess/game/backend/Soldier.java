@@ -14,6 +14,7 @@ public abstract class Soldier {
 
     protected String teamColor;
     protected int health;
+    public static int standardHealth;
 
     public Soldier(String teamColor, int health) {
         this.teamColor = teamColor;

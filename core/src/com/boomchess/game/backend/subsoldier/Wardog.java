@@ -21,6 +21,8 @@ public class Wardog extends Soldier
      * and the initial health. getHealth
     */
 
+    public static int standardHealth = 40;
+
     public Wardog(String teamColor) {
         /*
          * Constructor for the Wardog object, takes positional arguments and team color
@@ -81,6 +83,10 @@ public class Wardog extends Soldier
             BoomChess.magicSound.play(BoomChess.soundVolume);
         }
         return randomDamage;
+    }
+
+    public int getStandardHealth(){
+        return standardHealth;
     }
 
     @Override

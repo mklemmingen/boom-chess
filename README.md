@@ -94,44 +94,48 @@ At the end of each chess-like turn, the current players pieces will all attack a
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-quick ids for pieces:   // TODO UPDATE THE STATS TO THE CURRENT INGAME CHARACTERISTICS
+NEW: Damage is scaled by the health of the piece. The less health the piece has, the less it will deal damage.
+Its in the format of damage * standardHealth/currentHealth
+NEW: A Pieces Damage to an enemy is a fraction by 1/(numbers of enemies it is attacking this turn) after the individual
+damage of a single attack has been calculated
+NEW: A Piece gets a damage boost of (1+(numbers of allies close)/10) to its damage multiplicator
 
-General(King) - int: 10          / health: int: 50   / damage: 1-5  
+General(King) / health: int: 50   / damage: 1-5  
 
    The most critical piece on the board. It can move one square in any direction (horizontally, vertically, or diagonally).
    if killed team loses
    takes only half the possible damage
 
-Commando(Queen) - int: 20        / health: int: 50  / damage: 1-30  / advantages: +10 to attacking tanks 
+Commando(Queen)n / health: int: 50  / damage: 1-30  / advantages: +10 to attacking tanks 
 
    The most powerful piece. It can move horizontally, vertically, diagonally, and in any direction for any number of squares.
    on a randomized 1-5 scale, he takes (<random number>/5)*100 percent less damage
    
-Tank(Rook) - int: 30             / health: int: 60  / damage: 10-20 / advantages: +5 to attacking infantry / disadvantages: deals -5 to wardogs
+Tank(Rook) / health: int: 60  / damage: 10-20 / advantages: +5 to attacking infantry / disadvantages: deals -5 to wardogs
 
    These are often represented as towers. They can move horizontally or vertically for any number of squares.
    high health. hard on other armour.
    easily killed by helicopters. acts like towers
 
-War Dogs(Bishop) - int: 40      / health: int: 40   / damage: 5-20  / advantages: +5 to attacking infantry 
+War Dogs(Bishop) / health: int: 40   / damage: 5-20  / advantages: +5 to attacking infantry 
 
    They move diagonally for any number of squares.
    is the end of faith for all infantry. easy target for helicopters
    the war dogs fear them because they go broom. 
  
-Helicopter(Knight) - int: 50    / health: int : 50  / damage: 10-20 / advantages: +5 to attacking tanks
+Helicopter(Knight)/ health: int : 50  / damage: 10-20 / advantages: +5 to attacking tanks
 
    Knights move in an L-shape: two squares in one direction (either horizontally or vertically) and then one square in a perpendicular direction. Knights can jump over other pieces.
    High movement. doesn't care about obstacles.
    high effectiveness against armour. 
 
-Infantry(Pawn) - int: 60        / health: int: 40  / damage: 01-20 / advantages: +5 to attacking helicopters / disadvantages: -5 to tank
+Infantry(Pawn) / health: int: 40  / damage: 01-20 / advantages: +5 to attacking helicopters / disadvantages: -5 to tank
 
    Pawns move forward one square but capture diagonally. On their first move, they have the option to move forward two squares. When a pawn reaches the opponent's back rank, it can be promoted to any other piece (typically a queen).
    the simple pawn
    Has a bonus on attacking helicopters. an easy target for war dogs.
 
-Artillery - int: 40 / damage 01-10 
+Artillery / damage 01-10 
 
  Artillery can move in any direction one tile. It can hit targets 3 tiles away
 

@@ -21,6 +21,8 @@ public class Helicopter extends Soldier
      * and the initial health. getHealth
      */
 
+    public static int standardHealth = 50;
+
     public Helicopter(String teamColor) {
         /*
         * Constructor for the Helicopter object, takes positional arguments and team color
@@ -74,6 +76,10 @@ public class Helicopter extends Soldier
         }
 
         return randomDamage;
+    }
+
+    public int getStandardHealth(){
+        return standardHealth;
     }
 
     @Override

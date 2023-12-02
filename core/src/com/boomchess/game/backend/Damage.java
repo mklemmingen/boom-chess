@@ -90,6 +90,45 @@ public class Damage {
         // avoids runtime type checks and casts, ensure each soldier object has this method first
         if (soldierAttack instanceof calculateDamageInterface) {
             damage = ((calculateDamageInterface) soldierAttack).calculateDamage(soldierDefend);
+            // damage is reduced depending on the health of the attacking piece
+            damage = damage * (((calculateDamageInterface) soldierAttack).getStandardHealth() /
+                    soldierAttack.getHealth());
+            //damage is reduced by the amount of enemies surrounding the attacking piece
+            // for this, we check the surroundings, count enemy figurines and reduce damage by / that amount
+            int enemyCount = 0;
+            int friendCount = 0;
+
+            int distance = 1;
+            int startX = Math.max(0, positionAttX - distance);
+            int endX = Math.min(8, positionAttX + distance);
+
+            int startY = Math.max(0, positionAttY - distance);
+            int endY = Math.min(7, positionAttY + distance);
+
+            for (int i = startX; i <= endX; i++) {
+                for (int j = startY; j <= endY; j++) {
+                    if (i == positionAttX && j == positionAttY) continue; // Skip on checking the original piece
+                    if (!(gameBoard[i][j] instanceof Empty)){
+                        if (!(gameBoard[i][j] instanceof Hill)){
+                            String hurtColor = gameBoard[i][j].getTeamColor();
+                            if (!hurtColor.equals(soldierAttack.getTeamColor())) {
+                                enemyCount++;
+                            } else {
+                                friendCount++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // lower the damage by the amount of enemies surrounding the attacking piece
+            if(enemyCount == 0){enemyCount = 1;} // impossible theoretically, but might occur
+            damage = damage / enemyCount;
+            // increase the damage by the amount of friends surrounding the attacking piece
+            if(friendCount != 0) {
+                damage = damage * (1 + (friendCount / 10));
+            }
+
         } else {
             System.out.println("The attacking piece is not a calculateDamageInterface\n");
         }

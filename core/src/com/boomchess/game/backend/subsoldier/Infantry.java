@@ -17,6 +17,8 @@ public class Infantry extends Soldier
      * and the initial health. getHealth
      */
 
+    public static int standardHealth = 40;
+
     public Infantry(String teamColor) {
         /*
          * Constructor for the Infantry object, takes positional arguments and team color
@@ -42,6 +44,10 @@ public class Infantry extends Soldier
 
         return randomDamage;
 
+    }
+
+    public int getStandardHealth(){
+        return standardHealth;
     }
 
     public int defendAndBleed(int damage, Soldier soldierAttack) {

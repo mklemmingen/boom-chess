@@ -21,6 +21,8 @@ public class Tank extends Soldier
      * and the initial health. getHealth
      */
 
+    public static int standardHealth = 50;
+
     public Tank(String teamColor) {
         /*
          * Constructor for the Tank object, takes positional arguments and team color
@@ -48,6 +50,10 @@ public class Tank extends Soldier
         }
 
         return randomDamage;
+    }
+
+    public int getStandardHealth(){
+        return standardHealth;
     }
 
     @Override
