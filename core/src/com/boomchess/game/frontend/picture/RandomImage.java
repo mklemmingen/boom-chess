@@ -2,6 +2,7 @@ package com.boomchess.game.frontend.picture;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

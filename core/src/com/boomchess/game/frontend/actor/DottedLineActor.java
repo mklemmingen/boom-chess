@@ -12,11 +12,8 @@ import com.boomchess.game.backend.Soldier;
 import com.boomchess.game.frontend.interfaces.makeASoundInterface;
 import com.boomchess.game.frontend.stage.MenuStage;
 
-import java.util.ArrayList;
-
-import static com.boomchess.game.BoomChess.*;
-import static com.boomchess.game.BoomChess.dottedLineStage;
-import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
+import static com.boomchess.game.BoomChess.reRenderGame;
+import static com.boomchess.game.BoomChess.tileSize;
 
 
 /*
@@ -110,8 +107,8 @@ public class DottedLineActor extends Actor {
         // logic for drawing the dotted line starts here ---------------------------------------
 
         // calculate Pixel Coordinates of attacker and defender
-        Coordinates attacker = BoomChess.calculatePXbyTile((int) startX, (int) startY);
-        Coordinates defender = BoomChess.calculatePXbyTile((int) endX, (int) endY);
+        Coordinates attacker = BoomChess.calculatePXbyTile(startX, startY);
+        Coordinates defender = BoomChess.calculatePXbyTile(endX, endY);
 
         // if we are not doing an attack line, but a move line, change the time
 
@@ -164,7 +161,7 @@ public class DottedLineActor extends Actor {
         // blue circle in the middle of a tile for debugging
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.BLUE); // Color of your choice
-        Coordinates center = BoomChess.calculatePXbyTile((int) startX, (int) startY);
+        Coordinates center = BoomChess.calculatePXbyTile(startX, startY);
         shapeRenderer.circle(center.getX(), center.getY(), tileSize/16);  // Draws a small circle
         shapeRenderer.end();
 

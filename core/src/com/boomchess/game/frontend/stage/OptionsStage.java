@@ -27,14 +27,16 @@ public class OptionsStage extends Stage{
         botDifficultyText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(botDifficulty.equals("easy")){
-                    botDifficulty = "medium";
-                }
-                else if(botDifficulty.equals("medium")){
-                    botDifficulty = "hard";
-                }
-                else if(botDifficulty.equals("hard")){
-                    botDifficulty = "easy";
+                switch (botDifficulty) {
+                    case "easy":
+                        botDifficulty = "medium";
+                        break;
+                    case "medium":
+                        botDifficulty = "hard";
+                        break;
+                    case "hard":
+                        botDifficulty = "easy";
+                        break;
                 }
                 BoomChess.createOptionsStage();
             }
@@ -60,7 +62,7 @@ public class OptionsStage extends Stage{
         root.row();
 
         // Change Mode button to switch blue and green
-        String currentMode = "";
+        String currentMode;
         if(isColourChanged){
             currentMode = "Blue";
         }
@@ -72,12 +74,7 @@ public class OptionsStage extends Stage{
         modeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                if(isColourChanged){
-                    isColourChanged = false;
-                }
-                else{
-                    isColourChanged = true;
-                }
+                isColourChanged = !isColourChanged;
                 BoomChess.createOptionsStage();
             }
         });

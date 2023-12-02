@@ -1,14 +1,16 @@
 package com.boomchess.game.frontend.stage;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Board;
 
 import static com.boomchess.game.BoomChess.*;
-import static com.boomchess.game.frontend.stage.GameStage.setGameBoard;
 
 public class MenuStage extends Stage{
 
@@ -120,14 +122,16 @@ public class MenuStage extends Stage{
         botDifficultyText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(botDifficulty.equals("easy")){
-                    botDifficulty = "medium";
-                }
-                else if(botDifficulty.equals("medium")){
-                    botDifficulty = "hard";
-                }
-                else if(botDifficulty.equals("hard")){
-                    botDifficulty = "easy";
+                switch (botDifficulty) {
+                    case "easy":
+                        botDifficulty = "medium";
+                        break;
+                    case "medium":
+                        botDifficulty = "hard";
+                        break;
+                    case "hard":
+                        botDifficulty = "easy";
+                        break;
                 }
                 BoomChess.createMainMenuStage();
             }
@@ -135,7 +139,7 @@ public class MenuStage extends Stage{
         root.row();
 
         // Change Mode button to switch medieval and modern
-        String currentMode = "";
+        String currentMode;
         if(isMedievalMode){
             currentMode = "Medieval";
         }

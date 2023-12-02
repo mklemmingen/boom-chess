@@ -15,7 +15,6 @@ public class MusicPlaylist {
      */
     private final List<Music> songs;
     private int currentIndex = 0; // Initialize to -1 to indicate no song has been played yet
-    private final int previousIndex = -1; // Initialize to -1 to indicate no song has been played yet
 
     public MusicPlaylist() {
         /*

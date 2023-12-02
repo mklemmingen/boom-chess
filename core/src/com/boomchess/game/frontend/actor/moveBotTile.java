@@ -9,11 +9,7 @@ import com.boomchess.game.backend.Coordinates;
 import com.boomchess.game.backend.Soldier;
 import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
 import static com.boomchess.game.BoomChess.*;
-import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
-import static jdk.jfr.internal.instrument.JDKEvents.remove;
 
 public class moveBotTile {
     /*

@@ -1,17 +1,16 @@
 package com.boomchess.game.frontend.actor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.boomchess.game.BoomChess;
-import com.boomchess.game.frontend.actor.DeathExplosionActor;
-import com.boomchess.game.frontend.actor.DottedLineActor;
-import com.boomchess.game.frontend.actor.HitMarkerActor;
+import com.boomchess.game.backend.Coordinates;
+import com.boomchess.game.frontend.picture.SpeechBubbles;
 import com.boomchess.game.frontend.stage.MenuStage;
 
 import java.util.ArrayList;
 
 import static com.boomchess.game.BoomChess.*;
-import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
 
 public class AttackSequence {
 
@@ -49,6 +48,9 @@ public class AttackSequence {
         currentIndex = 0;
         damageSequenceRunning = true;
         lengthOfAttackList = attackList.size();
+
+        // adds an actor to the gameStage that displays "Attack in Progress"!
+        SpeechBubbles.createSpeechAttackIncoming();
 
         actActor();
     }
@@ -125,6 +127,9 @@ public class AttackSequence {
             // if it is a DeathExplosionActor, add it to the deathExplosionStage
             BoomChess.bigExplosionSound.play(BoomChess.soundVolume);
             deathExplosionStage.addActor(actorBuddy);
+            //adds a death kill speech bubble to the attacker
+            SpeechBubbles.createSpeechDefeatEnemy(((DeathExplosionActor) actorBuddy).X,
+                    ((DeathExplosionActor) actorBuddy).Y);
             timePerBreak = 3f;
         } else if (actorBuddy instanceof DottedLineActor) {
             // if it is a DottedLineActor, add it to the GameStage
@@ -137,6 +142,10 @@ public class AttackSequence {
         }
 
         currentIndex += 1;
+
+        // adds an actor to the gameStage that displays "Attack in Progress"!
+        // this is to make it clear to the player that the game is still completing a turn, and no moves may be made
+        // while the sequence is running
     }
 
     // --------------------------------------------------------------------------------------------------
@@ -151,5 +160,4 @@ public class AttackSequence {
         // render the gameBoard as a on-screen update
         reRenderGame();
     }
-
 }

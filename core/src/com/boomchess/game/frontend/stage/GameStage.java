@@ -1,4 +1,6 @@
 package com.boomchess.game.frontend.stage;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -8,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.Gdx;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Board;
 import com.boomchess.game.backend.Coordinates;
@@ -360,10 +361,6 @@ public class GameStage {
         });
 
         return gameStage;
-    }
-
-    public static void setGameBoard() {
-        Board.initialise();
     }
 
     public Stage getStage() {

@@ -1,7 +1,7 @@
 package com.boomchess.game.backend;
 
 import com.boomchess.game.BoomChess;
-import com.boomchess.game.backend.subsoldier.*;
+import com.boomchess.game.backend.subsoldier.General;
 import com.boomchess.game.frontend.actor.moveBotTile;
 
 import java.util.*;

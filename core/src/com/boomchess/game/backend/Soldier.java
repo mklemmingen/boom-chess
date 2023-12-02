@@ -1,6 +1,7 @@
 package com.boomchess.game.backend;
 
 import com.boomchess.game.backend.subsoldier.Empty;
+
 import java.util.ArrayList;
 
 public abstract class Soldier {

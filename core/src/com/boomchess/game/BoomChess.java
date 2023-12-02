@@ -16,11 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
-import com.boomchess.game.frontend.actor.AttackSequence;
-import com.boomchess.game.frontend.actor.DeathExplosionActor;
-import com.boomchess.game.frontend.actor.DottedLineActor;
-import com.boomchess.game.frontend.actor.HitMarkerActor;
-import com.boomchess.game.frontend.actor.moveBotTile;
+import com.boomchess.game.backend.subsoldier.General;
+import com.boomchess.game.frontend.actor.*;
 import com.boomchess.game.frontend.picture.RandomImage;
 import com.boomchess.game.frontend.screen.RelativeResizer;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
@@ -226,6 +223,12 @@ public class BoomChess extends ApplicationAdapter {
 	// at the top right at the correct time
 	private static boolean switchTurnUsed = true;
 
+	// public Texture for the speech bubble general "Attack incoming!"
+	public static Texture alarmTexture;
+
+	// random texture object of kill speech bubbles
+	public static RandomImage killSpeeches;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -342,6 +345,18 @@ public class BoomChess extends ApplicationAdapter {
 		obstacleTextures.addTexture("obstacles/obstacle6.png");
 		obstacleTextures.addTexture("obstacles/obstacle8.png");
 		obstacleTextures.addTexture("obstacles/obstacle9.png");
+
+		// adding alarm texture
+
+		alarmTexture = new Texture(Gdx.files.internal("speechbubbles/alarmattack.png"));
+
+		// adding speech bubbles that show a kill having happened
+		killSpeeches = new RandomImage();
+		killSpeeches.addTexture("speechbubbles/kill1.png");
+		killSpeeches.addTexture("speechbubbles/kill2.png");
+		killSpeeches.addTexture("speechbubbles/kill3.png");
+		killSpeeches.addTexture("speechbubbles/kill4.png");
+		killSpeeches.addTexture("speechbubbles/kill5.png");
 
 		// load the sound effects into respective Objects --------------------------------------
 
@@ -910,11 +925,11 @@ public class BoomChess extends ApplicationAdapter {
 		Table currentMover = new Table();
 
 		float width = tileSize * 3;
-		float height = tileSize * 1.5f;
+		float height = tileSize * 2;
 		currentMover.setSize(width, height);
 
 		// Position at upper left corner
-		float xPosition = 0; // Left edge of the screen
+		float xPosition = tileSize/3; // Left edge of the screen
 		float yPosition = Gdx.graphics.getHeight() - height;// Subtract height of the mover, positioning it at the top
 		currentMover.setPosition(xPosition, yPosition);
 
@@ -1212,5 +1227,34 @@ public class BoomChess extends ApplicationAdapter {
 		useEmpty = true;
 		emptyX = startX;
 		emptyY = startY;
+	}
+
+	// finds the coordinates of a general and gives out as px coordinate object
+	public static Coordinates findGeneral(boolean isRedGeneral) {
+		/*
+		* method for finding the general of a team and returning its coordinates
+		 */
+
+		Coordinates generalCoordinates = new Coordinates();
+		Soldier[][] gameBoard = Board.getGameBoard();
+
+		String teamColor;
+		if (isRedGeneral) {
+			teamColor = "red";
+		} else {
+			teamColor = "green";
+		}
+
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 8; j++) {
+
+				Soldier soldier = gameBoard[i][j];
+				if (soldier instanceof General && soldier.getTeamColor().equals(teamColor)) {
+					generalCoordinates = calculatePXbyTile(i, j);
+					return generalCoordinates;
+				}
+			}
+		}
+		return null;
 	}
 }

@@ -2,6 +2,7 @@ package com.boomchess.game.backend;
 
 // import the General, Helicopter, Infantry, Tank, Wardog Classes of other files
 
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.interfaces.calculateDamageInterface;
 import com.boomchess.game.backend.interfaces.defendAndBleedInterface;
@@ -9,6 +10,9 @@ import com.boomchess.game.backend.subsoldier.Artillery;
 import com.boomchess.game.backend.subsoldier.Empty;
 import com.boomchess.game.backend.subsoldier.General;
 import com.boomchess.game.backend.subsoldier.Hill;
+import com.boomchess.game.frontend.picture.SpeechBubbles;
+
+import static com.boomchess.game.BoomChess.*;
 
 
 public class Damage {

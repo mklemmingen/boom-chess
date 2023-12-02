@@ -17,8 +17,8 @@ import static com.boomchess.game.BoomChess.tileSize;
  */
 public class DeathExplosionActor extends Actor {
 
-    private final int X;
-    private final int Y;
+    public final int X;
+    public final int Y;
     // this is the time that the animation has been on the screen
     private float elapsed = 0;
     // this is the maximum duration that the animation will be on the screen
@@ -82,5 +82,4 @@ public class DeathExplosionActor extends Actor {
         batch.draw(currentFrame, x1, y1, scaledWidth, scaledHeight); // Draw the current frame at the specified position
 
     }
-
 }
