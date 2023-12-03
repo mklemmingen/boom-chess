@@ -81,6 +81,12 @@ public class MenuStage extends Stage{
 
                 // create the big game Board as an object of the Board class
                 Board.initialise();
+                if(isMedievalMode){
+                    isBeepMode = true;
+                }
+                else{
+                    isBeepMode = false;
+                }
 
                 inGame = true;
                 switchToStage(GameStage.createGameStage(isBotMatch));
@@ -103,6 +109,13 @@ public class MenuStage extends Stage{
                 background_music.setVolume(volume);
 
                 currentState = GameState.RED_TURN;
+
+                if(isMedievalMode){
+                    isBeepMode = true;
+                }
+                else{
+                    isBeepMode = false;
+                }
 
                 BoomChess.isBotMatch = true;
 
@@ -153,10 +166,12 @@ public class MenuStage extends Stage{
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 if(isMedievalMode){
                     isMedievalMode = false;
+                    isBeepMode = false;
                     createMapStage();
                 }
                 else{
                     isMedievalMode = true;
+                    isBeepMode = true;
                     createMapStage();
                 }
                 BoomChess.createMainMenuStage();
