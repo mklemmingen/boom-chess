@@ -280,6 +280,9 @@ Using Inkscape for refining Icons
 
 // sources for the sounds used for the pieces
 
+all sounds were converted and cut with audacity to make them
+smaller, compact and theme fitting
+
 https://freesound.org/people/TobiasKosmos/sounds/163277/
 https://freesound.org/people/nuncaconoci/sounds/487535/
 https://freesound.org/people/EminYILDIRIM/sounds/547369/
