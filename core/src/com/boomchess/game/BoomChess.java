@@ -412,19 +412,43 @@ public class BoomChess extends ApplicationAdapter {
 
 		bigArmsSound = new RandomSound();
 		bigArmsSound.addSound("sounds/cannonball.mp3");
+		bigArmsSound.addSound("sounds/big/big7.mp3");
+
 
 		dogSound = new RandomSound();
 		dogSound.addSound("sounds/Dogs/dog_barking.mp3");
+		dogSound.addSound("sounds/Dogs/dog1.mp3");
+		dogSound.addSound("sounds/Dogs/dog2.mp3");
+		dogSound.addSound("sounds/Dogs/dog3.mp3");
+		dogSound.addSound("sounds/Dogs/dog4.mp3");
+		dogSound.addSound("sounds/Dogs/dog5.mp3");
+		dogSound.addSound("sounds/Dogs/dog6.mp3");
 
 		helicopterSound = new RandomSound();
+		helicopterSound.addSound("sounds/Gunshot/autocannon-20mm.mp3");
+		helicopterSound.addSound("sounds/helicopter/helicopter1.mp3");
+		helicopterSound.addSound("sounds/helicopter/helicopter2.mp3");
+		helicopterSound.addSound("sounds/helicopter/helicopter3.mp3");
+		helicopterSound.addSound("sounds/helicopter/helicopter4.mp3");
+		helicopterSound.addSound("sounds/helicopter/helicopter5.mp3");
 
-		tankSound = new RandomSound();
-		tankSound.addSound("sounds/tank-engine.mp3");
+		tankSound = bigArmsSound;
 
 		smallExplosionSound = new RandomSound();
+		smallExplosionSound.addSound("sounds/small/small1.mp3");
+		smallExplosionSound.addSound("sounds/small/small2.mp3");
+		smallExplosionSound.addSound("sounds/small/small3.mp3");
 
 		bigExplosionSound = new RandomSound();
 		bigExplosionSound.addSound("sounds/boom.mp3");
+		bigExplosionSound.addSound("sounds/big/big7.mp3");
+		bigExplosionSound.addSound("sounds/big/big6.mp3");
+		bigExplosionSound.addSound("sounds/big/big5.mp3");
+		bigExplosionSound.addSound("sounds/big/big4.mp3");
+		bigExplosionSound.addSound("sounds/big/big3.mp3");
+		bigExplosionSound.addSound("sounds/big/big2.mp3");
+		bigExplosionSound.addSound("sounds/big/big1.mp3");
+
 
 		// speech bubble pop up sounds
 		speechSounds = new RandomSound();
@@ -443,11 +467,28 @@ public class BoomChess extends ApplicationAdapter {
 		// load the sounds for the medieval mode
 
 		archerSound = new RandomSound();
+		archerSound.addSound("sounds/archer/archer1.mp3");
+		archerSound.addSound("sounds/archer/archer2.mp3");
 		catapultSound = new RandomSound();
+		catapultSound.addSound("sounds/catapult/catapult1.mp3");
+		catapultSound.addSound("sounds/catapult/catapult2.mp3");
 		knightSound = new RandomSound();
+		knightSound.addSound("sounds/knight/knight1.mp3");
+		knightSound.addSound("sounds/knight/knight2.mp3");
+		knightSound.addSound("sounds/knight/knight3.mp3");
+		knightSound.addSound("sounds/knight/knight4.mp3");
 		magicSound = new RandomSound();
+		magicSound.addSound("sounds/magic/magic1.mp3");
+		magicSound.addSound("sounds/magic/magic2.mp3");
 		queenSound = new RandomSound();
-		kingSound = new RandomSound();
+		queenSound.addSound("sounds/sword/sword1.mp3");
+		queenSound.addSound("sounds/sword/sword2.mp3");
+		queenSound.addSound("sounds/sword/sword3.mp3");
+		queenSound.addSound("sounds/sword/sword4.mp3");
+		queenSound.addSound("sounds/sword/sword5.mp3");
+		queenSound.addSound("sounds/sword/sword6.mp3");
+		queenSound.addSound("sounds/sword/sword7.mp3");
+		kingSound = queenSound;
 
 		// load the background music into MusicPlaylist object --------------------------------------
 		background_music = new MusicPlaylist();
@@ -483,7 +524,7 @@ public class BoomChess extends ApplicationAdapter {
 		//	default: { up: button, down: button-down },
 		//	music: { up: music-off, down: music, checked: music },
 		//	sound: { up: sound-off, down: sound, checked: sound },
-		//	toggle: { up: button, down: button-down, checked: button-down }
+		//	tmp3le: { up: button, down: button-down, checked: button-down }
 
 		// com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 		//	default-vertical: { background: slider, knob: slider-knob },

@@ -381,6 +381,7 @@ public class GameStage {
                 dottedLineStage.clear();
                 gameEndStage.clear();
                 speechBubbleStage.clear();
+                crossOfDeathStage.clear();
 
                 actionSequence = new AttackSequence();
 
