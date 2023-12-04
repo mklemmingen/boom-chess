@@ -102,6 +102,8 @@ public class BoomChess extends ApplicationAdapter {
 	private static Image greenMove;
 	private static Image blueMove;
 
+	private static Image actionOngoing;
+
 	// background is drawn in a batch, hence Texture
 	private static Texture background;
 	private static Texture xMarker;
@@ -220,10 +222,6 @@ public class BoomChess extends ApplicationAdapter {
 	// for the return to menu button, we have to have a boolean keeping processTurn from running if not true
 	public static boolean inGame = false;
 
-	// boolean for knowing if switchTurn has been used and then using this boolean to change the logo
-	// at the top right at the correct time
-	private static boolean switchTurnUsed = true;
-
 	// public Texture for the speech bubble general "Attack incoming!"
 	public static Texture alarmTexture;
 
@@ -243,6 +241,8 @@ public class BoomChess extends ApplicationAdapter {
 	public static Stage crossOfDeathStage;
 
 	public static Texture crossOfDeathTexture;
+
+	private static boolean sequenceRunning;
 
 	// -----------------------------------------------------------------------------------------
 
@@ -331,6 +331,9 @@ public class BoomChess extends ApplicationAdapter {
 		modernMaps.addTexture("map/map3/map4.png"); // cool black and white map
 		modernMaps.addTexture("map/map3/map5.png"); // cool black and white map
 		modernMaps.addTexture("map/map3/map6.png"); // cool black and white map
+
+		// texture for the action Running logo
+		actionOngoing = new Image(new Texture(Gdx.files.internal("Misc/actionOngoing.png")));
 
 		// load the Textures of the medieval game mode
 
@@ -698,6 +701,8 @@ public class BoomChess extends ApplicationAdapter {
 		// create the crossOfDeathStage
 		crossOfDeathStage = new Stage();
 
+		sequenceRunning = false;
+
 		// ensures game starts in menu
 		createMainMenuStage();
 
@@ -754,22 +759,12 @@ public class BoomChess extends ApplicationAdapter {
 			loadingStage.draw();
 			return;
 		}
-		// start of the turn based system ----------------------------
-		if (showMove){
 
+		// map underneath the currentStage if the game is ongoing
+		if (inGame){
 			// for the map
 			mapStage.act();
 			mapStage.draw();
-
-			// for the move Logo, if the turn has switched, clear the stage, change logo
-			if(switchTurnUsed) {
-				moveLogoStage.clear(); // to ensure no double overlay
-				updateMoveLogo();
-				switchTurnUsed = false;
-			}
-
-			moveLogoStage.act();
-			moveLogoStage.draw();
 		}
 
 		// for the overlay of possible moves
@@ -808,13 +803,28 @@ public class BoomChess extends ApplicationAdapter {
 		gameEndStage.act();
 		gameEndStage.draw();
 
+		// for the move Logo, clear the stage, change logo
+		moveLogoStage.clear(); // to ensure no double overlay
+		updateMoveLogo();
+
+		if(inGame){
+			// draw the movelogo
+			moveLogoStage.act();
+			moveLogoStage.draw();
+		}
+
 		if (actionSequence.getDamageSequenceRunning()){
 			// update the method playNext
+			sequenceRunning = true;
 			actionSequence.playNext(Gdx.graphics.getDeltaTime());
 			return;
 		}
+		sequenceRunning = false;
 
-		if(inGame){processTurn();}
+		if(inGame){
+			// make a turn check if the game is in progress
+			processTurn();
+		}
 	}
 
 	private void processTurn() {
@@ -913,7 +923,6 @@ public class BoomChess extends ApplicationAdapter {
 		} else {
 			currentState = GameState.RED_TURN;
 		}
-		switchTurnUsed = true;
 		reRenderGame();
 	}
 
@@ -1024,6 +1033,9 @@ public class BoomChess extends ApplicationAdapter {
 		/*
 		* method for updating the moveLogoStage with the correct logo
 		 */
+
+		// if not in game, add an actor depending on the current state
+
 		Table currentMover = new Table();
 
 		float width = tileSize * 3;
@@ -1031,21 +1043,37 @@ public class BoomChess extends ApplicationAdapter {
 		currentMover.setSize(width, height);
 
 		// Position at upper left corner
-		float xPosition = tileSize/3; // Left edge of the screen
+		float xPosition = tileSize / 3; // Left edge of the screen
 		float yPosition = Gdx.graphics.getHeight() - height;// Subtract height of the mover, positioning it at the top
 		currentMover.setPosition(xPosition, yPosition);
 
 
-		if (currentState == GameState.RED_TURN) {
-			currentMover.addActor(redMove);
-		} else if (currentState == GameState.GREEN_TURN) {
-			if (!isColourChanged) {
-				currentMover.addActor(greenMove);
+		boolean addActor = true;
+		if(sequenceRunning){
+			// if the sequence is running, add an actor that says action is running
+			currentMover.addActor(actionOngoing);
+			currentMover.setPosition(xPosition, yPosition-tileSize/4);
+		}
+		else {
+			if (currentState == GameState.RED_TURN) {
+				currentMover.addActor(redMove);
+			} else if (currentState == GameState.GREEN_TURN) {
+				if (!isColourChanged) {
+					currentMover.addActor(greenMove);
+				} else {
+					currentMover.addActor(blueMove);
+				}
 			} else {
-				currentMover.addActor(blueMove);
+				// if the currentState is not in game, remove the currentMover
+				currentMover.remove();
+				addActor = false;
 			}
 		}
-		moveLogoStage.addActor(currentMover);
+
+		if (addActor) {
+			moveLogoStage.addActor(currentMover);
+		}
+
 	}
 
 	public static void reRenderGame(){
