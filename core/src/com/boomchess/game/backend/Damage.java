@@ -126,7 +126,7 @@ public class Damage {
             damage = damage / enemyCount;
             // increase the damage by the amount of friends surrounding the attacking piece
             if(friendCount != 0) {
-                damage = damage * (1 + (friendCount / 10));
+                damage = damage * friendCount;
             }
 
         } else {
