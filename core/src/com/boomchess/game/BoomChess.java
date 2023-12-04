@@ -1021,8 +1021,9 @@ public class BoomChess extends ApplicationAdapter {
 	}
 
 	private void updateMoveLogo() {
-		// this method adds a new stage to the currentStage
-		// Image of the currentMover
+		/*
+		* method for updating the moveLogoStage with the correct logo
+		 */
 		Table currentMover = new Table();
 
 		float width = tileSize * 3;
@@ -1321,6 +1322,9 @@ public class BoomChess extends ApplicationAdapter {
 
 	// ------------------- methods for setting a to be displayed as empty variable
 	public static void resetEmptyCoordinate() {
+		/*
+
+		 */
 		useEmpty = false;
 	}
 

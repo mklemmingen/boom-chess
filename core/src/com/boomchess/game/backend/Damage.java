@@ -150,8 +150,11 @@ public class Damage {
 
         // avoids runtime type checks and casts, ensure each soldier object has this method first
         if (gameBoard[positionDefX][positionDefY] instanceof defendAndBleedInterface) {
-            currentHealth -= ((defendAndBleedInterface) gameBoard[positionDefX][positionDefY])
+            int calculatedDamage = ((defendAndBleedInterface) gameBoard[positionDefX][positionDefY])
                     .defendAndBleed(damage, gameBoard[positionAttX][positionAttY]);
+            // check to make sure no negative integer is used for damage, as this would heal the piece
+            if(calculatedDamage  > 0){calculatedDamage = 0;}
+            currentHealth = currentHealth - calculatedDamage;
         } else {
             System.out.println("The defending piece is not a defendAndBleedInterface\n");
         }
