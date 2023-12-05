@@ -108,8 +108,8 @@ public class Damage {
             for (int i = startX; i <= endX; i++) {
                 for (int j = startY; j <= endY; j++) {
                     if (i == positionAttX && j == positionAttY) continue; // Skip on checking the original piece
-                    if (!(gameBoard[i][j] instanceof Empty)){
-                        if (!(gameBoard[i][j] instanceof Hill)){
+                    if (!(gameBoard[i][j] instanceof Empty)) {
+                        if (!(gameBoard[i][j] instanceof Hill)) {
                             String hurtColor = gameBoard[i][j].getTeamColor();
                             if (!hurtColor.equals(soldierAttack.getTeamColor())) {
                                 enemyCount++;
@@ -122,13 +122,15 @@ public class Damage {
             }
 
             // lower the damage by the amount of enemies surrounding the attacking piece
-            if(enemyCount == 0){enemyCount = 1;} // impossible theoretically, but might occur
-            damage = damage / enemyCount;
+            if (enemyCount == 0) {
+                enemyCount = 1;
+            } // impossible theoretically, but might occur
+            damage = damage / enemyCount ;
+
             // increase the damage by the amount of friends surrounding the attacking piece
             if(friendCount != 0) {
                 damage = damage * friendCount;
             }
-
         } else {
             System.out.println("The attacking piece is not a calculateDamageInterface\n");
         }
@@ -153,7 +155,7 @@ public class Damage {
             int calculatedDamage = ((defendAndBleedInterface) gameBoard[positionDefX][positionDefY])
                     .defendAndBleed(damage, gameBoard[positionAttX][positionAttY]);
             // check to make sure no negative integer is used for damage, as this would heal the piece
-            if(calculatedDamage  > 0){calculatedDamage = 0;}
+            if(calculatedDamage < 0){calculatedDamage = 0;}
             currentHealth = currentHealth - calculatedDamage;
         } else {
             System.out.println("The defending piece is not a defendAndBleedInterface\n");
