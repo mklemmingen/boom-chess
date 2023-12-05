@@ -244,6 +244,12 @@ public class BoomChess extends ApplicationAdapter {
 
 	private static boolean sequenceRunning;
 
+	private static float loadingElapsed = 0;
+	private static boolean assetsLoaded = false;
+	private static Sound boomSoftwares;
+	public static Stage wrongMoveStage;
+	public static Texture wrongMoveLogo;
+	public static Sound brick;
 	// -----------------------------------------------------------------------------------------
 
 
@@ -259,22 +265,233 @@ public class BoomChess extends ApplicationAdapter {
 		loadingScreenTextures.addTexture("loadingScreen/loadingScreen2.png");
 		loadingScreenTextures.addTexture("loadingScreen/loadingScreen3.png");
 		loadingSound = Gdx.audio.newSound(Gdx.files.internal("sounds/countdown.mp3"));
-		currentStage = new Stage();
 		loadingStage = LoadingScreenStage.initalizeUI();
 
-		// for defaulting colour change
-		isColourChanged = false;
+		// creating all stage objects
+		deathExplosionStage = new Stage(new ScreenViewport());
+		mapStage  = new Stage(new ScreenViewport());
+		dottedLineStage = new Stage(new ScreenViewport());
+		botMovingStage = new Stage(new ScreenViewport());
+		speechBubbleStage = new Stage(new ScreenViewport());
+		crossOfDeathStage = new Stage(new ScreenViewport());
+		gameEndStage = new Stage(new ScreenViewport());
+		currentStage = new Stage(new ScreenViewport());
+		moveLogoStage = new Stage(new ScreenViewport());
+		possibleMoveOverlay = new Stage(new ScreenViewport());
+		wrongMoveStage = new Stage(new ScreenViewport());
 
 		// initialises the tile size for relative positioning of stages
 		RelativeResizer.init(); // sets public tilesize variable
+
+		// resize all stages for the beginning
+		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		background = new Texture(Gdx.files.internal("backgrounds/background_5.png"));
+		boomSoftwares = Gdx.audio.newSound(Gdx.files.internal("Misc/BoomSoftwares.mp3"));
+
+		loadingScreenIsRunning = true;
+	}
+
+
+	public enum GameState {
+		// for determining the current state of the game
+		/*
+		* The game has 3 states: RED_TURN, GREEN_TURN, NOT_IN_GAME
+		* Using these states allows for smooth switching between game assets
+		* RED_TURN: the red player has their turn
+		* GREEN_TURN: the green player has their turn
+		* NOT_IN_GAME: the game is not in progress, in any menuStage
+		 */
+
+		RED_TURN, GREEN_TURN, NOT_IN_GAME
+	}
+
+	// the first state at game Start is NOT_IN_GAME
+	public static GameState currentState = GameState.NOT_IN_GAME;
+	
+	@Override
+	public void render() {
+		/*
+		* render is called every frame, main-game loop of the game, holds all stages in nested ifs and the processTurn
+		 */
+
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+
+		loadingStage.act();
+		loadingStage.draw();
+
+		if (loadingScreenIsRunning){
+			// load the assets first time
+			if(!(assetsLoaded)){
+				loadAllAssets();
+				boomSoftwares.play(volume);
+			}
+			// run loading screen for 3 seconds atleast
+			if(loadingElapsed < 2.5){
+				loadingElapsed += Gdx.graphics.getDeltaTime();
+			} else {
+				loadingScreenIsRunning = false;
+				// ensures game starts in menu
+				createMainMenuStage();
+				loadingStage.clear();
+			}
+			return;
+		}
+
+		batch.begin();
+		batch.draw(background, 0, 0);
+		batch.end();
+
+		// check to make sure the screen hasn't resized
+		if(RelativeResizer.ensure()) {
+			// if so, adapts tileSize already in RelativeResizer, we need to re-render the currentStage
+			if(inGame){
+				reRenderGame();
+			} else { // creates a main menu stage as a failsafe
+				createMainMenuStage();
+			}
+			audioTable.setPosition(tileSize*2, tileSize*2+tileSize/3);
+			// sets viewport correctly
+			resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			// true, since we are simply resizing the map
+			mapStage = MapStage.initializeUI(true);
+			return;
+		}
+
+		// map underneath the currentStage if the game is ongoing
+		if (inGame){
+			// for the map
+			mapStage.act();
+			mapStage.draw();
+		}
+
+		// for the overlay of possible moves
+		if (renderOverlay) {
+			possibleMoveOverlay.act();
+			possibleMoveOverlay.draw();
+		}
+
+		// for the stages, displays only stage assigned as currentStage, see method switchToStage
+		currentStage.act();
+		currentStage.draw();
+
+		// for the crossOfDeathStage
+		crossOfDeathStage.act();
+		crossOfDeathStage.draw();
+
+		// for the dotted line when damage occurs -----------------------------------------------
+		// Render the dottedLineStage
+		dottedLineStage.act(Gdx.graphics.getDeltaTime());
+		dottedLineStage.draw();
+
+		// for the deathExplosion --------------------------------------------------------------
+		// Render the deathExplosionStage
+		deathExplosionStage.act(Gdx.graphics.getDeltaTime());
+		deathExplosionStage.draw();
+
+		// stage for the moving bot soldiers
+		botMovingStage.act(Gdx.graphics.getDeltaTime());
+		botMovingStage.draw();
+
+		// stage for the speech bubbles
+		speechBubbleStage.act(Gdx.graphics.getDeltaTime());
+		speechBubbleStage.draw();
+
+		// render the gameEndStage
+		gameEndStage.act();
+		gameEndStage.draw();
+
+		// for the move Logo, clear the stage, change logo
+		moveLogoStage.clear(); // to ensure no double overlay
+		updateMoveLogo();
+
+		if(inGame){
+			// draw the movelogo
+			moveLogoStage.act();
+			moveLogoStage.draw();
+
+			wrongMoveStage.act();
+			wrongMoveStage.draw();
+		}
+
+		if (actionSequence.getDamageSequenceRunning()){
+			// update the method playNext
+			sequenceRunning = true;
+			actionSequence.playNext(Gdx.graphics.getDeltaTime());
+			return;
+		}
+		sequenceRunning = false;
+
+		if(inGame){
+			// make a turn check if the game is in progress
+			processTurn();
+		}
+	}
+
+	private void processTurn() {
+		/*
+		* ProcessTurn is called at end of every Frame and triggers game progression if a Drag&Drop turn is legit /
+		* triggers the bot if isBotMatch and RED_MOVE
+		 */
+		if (currentState == GameState.RED_TURN) {
+			if (!isBotMatch){
+				if (legitTurn) {
+					calculateDamage("red");
+					legitTurn = false;
+				}
+			} else {
+				// switch case to make a bot decision for red team
+				if (!(botMove.getIsMoving())) {
+					switch (botDifficulty) {
+						case ("easy"):
+							BOT.easyBotMove();
+							break;
+						case ("medium"):
+							BOT.mediumBotMove();
+							break;
+						case ("hard"):
+							BOT.hardBotMove();
+							break;
+					}
+					legitTurn = false;
+				} else {
+					// add delta float time to BotMove.update
+					botMove.update(Gdx.graphics.getDeltaTime()); // updates till moving has finished
+				}
+
+				if (botMove.movingFinished) { // if the bot moving has finished, render and attack
+
+					// update the gameBoard officially, not with botMove Trick
+					Board.update(botMove.startX, botMove.startY, botMove.endX, botMove.endY);
+					botMovingStage.clear(); // clear the Stage so that moveSoldier is gone
+					reRenderGame();
+
+					// calculate damage, starts consequence
+					calculateDamage("red");
+				}
+			}
+		} else if (currentState == GameState.GREEN_TURN) {
+			if (legitTurn) {
+				calculateDamage("green");
+				legitTurn = false;
+			}
+		}
+	}
+
+	private static void loadAllAssets(){
+		/*
+		This method gets called during the main loading Stage runs
+		 */
+		// loading all assets -----------------------------------------------------------------------------------
+
+		// for defaulting colour change
+		isColourChanged = false;
 
 		// skin of the UI --------------------
 		// skin (look) of the buttons via a prearranged json file
 		skin = new Skin(Gdx.files.internal("menu.commodore64/uiskin.json"));
 
-		// loading all assets -----------------------------------------------------------------------------------
-
-		background = new Texture(Gdx.files.internal("backgrounds/background_5.png"));
+		// assets
 
 		greenMove = new Image(new Texture(Gdx.files.internal("moveLogos/green_Move.png")));
 		redMove = new Image(new Texture(Gdx.files.internal("moveLogos/red_Move.png")));
@@ -312,8 +529,6 @@ public class BoomChess extends ApplicationAdapter {
 
 		// Loading Texture of the map
 
-		mapStage  = new Stage();
-		
 		medievalMaps = new RandomImage();
 		modernMaps = new RandomImage();
 
@@ -413,6 +628,8 @@ public class BoomChess extends ApplicationAdapter {
 		smallArmsSound.addSound("sounds/Gunshot/Low/Long/G.mp3");
 		smallArmsSound.addSound("sounds/Gunshot/Low/Long/H.mp3");
 
+		brick = Gdx.audio.newSound(Gdx.files.internal("Misc/brick.mp3"));
+
 		bigArmsSound = new RandomSound();
 		bigArmsSound.addSound("sounds/cannonball.mp3");
 		bigArmsSound.addSound("sounds/big/big7.mp3");
@@ -507,6 +724,7 @@ public class BoomChess extends ApplicationAdapter {
 		background_music.addSong("music/Song Idee Chess.mp3"); // song added by Artist Wumbatz
 		background_music.addSong("music/Song 2.mp3"); // song added by Artist Wumbatz
 
+		wrongMoveLogo = new Texture("Misc/WrongMove.png");
 
 		// load the menu music
 
@@ -559,31 +777,31 @@ public class BoomChess extends ApplicationAdapter {
 		});
 
 		muteButton.addListener(new ClickListener() {
-		   @Override
-		   public void clicked(InputEvent event, float x, float y) {
-			   // if in game state - play background_music
-			   if (volume == 0) {
-				   volume = 0.1f;
-				   soundVolume = 0.1f;
-				   volumeSlider.setValue(0.1f);
-				   soundVolumeSlider.setValue(1.0f);
-				   if (currentState != GameState.NOT_IN_GAME) {
-					   background_music.setVolume(volume);
-				   } else {
-					   menu_music.setVolume(volume);
-				   }
-			   } else {
-				   volume = 0;
-				   soundVolume = 0;
-				   volumeSlider.setValue(0);
-				   soundVolumeSlider.setValue(0);
-				   if (currentState != GameState.NOT_IN_GAME) {
-					   background_music.setVolume(volume);
-				   } else {
-					   menu_music.setVolume(volume);
-				   }
-			   }
-		   }
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// if in game state - play background_music
+				if (volume == 0) {
+					volume = 0.1f;
+					soundVolume = 0.1f;
+					volumeSlider.setValue(0.1f);
+					soundVolumeSlider.setValue(1.0f);
+					if (currentState != GameState.NOT_IN_GAME) {
+						background_music.setVolume(volume);
+					} else {
+						menu_music.setVolume(volume);
+					}
+				} else {
+					volume = 0;
+					soundVolume = 0;
+					volumeSlider.setValue(0);
+					soundVolumeSlider.setValue(0);
+					if (currentState != GameState.NOT_IN_GAME) {
+						background_music.setVolume(volume);
+					} else {
+						menu_music.setVolume(volume);
+					}
+				}
+			}
 		});
 
 		skipButton.addListener(new ChangeListener() {
@@ -645,10 +863,6 @@ public class BoomChess extends ApplicationAdapter {
 		// for the dotted Line when damage occurs -----------------------------------------------
 
 		shapeRenderer = new ShapeRenderer();
-		dottedLineStage = new Stage(new ScreenViewport());
-
-		// for the deathExplosion ---------------------------------------------------------------
-		deathExplosionStage = new Stage(new ScreenViewport());
 
 		// -----------------------------------------------------------------------------
 		/*
@@ -660,8 +874,6 @@ public class BoomChess extends ApplicationAdapter {
 		// skin (look) of the progress bar via a prearranged json file
 		progressBarSkin = new Skin(Gdx.files.internal("progressBarSkin/neon-ui.json"));
 
-		// for the Move Logo Overlay
-		moveLogoStage = new Stage();
 
 		// creation of empty Board.validMoveTiles for null-pointer exception avoidance
 		Board.validMoveTiles = new ArrayList<>();
@@ -675,9 +887,6 @@ public class BoomChess extends ApplicationAdapter {
 
 		loadingSound.stop();
 
-		// initialise the gameEndStage
-		gameEndStage = new Stage();
-
 		// intialise the possibleMoveOverlay
 		possibleMoveOverlay = new Stage();
 
@@ -688,193 +897,13 @@ public class BoomChess extends ApplicationAdapter {
 		// initialise the botMove, a simulator for the schein-animation of the bot soldier along the white line
 		botMove = new moveBotTile();
 
-		botMovingStage = new Stage();
-
 		// our damage dealing scenarios
 		actionSequence = new AttackSequence();
 
-		loadingScreenIsRunning = false;
-
-		// create the speechBubbleStage
-		speechBubbleStage = new Stage();
-
-		// create the crossOfDeathStage
-		crossOfDeathStage = new Stage();
-
 		sequenceRunning = false;
 
-		// ensures game starts in menu
-		createMainMenuStage();
-
-		// resize all stages for the beginning
-		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-	}
-
-
-	public enum GameState {
-		// for determining the current state of the game
-		/*
-		* The game has 3 states: RED_TURN, GREEN_TURN, NOT_IN_GAME
-		* Using these states allows for smooth switching between game assets
-		* RED_TURN: the red player has their turn
-		* GREEN_TURN: the green player has their turn
-		* NOT_IN_GAME: the game is not in progress, in any menuStage
-		 */
-
-		RED_TURN, GREEN_TURN, NOT_IN_GAME
-	}
-
-	// the first state at game Start is NOT_IN_GAME
-	public static GameState currentState = GameState.NOT_IN_GAME;
-	
-	@Override
-	public void render() {
-		/*
-		* render is called every frame, main-game loop of the game, holds all stages in nested ifs and the processTurn
-		 */
-
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-
-		// check to make sure the screen hasn't resized
-		if(RelativeResizer.ensure()) {
-			// if so, adapts tileSize already in RelativeResizer, we need to re-render the currentStage
-			if(inGame){
-				reRenderGame();
-			} else { // creates a main menu stage as a failsafe
-				createMainMenuStage();
-			}
-			audioTable.setPosition(tileSize*2, tileSize*2+tileSize/3);
-			// sets viewport correctly
-			resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			// true, since we are simply resizing the map
-			mapStage = MapStage.initializeUI(true);
-		}
-
-		batch.begin();
-		batch.draw(background, 0, 0);
-		batch.end();
-
-		if (loadingScreenIsRunning){
-			loadingStage.act();
-			loadingStage.draw();
-			return;
-		}
-
-		// map underneath the currentStage if the game is ongoing
-		if (inGame){
-			// for the map
-			mapStage.act();
-			mapStage.draw();
-		}
-
-		// for the overlay of possible moves
-		if (renderOverlay) {
-			possibleMoveOverlay.act();
-			possibleMoveOverlay.draw();
-		}
-
-		// for the stages, displays only stage assigned as currentStage, see method switchToStage
-		currentStage.act();
-		currentStage.draw();
-
-		// for the crossOfDeathStage
-		crossOfDeathStage.act();
-		crossOfDeathStage.draw();
-
-		// for the dotted line when damage occurs -----------------------------------------------
-		// Render the dottedLineStage
-		dottedLineStage.act(Gdx.graphics.getDeltaTime());
-		dottedLineStage.draw();
-
-		// for the deathExplosion --------------------------------------------------------------
-		// Render the deathExplosionStage
-		deathExplosionStage.act(Gdx.graphics.getDeltaTime());
-		deathExplosionStage.draw();
-
-		// stage for the moving bot soldiers
-		botMovingStage.act(Gdx.graphics.getDeltaTime());
-		botMovingStage.draw();
-
-		// stage for the speech bubbles
-		speechBubbleStage.act(Gdx.graphics.getDeltaTime());
-		speechBubbleStage.draw();
-
-		// render the gameEndStage
-		gameEndStage.act();
-		gameEndStage.draw();
-
-		// for the move Logo, clear the stage, change logo
-		moveLogoStage.clear(); // to ensure no double overlay
-		updateMoveLogo();
-
-		if(inGame){
-			// draw the movelogo
-			moveLogoStage.act();
-			moveLogoStage.draw();
-		}
-
-		if (actionSequence.getDamageSequenceRunning()){
-			// update the method playNext
-			sequenceRunning = true;
-			actionSequence.playNext(Gdx.graphics.getDeltaTime());
-			return;
-		}
-		sequenceRunning = false;
-
-		if(inGame){
-			// make a turn check if the game is in progress
-			processTurn();
-		}
-	}
-
-	private void processTurn() {
-		/*
-		* ProcessTurn is called at end of every Frame and triggers game progression if a Drag&Drop turn is legit /
-		* triggers the bot if isBotMatch and RED_MOVE
-		 */
-		if (currentState == GameState.RED_TURN) {
-			if (!isBotMatch){
-				if (legitTurn) {
-					calculateDamage("red");
-					legitTurn = false;
-				}
-			} else {
-				// switch case to make a bot decision for red team
-				if (!(botMove.getIsMoving())) {
-					switch (botDifficulty) {
-						case ("easy"):
-							BOT.easyBotMove();
-							break;
-						case ("medium"):
-							BOT.mediumBotMove();
-							break;
-						case ("hard"):
-							BOT.hardBotMove();
-							break;
-					}
-					legitTurn = false;
-				} else {
-					// add delta float time to BotMove.update
-					botMove.update(Gdx.graphics.getDeltaTime()); // updates till moving has finished
-				}
-
-				if (botMove.movingFinished) { // if the bot moving has finished, render and attack
-
-					// update the gameBoard officially, not with botMove Trick
-					Board.update(botMove.startX, botMove.startY, botMove.endX, botMove.endY);
-					botMovingStage.clear(); // clear the Stage so that moveSoldier is gone
-					reRenderGame();
-
-					// calculate damage, starts consequence
-					calculateDamage("red");
-				}
-			}
-		} else if (currentState == GameState.GREEN_TURN) {
-			if (legitTurn) {
-				calculateDamage("green");
-				legitTurn = false;
-			}
-		}
+		// leaves the loading screen
+		assetsLoaded = true;
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import com.boomchess.game.backend.Board;
 import com.boomchess.game.backend.Coordinates;
 import com.boomchess.game.backend.Soldier;
 import com.boomchess.game.frontend.actor.AttackSequence;
+import com.boomchess.game.frontend.actor.WrongMoveIndicator;
 import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
 
 import java.util.ArrayList;
@@ -181,6 +182,13 @@ public class GameStage {
                             if ((currentState == BoomChess.GameState.RED_TURN && !tileTeamColor.equals("red")) ||
                                     (currentState == BoomChess.GameState.GREEN_TURN && !tileTeamColor.equals("green"))) {
                                 event.cancel();
+
+                                // adds a logo on screen that says that the movement was not allowed yet
+                                WrongMoveIndicator indi = new WrongMoveIndicator();
+                                wrongMoveStage.addActor(indi);
+                                //plays a brick sound
+                                indi.makeSound();
+
                                 System.out.println("It's not your turn!\n");
                                 BoomChess.reRenderGame();
                                 return;

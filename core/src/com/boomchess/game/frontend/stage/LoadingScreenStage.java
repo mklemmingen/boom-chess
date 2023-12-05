@@ -11,7 +11,6 @@ import static com.boomchess.game.BoomChess.loadingSound;
 public class LoadingScreenStage {
 
     public static Stage initalizeUI() {
-        loadingSound.play();
         Stage loadingScreen = new Stage();
 
         // Begin of Options LoadingScreen Layout - Root Table arranges content automatically and adaptively as ui-structure
@@ -23,6 +22,7 @@ public class LoadingScreenStage {
         int width = Gdx.graphics.getWidth();
         int height = Gdx.graphics.getHeight();
         picture.setSize(width, height);
+        root.setSize(width, height);
         root.add(picture);
 
         loadingScreen.addActor(root);
