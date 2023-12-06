@@ -161,7 +161,6 @@ public class Damage {
             System.out.println("The defending piece is not a defendAndBleedInterface\n");
         }
 
-
         // if the defending piece is a general, we need to check if it is dead
         // if it is dead, we need to end the game
 

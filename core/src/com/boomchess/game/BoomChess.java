@@ -321,11 +321,6 @@ public class BoomChess extends ApplicationAdapter {
 		loadingStage.draw();
 
 		if (loadingScreenIsRunning){
-			// load the assets first time
-			if(!(assetsLoaded)){
-				loadAllAssets();
-				boomSoftwares.play(volume);
-			}
 			// run loading screen for 3 seconds atleast
 			if(loadingElapsed < 2.5){
 				loadingElapsed += Gdx.graphics.getDeltaTime();
@@ -334,6 +329,11 @@ public class BoomChess extends ApplicationAdapter {
 				// ensures game starts in menu
 				createMainMenuStage();
 				loadingStage.clear();
+			}
+			// load the assets first time
+			if(!(assetsLoaded)){
+				loadAllAssets();
+				boomSoftwares.play(1);
 			}
 			return;
 		}
