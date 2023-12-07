@@ -11,6 +11,8 @@ public class DesktopLauncher {
 		config.setWindowedMode(1536, 896);
 		config.setForegroundFPS(60);
 		config.useVsync(true);
+		config.setResizable(false);
+		config.setWindowIcon("logo/Logo3.png");
 		new Lwjgl3Application(new BoomChess(), config);
 	}
 }
