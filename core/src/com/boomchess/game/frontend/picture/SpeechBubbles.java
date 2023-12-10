@@ -34,7 +34,7 @@ public class SpeechBubbles {
                 generalCoordinates = BoomChess.findGeneral(true);
             }
             else{
-                return; // we dont need a bot to tell us that an attack is incoming
+                return; // we don't need a bot to tell us that an attack is incoming
             }
         }
         else{

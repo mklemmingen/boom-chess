@@ -46,7 +46,8 @@ public class MenuStage extends Stage{
         helpButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                BoomChess.createHelpStage();
+                // switch showHelp, if on, turn off, if off, turn on
+                createHelpStage();
             }
         });
         root.row();

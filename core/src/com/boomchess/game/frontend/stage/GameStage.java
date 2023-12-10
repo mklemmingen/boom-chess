@@ -299,11 +299,11 @@ public class GameStage {
         if (!isBotMatch) {
             backTable.setSize(tileSize*5, tileSize*1.5f); // determines the frame size for the backTable (button: to main menu)
             // bottom right the table in the parent container
-            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/3);
+            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/2.5f);
         } else {
             backTable.setSize(tileSize*5, tileSize*2);
             // bottom right the table in the parent container
-            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/4);}
+            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/3.5f);}
         gameStage.addActor(backTable); // Add the table to the stage
 
         if(isBotMatch) {
@@ -330,6 +330,18 @@ public class GameStage {
                 }
             });
         }
+
+        // help button
+        backTable.row().padBottom(tileSize/8);
+        TextButton helpButton = new TextButton("Help", skin);
+        helpButton.align(Align.bottomRight);
+        backTable.add(helpButton);
+        helpButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                showHelp = !showHelp;
+            }
+        });
 
         backTable.row().padBottom(tileSize/8);
         // Button to change 1.Player Colour to blue
@@ -396,6 +408,7 @@ public class GameStage {
                 BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
                 
                 inGame = false;
+                showHelp = false;
                 
                 createMainMenuStage();
             }

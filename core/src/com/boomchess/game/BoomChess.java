@@ -250,6 +250,11 @@ public class BoomChess extends ApplicationAdapter {
 	public static Stage wrongMoveStage;
 	public static Texture wrongMoveLogo;
 	public static Sound brick;
+
+	// for the help stage and the help button
+	public static Stage helpStage;
+	public static Texture helpTexture;
+	public static boolean showHelp;
 	// -----------------------------------------------------------------------------------------
 
 
@@ -279,6 +284,7 @@ public class BoomChess extends ApplicationAdapter {
 		moveLogoStage = new Stage(new ScreenViewport());
 		possibleMoveOverlay = new Stage(new ScreenViewport());
 		wrongMoveStage = new Stage(new ScreenViewport());
+		helpStage = new Stage(new ScreenViewport());
 
 		// initialises the tile size for relative positioning of stages
 		RelativeResizer.init(); // sets public tilesize variable
@@ -422,6 +428,11 @@ public class BoomChess extends ApplicationAdapter {
 		}
 		sequenceRunning = false;
 
+		if(showHelp){
+			helpStage.act();
+			helpStage.draw();
+		}
+
 		if(inGame){
 			// make a turn check if the game is in progress
 			processTurn();
@@ -526,6 +537,9 @@ public class BoomChess extends ApplicationAdapter {
 		boomLogo = new Image(new Texture(Gdx.files.internal("logo/Logo3.png")));
 
 		empty = new Texture(Gdx.files.internal("Misc/empty.png"));
+
+		// help texture
+		helpTexture = new Texture(Gdx.files.internal("Misc/rules.png"));
 
 		// Loading Texture of the map
 
@@ -902,6 +916,13 @@ public class BoomChess extends ApplicationAdapter {
 
 		sequenceRunning = false;
 
+		// help Stage
+
+		Image helpImage = new Image(helpTexture);
+		helpImage.setSize(tileSize*12.5f, tileSize*8);
+		helpImage.setPosition(tileSize*4.1f, tileSize*1.9f);
+		helpStage.addActor(helpImage);
+
 		// leaves the loading screen
 		assetsLoaded = true;
 	}
@@ -1123,18 +1144,43 @@ public class BoomChess extends ApplicationAdapter {
 		gameEndStage.clear();
 	}
 
-	public static void createHelpStage() {
-		/*
-		* method for creating the stage for the help display
-		 */
-		switchToStage(HelpStage.initializeUI());
-	}
-
 	public static void createOptionsStage() {
 		/*
 		* method for creating the stage for the options display
 		 */
 		switchToStage(OptionsStage.initalizeUI());
+	}
+
+	public static void createHelpStage() {
+		/*
+		* method for creating the stage for the help display
+		 */
+		Stage funcStage = new Stage();
+
+		Table funcTable = new Table();
+
+		Image helpImage = new Image(helpTexture);
+		helpImage.setSize(tileSize*12.5f, tileSize*8);
+		helpImage.setPosition(tileSize*4.1f, tileSize*1.9f);
+		funcTable.addActor(helpImage);
+
+		funcTable.row();
+
+		// button to go back to the menu
+		TextButton backButton = new TextButton("Back", skin);
+		backButton.setPosition((float) Gdx.graphics.getWidth() /2,
+				(float) Gdx.graphics.getHeight() /8);
+		backButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				createMainMenuStage();
+			}
+		});
+		funcTable.addActor(backButton);
+
+		funcStage.addActor(funcTable);
+
+		switchToStage(funcStage);
 	}
 
 	public static void createCreditsStage() {
