@@ -296,41 +296,11 @@ public class GameStage {
         // create another table for the option buttons
 
         Table backTable = new Table();
-        if (!isBotMatch) {
-            backTable.setSize(tileSize*5, tileSize*1.5f); // determines the frame size for the backTable (button: to main menu)
-            // bottom right the table in the parent container
-            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/2.5f);
-        } else {
-            backTable.setSize(tileSize*5, tileSize*2f);
-            // bottom right the table in the parent container
-            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/1.5f);}
+        backTable.setSize(tileSize*5, tileSize*2f);
+        // bottom right the table in the parent container
+        backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize);
         gameStage.addActor(backTable); // Add the table to the stage
 
-        if(isBotMatch) {
-
-            backTable.row().padBottom(tileSize/8);
-            // button to change bot difficulty
-            // text that displays a text saying "Bot Difficulty"
-            final TextButton botDifficultyText = new TextButton("Bot: " + botDifficulty, skin);
-            backTable.add(botDifficultyText);
-            botDifficultyText.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    switch (botDifficulty) {
-                        case "easy":
-                            botDifficulty = "medium";
-                            break;
-                        case "medium":
-                            botDifficulty = "hard";
-                            break;
-                        case "hard":
-                            botDifficulty = "easy";
-                            break;
-                    }
-                    switchToStage(createGameStage(true));
-                }
-            });
-        }
 
         // help button
         backTable.row().padBottom(tileSize/8);
@@ -345,61 +315,16 @@ public class GameStage {
         });
 
         backTable.row().padBottom(tileSize/8);
-        // Button to change 1.Player Colour to blue
-        TextButton changeColourButton = new TextButton("Switch 1P Skin", skin);
-        changeColourButton.align(Align.bottomRight);
-        backTable.add(changeColourButton);
-        changeColourButton.addListener(new ChangeListener() {
+
+        // turn on options
+        TextButton optionsButton = new TextButton("Options", skin);
+        optionsButton.align(Align.bottomRight);
+        backTable.add(optionsButton);
+        optionsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                isColourChanged = !isColourChanged;
-                reRenderGame();
-            }
-        });
-
-        if(isBotMatch){
-            // button for turning the arm on and off
-            backTable.row().padBottom(tileSize/8);
-            TextButton armButton = new TextButton("BotArm: " + showArm, skin);
-            backTable.add(armButton);
-            armButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    showArm = !showArm;
-                    reRenderGame();
-                }
-            });
-        }
-
-        // button to change the beep mode of the speech bubbles isBeepMode true or false
-        backTable.row().padBottom(tileSize/8);
-        String currentBeepMode;
-        if(isBeepMode){
-            currentBeepMode = "Arcade";
-        }
-        else{
-            currentBeepMode = "Radio";
-        }
-        TextButton beepModeButton = new TextButton("Exclamations: " + currentBeepMode, skin);
-        backTable.add(beepModeButton);
-        beepModeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                isBeepMode = !isBeepMode;
-                reRenderGame();
-            }
-        });
-
-        backTable.row().padBottom(tileSize/8);
-        // change Map
-        TextButton changeMapButton = new TextButton("Change Map", skin);
-        changeMapButton.align(Align.bottomRight);
-        backTable.add(changeMapButton);
-        changeMapButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                BoomChess.createMapStage();
-                createGameStage(isBotMatch);
+                createInGameOptionStages();
+                showInGameOptions = !showInGameOptions;
             }
         });
         backTable.row().padBottom(tileSize/8);

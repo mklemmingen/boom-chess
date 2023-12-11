@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.boomchess.game.backend.*;
 import com.boomchess.game.backend.subsoldier.General;
@@ -261,6 +264,11 @@ public class BoomChess extends ApplicationAdapter {
 	public static Texture botArm;
 	public static boolean showArm = false;
 
+	// for the option stages ( bot and non bot )
+	public static boolean showInGameOptions;
+	public static Stage inGamOptStage;
+	public static Texture clipBoard;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -291,6 +299,7 @@ public class BoomChess extends ApplicationAdapter {
 		possibleMoveOverlay = new Stage(new ScreenViewport());
 		wrongMoveStage = new Stage(new ScreenViewport());
 		helpStage = new Stage(new ScreenViewport());
+		inGamOptStage = new Stage(new ScreenViewport());
 
 		// initialises the tile size for relative positioning of stages
 		RelativeResizer.init(); // sets public tilesize variable
@@ -426,6 +435,20 @@ public class BoomChess extends ApplicationAdapter {
 			wrongMoveStage.draw();
 		}
 
+
+		if(showHelp){
+			showInGameOptions = false;
+			Gdx.input.setInputProcessor(currentStage);
+			helpStage.act();
+			helpStage.draw();
+		}
+
+		if(showInGameOptions){
+			Gdx.input.setInputProcessor(inGamOptStage);
+			inGamOptStage.act();
+			inGamOptStage.draw();
+		}
+
 		if (actionSequence.getDamageSequenceRunning()){
 			// update the method playNext
 			sequenceRunning = true;
@@ -433,11 +456,6 @@ public class BoomChess extends ApplicationAdapter {
 			return;
 		}
 		sequenceRunning = false;
-
-		if(showHelp){
-			helpStage.act();
-			helpStage.draw();
-		}
 
 		if(inGame){
 			// make a turn check if the game is in progress
@@ -932,8 +950,154 @@ public class BoomChess extends ApplicationAdapter {
 		helpImage.setPosition(tileSize*4.1f, tileSize*1.9f);
 		helpStage.addActor(helpImage);
 
+		clipBoard = new Texture(Gdx.files.internal("Misc/clipboard.png"));
+		createInGameOptionStages();
+
 		// leaves the loading screen
 		assetsLoaded = true;
+	}
+
+	public static void createInGameOptionStages() {
+		// clear the stages
+		inGamOptStage.clear();
+
+		Table table = new Table();
+
+		table.setSize(tileSize*3, tileSize*5);
+		// bottom right the table in the parent container
+		// set position to middle of the screen
+		table.setPosition((float) Gdx.graphics.getWidth() /2 - table.getWidth()/2,
+				(float) Gdx.graphics.getHeight() /2 - table.getHeight()/2);
+
+		// button to change bot difficulty
+		// text that displays a text saying "Bot Difficulty"
+		final TextButton botDifficultyText = new TextButton("Bot: " + botDifficulty, skin);
+		botDifficultyText.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				switch (botDifficulty) {
+					case "easy":
+						botDifficulty = "medium";
+						break;
+					case "medium":
+						botDifficulty = "hard";
+						break;
+					case "hard":
+						botDifficulty = "easy";
+						break;
+				}
+				createInGameOptionStages();
+			}
+		});
+		table.add(botDifficultyText).padBottom(10).row();
+
+		// Button to change 1.Player Colour to blue
+		TextButton changeColourButton = new TextButton("Switch 1P Skin", skin);
+		changeColourButton.align(Align.bottomRight);
+		changeColourButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				isColourChanged = !isColourChanged;
+				createInGameOptionStages();
+			}
+		});
+		table.add(changeColourButton).padBottom(10).row();
+
+		// button for turning the arm on and off
+		TextButton armButton = new TextButton("BotArm: " + showArm, skin);
+		armButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				showArm = !showArm;
+				createInGameOptionStages();
+			}
+		});
+		table.add(armButton).padBottom(10).row();
+
+		// button to change the beep mode of the speech bubbles isBeepMode true or false
+		String currentBeepMode;
+		if(isBeepMode){
+			currentBeepMode = "Arcade";
+		}
+		else{
+			currentBeepMode = "Radio";
+		}
+		TextButton beepModeButton = new TextButton("Exclamations: " + currentBeepMode, skin);
+		beepModeButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+				isBeepMode = !isBeepMode;
+				createInGameOptionStages();
+			}
+		});
+		table.add(beepModeButton).padBottom(10).row();
+
+		// change Map
+		TextButton changeMapButton = new TextButton("Change Map", skin);
+		changeMapButton.align(Align.bottomRight);
+		changeMapButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				BoomChess.createMapStage();
+				createInGameOptionStages();
+			}
+		});
+		table.add(changeMapButton).padBottom(10).row();
+
+		// Exit to Main Menu button to return to the main menu
+		TextButton menuButton = new TextButton("Return to Main Menu", skin);
+		menuButton.align(Align.bottomRight);
+		menuButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				deathExplosionStage.clear();
+				botMovingStage.clear();
+				dottedLineStage.clear();
+				gameEndStage.clear();
+				speechBubbleStage.clear();
+				crossOfDeathStage.clear();
+
+				actionSequence = new AttackSequence();
+
+				BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
+
+				inGame = false;
+				showHelp = false;
+
+				showInGameOptions = false;
+
+				createMainMenuStage();
+			}
+		});
+		table.add(menuButton).padBottom(10).row();
+
+		// button to turn off boolean showInGameOptions and to set the input processor to currentStage
+		TextButton closeButton = new TextButton("Close Options", skin);
+		closeButton.align(Align.bottomRight);
+		closeButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				showInGameOptions = false;
+				Gdx.input.setInputProcessor(currentStage);
+			}
+		});
+		table.add(closeButton).padBottom(10).row();
+
+
+		// add a clipboard Image centralised on the screen
+		Image clipBoardImage = new Image(clipBoard);
+		clipBoardImage.setSize(tileSize*6, tileSize*8);
+		clipBoardImage.setPosition((float) Gdx.graphics.getWidth() /2 - clipBoardImage.getWidth()/2,
+				(float) Gdx.graphics.getHeight() /2 - clipBoardImage.getHeight()/2);
+		// set size
+		clipBoardImage.setZIndex(1);
+		inGamOptStage.addActor(clipBoardImage);
+
+
+		// add the tables to their stages
+		table.setZIndex(2);
+		inGamOptStage.addActor(table);
+
 	}
 
 	@Override
