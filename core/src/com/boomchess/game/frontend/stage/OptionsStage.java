@@ -97,6 +97,21 @@ public class OptionsStage extends Stage{
                 BoomChess.createOptionsStage();
             }
         });
+        root.row();
+
+        // button for turning the arm on and off
+        root.row().padBottom(tileSize/8);
+        TextButton armButton = new TextButton("BotArm: " + showArm, skin);
+        root.add(armButton).padBottom(tileSize/2);
+        armButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                showArm = !showArm;
+                createOptionsStage();
+            }
+        });
+
+        root.row();
 
 
         // back button to return to the main menu

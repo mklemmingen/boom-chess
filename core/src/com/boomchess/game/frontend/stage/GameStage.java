@@ -301,12 +301,13 @@ public class GameStage {
             // bottom right the table in the parent container
             backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/2.5f);
         } else {
-            backTable.setSize(tileSize*5, tileSize*2);
+            backTable.setSize(tileSize*5, tileSize*2f);
             // bottom right the table in the parent container
-            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/3.5f);}
+            backTable.setPosition(Gdx.graphics.getWidth() - backTable.getWidth(), tileSize/1.5f);}
         gameStage.addActor(backTable); // Add the table to the stage
 
         if(isBotMatch) {
+
             backTable.row().padBottom(tileSize/8);
             // button to change bot difficulty
             // text that displays a text saying "Bot Difficulty"
@@ -355,6 +356,20 @@ public class GameStage {
                 reRenderGame();
             }
         });
+
+        if(isBotMatch){
+            // button for turning the arm on and off
+            backTable.row().padBottom(tileSize/8);
+            TextButton armButton = new TextButton("BotArm: " + showArm, skin);
+            backTable.add(armButton);
+            armButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    showArm = !showArm;
+                    reRenderGame();
+                }
+            });
+        }
 
         // button to change the beep mode of the speech bubbles isBeepMode true or false
         backTable.row().padBottom(tileSize/8);

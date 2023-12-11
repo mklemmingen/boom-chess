@@ -255,6 +255,12 @@ public class BoomChess extends ApplicationAdapter {
 	public static Stage helpStage;
 	public static Texture helpTexture;
 	public static boolean showHelp;
+
+	// bot arm texture for botMoveTile
+
+	public static Texture botArm;
+	public static boolean showArm = false;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -522,6 +528,9 @@ public class BoomChess extends ApplicationAdapter {
 		redTank = new Texture(Gdx.files.internal("redTeam/tank_red_left.png"));
 		greenArtillery = new Texture(Gdx.files.internal("greenTeam/artillery_green_right.png"));
 		redArtillery = new Texture(Gdx.files.internal("redTeam/artillery_red_left.png"));
+
+		// bot arm
+		botArm = new Texture(Gdx.files.internal("Misc/botArm.png"));
 
 
 		blueArtillery = new Texture(Gdx.files.internal("blueTeam/artillery_blue_right.png"));

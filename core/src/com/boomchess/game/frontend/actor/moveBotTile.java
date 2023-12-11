@@ -32,6 +32,8 @@ public class moveBotTile {
     public boolean movingFinished;
 
     private static Image soldierImage;
+
+    private static Image botArm;
     private static Stack soldierStack;
 
     public moveBotTile() {
@@ -85,6 +87,8 @@ public class moveBotTile {
             soldierImage = new Image(empty);
         }
 
+        botArm = new Image(BoomChess.botArm);
+
         soldierStack = new Stack();
 
         soldierStack.setSize(BoomChess.tileSize, BoomChess.tileSize);
@@ -95,6 +99,13 @@ public class moveBotTile {
 
         // add SoldierImage to the widget and fill it
         soldierStack.add(soldierImage);
+
+        if(showArm) {
+            botArm.setScale(0.75f);
+            botArm.setSize(1000, 240);
+            botArm.setVisible(false);
+            botMovingStage.addActor(botArm);
+        }
 
         BoomChess.botMovingStage.addActor(soldierStack);
 
@@ -144,6 +155,10 @@ public class moveBotTile {
         currentY -= (int) (tileSize/2);
 
         soldierStack.setPosition(currentX, currentY);
+        if(showArm) {
+            botArm.setVisible(true);
+            botArm.setPosition(currentX + (0.75f * tileSize), currentY - tileSize);
+        }
     }
 
     public boolean getIsMoving() {
