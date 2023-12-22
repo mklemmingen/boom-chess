@@ -965,9 +965,6 @@ public class BoomChess extends ApplicationAdapter {
 
 		table.setSize(tileSize*3, tileSize*5);
 		// bottom right the table in the parent container
-		// set position to middle of the screen
-		table.setPosition((float) Gdx.graphics.getWidth() /2 - table.getWidth()/2,
-				(float) Gdx.graphics.getHeight() /2 - table.getHeight()/2);
 
 		// button to change bot difficulty
 		// text that displays a text saying "Bot Difficulty"
@@ -1087,12 +1084,16 @@ public class BoomChess extends ApplicationAdapter {
 		// add a clipboard Image centralised on the screen
 		Image clipBoardImage = new Image(clipBoard);
 		clipBoardImage.setSize(tileSize*6, tileSize*8);
-		clipBoardImage.setPosition((float) Gdx.graphics.getWidth() /2 - clipBoardImage.getWidth()/2,
-				(float) Gdx.graphics.getHeight() /2 - clipBoardImage.getHeight()/2);
 		// set size
 		clipBoardImage.setZIndex(1);
 		inGamOptStage.addActor(clipBoardImage);
 
+		clipBoardImage.setPosition((float) Gdx.graphics.getWidth() - tileSize*5.5f,
+				(float) Gdx.graphics.getHeight() - tileSize*13);;
+
+		// set position to middle of the screen
+		table.setPosition((float) Gdx.graphics.getWidth() - tileSize*4,
+				(float) Gdx.graphics.getHeight() - tileSize*12);
 
 		// add the tables to their stages
 		table.setZIndex(2);
