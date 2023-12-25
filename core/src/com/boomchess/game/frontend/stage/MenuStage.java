@@ -89,6 +89,8 @@ public class MenuStage extends Stage{
                     isBeepMode = false;
                 }
 
+                showArm = false;
+
                 inGame = true;
                 switchToStage(GameStage.createGameStage(isBotMatch));
             }
@@ -122,6 +124,8 @@ public class MenuStage extends Stage{
 
                 // create the big game Board as an object of the Board class
                 Board.initialise();
+
+                showArm = true;
 
                 inGame = true;
                 switchToStage(GameStage.createGameStage(isBotMatch));

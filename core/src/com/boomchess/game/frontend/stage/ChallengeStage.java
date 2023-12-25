@@ -39,6 +39,8 @@ public class ChallengeStage {
                 // create the first gameBoard
                 Board.initialiseChallengeOne();
 
+                showArm = true;
+
                 inGame = true;
                 switchToStage(GameStage.createGameStage(isBotMatch));
             }
