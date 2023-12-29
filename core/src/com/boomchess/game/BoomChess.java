@@ -269,6 +269,11 @@ public class BoomChess extends ApplicationAdapter {
 	public static Stage inGamOptStage;
 	public static Texture clipBoard;
 
+	// extended Credits
+
+	public static Texture credits;
+	public static Texture extendedCredits;
+
 	// -----------------------------------------------------------------------------------------
 
 
@@ -280,9 +285,7 @@ public class BoomChess extends ApplicationAdapter {
 		// loading Screen is going till loading complete and main menu starts ----------------------------
 
 		loadingScreenTextures = new RandomImage();
-		loadingScreenTextures.addTexture("loadingScreen/loadingScreen.png");
 		loadingScreenTextures.addTexture("loadingScreen/loadingScreen2.png");
-		loadingScreenTextures.addTexture("loadingScreen/loadingScreen3.png");
 		loadingSound = Gdx.audio.newSound(Gdx.files.internal("sounds/countdown.mp3"));
 		loadingStage = LoadingScreenStage.initalizeUI();
 
@@ -766,6 +769,11 @@ public class BoomChess extends ApplicationAdapter {
 		background_music.addSong("music/Song 2.mp3"); // song added by Artist Wumbatz
 
 		wrongMoveLogo = new Texture("Misc/WrongMove.png");
+
+		// credits
+
+		credits = new Texture("Misc/credits.png");
+		extendedCredits = new Texture("Misc/extendedCredits.png");
 
 		// load the menu music
 
