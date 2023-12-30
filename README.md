@@ -14,7 +14,7 @@ Projektplan auf BoomChess first layer level
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-sound assisted by Wambutz, actions marked if undertaken
+sound assisted by Wambutz
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -54,36 +54,14 @@ Starting Menu Layout:
 
 Boom-Chess
 
-1. HELP!
+1. Tutorial
 2. Start a 2-player-game
 3. Start a game against a bot
 4. Options
 5. Credits
+6. EXIT
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-1.1 Learn the game
-
-   ......  explanation about the different figurines, their stats, their dis/advantages 
-
-2.1 Options about the game that will start
-
-  
-3.1  Options about the game that will start
-
-  3.2 Choose the Difficulty of your enemy
- 
-  
-
-4.1 Options about the colours of the game-board, about colour-blindness
-
-5.1 Let the credits and info about the game run down
-   - display libGDX
-   - display where code snippets have been taken from
-   - display people that have worked on this project
-   - display programs that have been used in creating the art and sounds
-
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Quick intro:
 The game will be modernized using a different approach to chess. Each piece is a new piece resembling it only slightly in the way it can move. The King will be a General. The Towers will be tanks. The Pawns Infantry. The Runners will be Dogs. The Horses will be Helicopters. The Queen will be a Commando. 
@@ -176,14 +154,6 @@ https://pixabay.com/sound-effects/desert-eagle-gunshot-14622/
 
 https://pixabay.com/sound-effects/driving-tank-engine-88503/
 
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-general backend setup:
-
-Soldier[][] gameBoard = new Soldier 9 8;
-
-Tile will hold information as to if the tile has a :  - rock on it - a piece on it, which and which team, pieceID, Health 
-
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 gameStage-Explanation:
@@ -192,8 +162,6 @@ the game Stage will be created by initializing the gameBoard. This gameBoard wil
 The gameStage will create the gameBoard by looping through it and creating the Overlay-GameBoard depending on what Soldiers are on what tile.
 Each tile has a Listener on it that activated if the Widget is dragged - during dragging, its possible moves from its current Drag-Start location get calculated and 
 overlaid above the gameBoard-Stage. It ends when a click occurs.
-
-- game Loop Explanation //TODO 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
