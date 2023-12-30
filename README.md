@@ -10,7 +10,7 @@ Lauterbach, Yateem, Cam, Ruckgaber
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-<img src="./gameplayGif.gif" width="250" alt="gif showing the game Boom Chess.">
+<img src="./gameplayGif.gif" width="750" alt="gif showing the game Boom Chess.">
 
 Projektplan auf BoomChess first layer level 
 
@@ -42,8 +42,7 @@ configuration for desktop-specific rendering:
 /desktop/src/com.boomchess.game/DesktopLauncher.java
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-the front end framework will be run my libGDX, which will help in things running smoothly and easier to set up. 
+libGDX will be used as a general framework, providing a low-end basis for smooth game programming with a core costumizable canvas game class
 Gradle will be used to easily work with libraries (dependencies) and for smooth game starts.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
