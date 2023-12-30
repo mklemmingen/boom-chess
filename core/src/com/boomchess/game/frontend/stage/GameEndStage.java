@@ -30,7 +30,7 @@ public class GameEndStage extends Stage{
         if(isMedievalMode){
             coolShoutout = "Huzzah! A King has found his final Rest!\n";
         } else {
-            coolShoutout = "Hell yeah! A General has been neutralised!\n";
+            coolShoutout = "Boom Boom! A General has been neutralised!\n";
         }
 
         /*
