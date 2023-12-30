@@ -121,9 +121,9 @@ public class BoomChess extends ApplicationAdapter {
 
 	// universal Buttons -- here for music and sound control
 
-	public static Button playButton;
+	public static TextButton playButton;
 
-	public static Button muteButton;
+	public static TextButton muteButton;
 
 	public static Button skipButton;
 
@@ -276,6 +276,14 @@ public class BoomChess extends ApplicationAdapter {
 
 	// -----------------------------------------------------------------------------------------
 
+	// tutorial and loading screen
+
+	public static Sound katIncluded;
+	public static Music tutorialSound;
+
+	public static Texture tutorialTexture;
+	public static boolean inTutorial = false;
+
 
 	@Override
 	public void create() {
@@ -287,6 +295,8 @@ public class BoomChess extends ApplicationAdapter {
 		loadingScreenTextures = new RandomImage();
 		loadingScreenTextures.addTexture("loadingScreen/loadingScreen2.png");
 		loadingSound = Gdx.audio.newSound(Gdx.files.internal("sounds/countdown.mp3"));
+		tutorialSound = Gdx.audio.newMusic(Gdx.files.internal("Misc/tutorialsound.mp3"));
+		tutorialTexture = new Texture(Gdx.files.internal("Misc/tutorial.png"));
 		loadingStage = LoadingScreenStage.initalizeUI();
 
 		// creating all stage objects
@@ -312,6 +322,7 @@ public class BoomChess extends ApplicationAdapter {
 
 		background = new Texture(Gdx.files.internal("backgrounds/background_5.png"));
 		boomSoftwares = Gdx.audio.newSound(Gdx.files.internal("Misc/BoomSoftwares.mp3"));
+		katIncluded = Gdx.audio.newSound(Gdx.files.internal("Misc/katIncluded.mp3"));
 
 		loadingScreenIsRunning = true;
 	}
@@ -782,9 +793,9 @@ public class BoomChess extends ApplicationAdapter {
 
 		// ---------------------------- universal Buttons for adding to stages
 
-		playButton = new Button(skin, "music");
+		playButton = new TextButton("Play", skin);
 
-		muteButton = new Button(skin, "sound");
+		muteButton = new TextButton("Mute", skin);
 
 		skipButton = new TextButton("skip", skin);
 
@@ -807,9 +818,15 @@ public class BoomChess extends ApplicationAdapter {
 				// if in game state - play background_music
 				if (currentState != GameState.NOT_IN_GAME) {
 					if(background_music.isPlaying()) {
+						if(inTutorial) {
+							tutorialSound.stop();
+						}
 						background_music.stop();
 						background_music.setVolume(0);
 					} else {
+						if(inTutorial) {
+							tutorialSound.play();
+						}
 						background_music.play();
 						background_music.setVolume(volume);
 					}
@@ -830,6 +847,7 @@ public class BoomChess extends ApplicationAdapter {
 			public void clicked(InputEvent event, float x, float y) {
 				// if in game state - play background_music
 				if (volume == 0) {
+					tutorialSound.setVolume(1);
 					volume = 0.1f;
 					soundVolume = 0.1f;
 					volumeSlider.setValue(0.1f);
@@ -840,6 +858,7 @@ public class BoomChess extends ApplicationAdapter {
 						menu_music.setVolume(volume);
 					}
 				} else {
+					tutorialSound.setVolume(0);
 					volume = 0;
 					soundVolume = 0;
 					volumeSlider.setValue(0);
@@ -1323,6 +1342,7 @@ public class BoomChess extends ApplicationAdapter {
 		/*
 		* method for creating the stage for the main menu
 		 */
+		inTutorial = false;
 		switchToStage(MenuStage.initializeUI());
 		gameEndStage.clear();
 	}

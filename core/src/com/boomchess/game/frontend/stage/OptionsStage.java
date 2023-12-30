@@ -19,11 +19,12 @@ public class OptionsStage extends Stage{
         final Table root = new Table();
         root.setFillParent(true);
 
+        root.row().padBottom(tileSize/3);
         // button to change bot difficulty
         // text that displays a text saying "Bot Difficulty"
         String currentDif = botDifficulty;
         final TextButton botDifficultyText = new TextButton("Bot Difficulty: " + currentDif, skin);
-        root.add(botDifficultyText).padBottom(tileSize/8);
+        root.add(botDifficultyText);
         botDifficultyText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -41,7 +42,7 @@ public class OptionsStage extends Stage{
                 BoomChess.createOptionsStage();
             }
         });
-        root.row();
+        root.row().padBottom(tileSize/3);
 
         // Change Mode button to switch medieval and modern
         String currentGameMode;
@@ -52,7 +53,7 @@ public class OptionsStage extends Stage{
             currentGameMode = "Modern";
         }
         TextButton modeGameButton = new TextButton("Switch Mode: " + currentGameMode, skin);
-        root.add(modeGameButton).padBottom(tileSize/8);
+        root.add(modeGameButton);
         modeGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
@@ -69,25 +70,55 @@ public class OptionsStage extends Stage{
                 BoomChess.createOptionsStage();
             }
         });
-        root.row();
+        root.row().padBottom(tileSize/3);
 
         // text that displays a text saying "Number of Obstacles"
-        final TextButton numberObstaclesText = new TextButton("Number of Obstacles 0-10", skin);
-        root.add(numberObstaclesText).padBottom(tileSize/12);
-        root.row();
-
-        // slider for setting the number of obstacles in the initial no mans land
-        final Slider obstacleSlider;
-        obstacleSlider = new Slider(0, 10, 1f, false, skin);
-        obstacleSlider.setValue(numberObstacle);
-        root.add(obstacleSlider).padBottom(tileSize/8);
-        obstacleSlider.addListener(new ChangeListener() {
+        final TextButton numberObstaclesText = new TextButton(
+                "Change Number of Obstacles: " + numberObstacle, skin);
+        numberObstaclesText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                BoomChess.numberObstacle = obstacleSlider.getValue();
+                switch ((int) numberObstacle) {
+                    case 0:
+                        numberObstacle = 1;
+                        break;
+                    case 1:
+                        numberObstacle = 2;
+                        break;
+                    case 2:
+                        numberObstacle = 3;
+                        break;
+                    case 3:
+                        numberObstacle = 4;
+                        break;
+                    case 4:
+                        numberObstacle = 5;
+                        break;
+                    case 5:
+                        numberObstacle = 6;
+                        break;
+                    case 6:
+                        numberObstacle = 7;
+                        break;
+                    case 7:
+                        numberObstacle = 8;
+                        break;
+                    case 8:
+                        numberObstacle = 9;
+                        break;
+                    case 9:
+                        numberObstacle = 10;
+                        break;
+                    case 10:
+                        numberObstacle = 0;
+                        break;
+                }
+                BoomChess.createOptionsStage();
             }
         });
-        root.row();
+        root.add(numberObstaclesText);
+
+         root.row().padBottom(tileSize/3);;
 
         // Change Mode button to switch blue and green
         String currentMode;
@@ -98,7 +129,7 @@ public class OptionsStage extends Stage{
             currentMode = "Green";
         }
         TextButton modeButton = new TextButton("Switch 1.Player Colour: " + currentMode, skin);
-        root.add(modeButton).padBottom(tileSize/8);
+        root.add(modeButton);
         modeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
@@ -106,7 +137,7 @@ public class OptionsStage extends Stage{
                 BoomChess.createOptionsStage();
             }
         });
-        root.row();
+        root.row().padBottom(tileSize/3);
 
         // button to change the beep mode of the speech bubbles isBeepMode true or false
         String currentBeepMode;
@@ -117,7 +148,7 @@ public class OptionsStage extends Stage{
             currentBeepMode = "Battlefield";
         }
         TextButton beepModeButton = new TextButton("Speech Bubbles: " + currentBeepMode, skin);
-        root.add(beepModeButton).padBottom(tileSize/8);
+        root.add(beepModeButton);
         beepModeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
@@ -125,12 +156,11 @@ public class OptionsStage extends Stage{
                 BoomChess.createOptionsStage();
             }
         });
-        root.row();
+        root.row().padBottom(tileSize/3);
 
         // button for turning the arm on and off
-        root.row().padBottom(tileSize/8);
         TextButton armButton = new TextButton("BotArm: " + showArm, skin);
-        root.add(armButton).padBottom(tileSize/8);
+        root.add(armButton);
         armButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -138,13 +168,11 @@ public class OptionsStage extends Stage{
                 createOptionsStage();
             }
         });
-
-        root.row();
-
+        root.row().padBottom(tileSize/3);
 
         // back button to return to the main menu
         TextButton backButton = new TextButton("Back", skin);
-        root.add(backButton).padBottom(tileSize/8);
+        root.add(backButton);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
