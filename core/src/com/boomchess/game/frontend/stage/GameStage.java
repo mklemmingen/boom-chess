@@ -345,6 +345,8 @@ public class GameStage {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                tutorialSound.stop();
+
                 deathExplosionStage.clear();
                 botMovingStage.clear();
                 dottedLineStage.clear();
