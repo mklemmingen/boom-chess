@@ -14,11 +14,6 @@ jobs:
         with:
           fetch-depth: 0 # fetch all history
 
-      - name: Set up Git
-        run: |
-          git config --global user.email "martin.lauterbach@student.reutlingen-university.de"
-          git config --global user.name "Marty, Auto-Pipeline"
-
       - name: Add GitLab remote and push
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
