@@ -1,36 +1,60 @@
 package com.boomchess.game;
 
+import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.boomchess.game.backend.*;
+import com.boomchess.game.backend.BOT;
+import com.boomchess.game.backend.Board;
+import com.boomchess.game.backend.Coordinates;
+import com.boomchess.game.backend.Damage;
+import com.boomchess.game.backend.Soldier;
+import com.boomchess.game.backend.subsoldier.Artillery;
+import com.boomchess.game.backend.subsoldier.Commando;
 import com.boomchess.game.backend.subsoldier.General;
-import com.boomchess.game.frontend.actor.*;
+import com.boomchess.game.backend.subsoldier.Helicopter;
+import com.boomchess.game.backend.subsoldier.Infantry;
+import com.boomchess.game.backend.subsoldier.Tank;
+import com.boomchess.game.backend.subsoldier.Wardog;
+import com.boomchess.game.frontend.actor.AttackSequence;
+import com.boomchess.game.frontend.actor.DamageNumber;
+import com.boomchess.game.frontend.actor.DeathExplosionActor;
+import com.boomchess.game.frontend.actor.DottedLineActor;
+import com.boomchess.game.frontend.actor.HitMarkerActor;
+import com.boomchess.game.frontend.actor.moveBotTile;
 import com.boomchess.game.frontend.picture.RandomImage;
 import com.boomchess.game.frontend.picture.SpeechBubbles;
 import com.boomchess.game.frontend.screen.RelativeResizer;
 import com.boomchess.game.frontend.sound.MusicPlaylist;
 import com.boomchess.game.frontend.sound.RandomSound;
-import com.boomchess.game.frontend.stage.*;
+import com.boomchess.game.frontend.stage.ChallengeStage;
+import com.boomchess.game.frontend.stage.CreditsStage;
+import com.boomchess.game.frontend.stage.GameEndStage;
+import com.boomchess.game.frontend.stage.GameStage;
+import com.boomchess.game.frontend.stage.LoadingScreenStage;
+import com.boomchess.game.frontend.stage.MapStage;
+import com.boomchess.game.frontend.stage.MenuStage;
+import com.boomchess.game.frontend.stage.OptionsStage;
 
 import java.util.ArrayList;
-
-import static com.boomchess.game.frontend.stage.GameStage.createGameStage;
 
 public class BoomChess extends ApplicationAdapter {
 
@@ -41,7 +65,7 @@ public class BoomChess extends ApplicationAdapter {
 	public static float tileSize;
 	public static Skin skin;
 	public static Skin progressBarSkin;
-	public static float numberObstacle; // number of obstacles in the default game mode
+	public static int numberObstacle; // number of obstacles in the default game mode
 	public static Stage currentStage;
 
 	// for the Move Overlay ------------------------------------------------------
@@ -107,8 +131,6 @@ public class BoomChess extends ApplicationAdapter {
 
 	private static Image actionOngoing;
 
-	// background is drawn in a batch, hence Texture
-	private static Texture background;
 	private static Texture xMarker;
 	public static Image boomLogo;
 
@@ -121,16 +143,9 @@ public class BoomChess extends ApplicationAdapter {
 
 	// universal Buttons -- here for music and sound control
 
-	public static TextButton playButton;
-
-	public static TextButton muteButton;
+	public static Button muteButton;
 
 	public static Button skipButton;
-
-	// for the volume slider
-
-	public static Slider volumeSlider;
-	public static Slider soundVolumeSlider;
 
 	// volume of Sounds
 
@@ -140,9 +155,9 @@ public class BoomChess extends ApplicationAdapter {
 
 	// for the labels
 
-	public static Label volumeLabel;
+	public static TextButton volumeLabel;
 
-	public static Label soundVolumeLabel;
+	public static TextButton soundVolumeLabel;
 
 	// audio table
 	public static Table audioTable;
@@ -197,7 +212,7 @@ public class BoomChess extends ApplicationAdapter {
 
 	public static Sound loadingSound;
 
-	public static String botDifficulty = "easy";
+	public static String botDifficulty = "medium";
 
 	// stage for gameEnd
 	public static Stage gameEndStage;
@@ -249,7 +264,6 @@ public class BoomChess extends ApplicationAdapter {
 
 	private static float loadingElapsed = 0;
 	private static boolean assetsLoaded = false;
-	private static Sound boomSoftwares;
 	public static Stage wrongMoveStage;
 	public static Texture wrongMoveLogo;
 	public static Sound brick;
@@ -269,21 +283,80 @@ public class BoomChess extends ApplicationAdapter {
 	public static Stage inGamOptStage;
 	public static Texture clipBoard;
 
-	// extended Credits
+	// -----------------------------------------------------------------------------------------
+
+	// android relative sizing capability
+
+	public static Stage backgroundStage;
+
+	public static float screenWidth;
+	public static float screenHeigth;
+
+	public static float buttonWidth;
+	public static float buttonHeight;
+
+
+	// -----------------------------------------------------------------------------------------
+
+	// credits
 
 	public static Texture credits;
 	public static Texture extendedCredits;
 
-	// -----------------------------------------------------------------------------------------
+	public static float sliderSize;
 
-	// tutorial and loading screen
+	// --------------------------------------------
 
-	public static Sound katIncluded;
-	public static Music tutorialSound;
+	public static Sound boomSoftware;
 
 	public static Texture tutorialTexture;
 	public static boolean inTutorial = false;
 
+	// --------------------------------------------
+
+	public static int botMovingSpeed = 2;
+
+	// --------------------------------------------
+
+	public static boolean showAttackCircle = true;
+	public static Texture threeTOthreeCircle;
+	public static Texture fiveTOfiveCircle;
+
+	// --------------------------------------------
+
+	public static boolean showPossibleDamage = true;
+
+	public static Stage damageNumberStage;
+
+	public static Texture plusFive;
+	public static Texture plusTen;
+	public static Texture minusFive;
+	public static Texture minusTen;
+
+	// -------------------------------------------
+
+	// textures for damage intervals
+	public static boolean showIntervals = false;
+	public static Texture tenTwenty;
+	public static Texture oneFive;
+	public static Texture oneTwenty;
+	public static Texture fiveThirty;
+	public static Texture fiveTen;
+	public static Texture fiveTwenty;
+
+	// -------------------------------------------
+
+	// numbers
+	public static Texture zero;
+	public static Texture one;
+	public static Texture two;
+	public static Texture three;
+	public static Texture four;
+	public static Texture five;
+	public static Texture six;
+	public static Texture seven;
+	public static Texture eight;
+	public static Texture nine;
 
 	@Override
 	public void create() {
@@ -293,10 +366,11 @@ public class BoomChess extends ApplicationAdapter {
 		// loading Screen is going till loading complete and main menu starts ----------------------------
 
 		loadingScreenTextures = new RandomImage();
-		loadingScreenTextures.addTexture("loadingScreen/loadingScreen2.png");
+		loadingScreenTextures.addTexture("loadingScreen/BoomSoftware.png");
 		loadingSound = Gdx.audio.newSound(Gdx.files.internal("sounds/countdown.mp3"));
-		tutorialSound = Gdx.audio.newMusic(Gdx.files.internal("Misc/tutorialsound.mp3"));
+
 		tutorialTexture = new Texture(Gdx.files.internal("Misc/tutorial.png"));
+
 		loadingStage = LoadingScreenStage.initalizeUI();
 
 		// creating all stage objects
@@ -313,6 +387,8 @@ public class BoomChess extends ApplicationAdapter {
 		wrongMoveStage = new Stage(new ScreenViewport());
 		helpStage = new Stage(new ScreenViewport());
 		inGamOptStage = new Stage(new ScreenViewport());
+		backgroundStage = new Stage(new ScreenViewport());
+		damageNumberStage = new Stage(new ScreenViewport());
 
 		// initialises the tile size for relative positioning of stages
 		RelativeResizer.init(); // sets public tilesize variable
@@ -320,9 +396,20 @@ public class BoomChess extends ApplicationAdapter {
 		// resize all stages for the beginning
 		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		background = new Texture(Gdx.files.internal("backgrounds/background_5.png"));
-		boomSoftwares = Gdx.audio.newSound(Gdx.files.internal("Misc/BoomSoftwares.mp3"));
-		katIncluded = Gdx.audio.newSound(Gdx.files.internal("Misc/katIncluded.mp3"));
+		// background is drawn in a batch, hence Texture
+		Texture background = new Texture(Gdx.files.internal("backgrounds/background_4.png"));
+
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeigth = Gdx.graphics.getHeight();
+
+		Image backgroundImage = new Image(background);
+		backgroundImage.setSize(screenWidth, screenHeigth);
+		backgroundStage.addActor(backgroundImage);
+
+		buttonWidth = tileSize*2;
+		buttonHeight = tileSize/2;
+
+		boomSoftware = Gdx.audio.newSound(Gdx.files.internal("Misc/BoomSoftwares.mp3"));
 
 		loadingScreenIsRunning = true;
 	}
@@ -352,12 +439,11 @@ public class BoomChess extends ApplicationAdapter {
 
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 
-		loadingStage.act();
-		loadingStage.draw();
-
 		if (loadingScreenIsRunning){
+			loadingStage.act();
+			loadingStage.draw();
 			// run loading screen for 3 seconds atleast
-			if(loadingElapsed < 2.5){
+			if(loadingElapsed < 3){
 				loadingElapsed += Gdx.graphics.getDeltaTime();
 			} else {
 				loadingScreenIsRunning = false;
@@ -368,30 +454,13 @@ public class BoomChess extends ApplicationAdapter {
 			// load the assets first time
 			if(!(assetsLoaded)){
 				loadAllAssets();
-				boomSoftwares.play(1);
+				boomSoftware.play(volume);
 			}
 			return;
 		}
 
-		batch.begin();
-		batch.draw(background, 0, 0);
-		batch.end();
-
-		// check to make sure the screen hasn't resized
-		if(RelativeResizer.ensure()) {
-			// if so, adapts tileSize already in RelativeResizer, we need to re-render the currentStage
-			if(inGame){
-				reRenderGame();
-			} else { // creates a main menu stage as a failsafe
-				createMainMenuStage();
-			}
-			audioTable.setPosition(tileSize*2, tileSize*2+tileSize/3);
-			// sets viewport correctly
-			resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			// true, since we are simply resizing the map
-			mapStage = MapStage.initializeUI(true);
-			return;
-		}
+		backgroundStage.act();
+		backgroundStage.draw();
 
 		// map underneath the currentStage if the game is ongoing
 		if (inGame){
@@ -427,6 +496,10 @@ public class BoomChess extends ApplicationAdapter {
 		// stage for the moving bot soldiers
 		botMovingStage.act(Gdx.graphics.getDeltaTime());
 		botMovingStage.draw();
+
+		// stage for the damage numbers and its Runnables
+		damageNumberStage.act(Gdx.graphics.getDeltaTime());
+		damageNumberStage.draw();
 
 		// stage for the speech bubbles
 		speechBubbleStage.act(Gdx.graphics.getDeltaTime());
@@ -527,24 +600,84 @@ public class BoomChess extends ApplicationAdapter {
 		}
 	}
 
-	private static void loadAllAssets(){
+	private static void loadAllAssets() {
 		/*
 		This method gets called during the main loading Stage runs
 		 */
 		// loading all assets -----------------------------------------------------------------------------------
 
 		// for defaulting colour change
-		isColourChanged = false;
+		isColourChanged = true;
 
 		// skin of the UI --------------------
-		// skin (look) of the buttons via a prearranged json file
+		// skin (look) of the buttons via the prearranged json file
 		skin = new Skin(Gdx.files.internal("menu.commodore64/uiskin.json"));
+
+		// Retrieving the font used in the skin
+		BitmapFont font = skin.getFont("commodore-64");
+
+		// Scaling the font depending on the relativresizer calculated tile size
+
+		if (tileSize > 140) {
+			font.getData().setScale(3f);
+			sliderSize = 4f;
+		} else if (tileSize > 100) {
+			font.getData().setScale(2f);
+			sliderSize = 2.5f;
+		} else if (tileSize > 50){
+			font.getData().setScale(1.5f);
+			sliderSize = 1.5f;
+		} else {
+			font.getData().setScale(1.5f);
+			sliderSize = 1f;
+		}
+
+		// Optionally, update the skin with the scaled font if needed
+		skin.add("commodore-64", font, BitmapFont.class);
+
 
 		// assets
 
 		greenMove = new Image(new Texture(Gdx.files.internal("moveLogos/green_Move.png")));
 		redMove = new Image(new Texture(Gdx.files.internal("moveLogos/red_Move.png")));
 		blueMove = new Image(new Texture(Gdx.files.internal("moveLogos/blue_Move.png")));
+
+		// for the intervals
+
+		tenTwenty = new Texture(Gdx.files.internal("Misc/tenTwenty.png"));
+		oneFive = new Texture(Gdx.files.internal("Misc/oneFive.png"));
+		oneTwenty = new Texture(Gdx.files.internal("Misc/oneTwenty.png"));
+		fiveThirty = new Texture(Gdx.files.internal("Misc/fiveThirty.png"));
+		fiveTen = new Texture(Gdx.files.internal("Misc/fiveTen.png"));
+		fiveTwenty = new Texture(Gdx.files.internal("Misc/fiveTwenty.png"));
+
+		// for the damage numbers
+
+		zero = new Texture(Gdx.files.internal("Misc/zero.png"));
+		one = new Texture(Gdx.files.internal("Misc/one.png"));
+		two = new Texture(Gdx.files.internal("Misc/two.png"));
+		three = new Texture(Gdx.files.internal("Misc/three.png"));
+		four = new Texture(Gdx.files.internal("Misc/four.png"));
+		five = new Texture(Gdx.files.internal("Misc/five.png"));
+		six = new Texture(Gdx.files.internal("Misc/six.png"));
+		seven = new Texture(Gdx.files.internal("Misc/seven.png"));
+		eight = new Texture(Gdx.files.internal("Misc/eight.png"));
+		nine = new Texture(Gdx.files.internal("Misc/nine.png"));
+
+		// damage numbers
+
+		plusFive = new Texture(Gdx.files.internal("Misc/plusFive.png"));
+		plusTen = new Texture(Gdx.files.internal("Misc/plusTen.png"));
+		minusFive = new Texture(Gdx.files.internal("Misc/minusFive.png"));
+		minusTen = new Texture(Gdx.files.internal("Misc/minusTen.png"));
+
+		// set the size of all move logos
+
+		greenMove.setSize(tileSize*2.5f, tileSize*1.2f);
+		redMove.setSize(tileSize*2.5f, tileSize*1.2f);
+		blueMove.setSize(tileSize*2.5f, tileSize*1.2f);
+
+		//------------------------------------------------
 
 		greenInfantry = new Texture(Gdx.files.internal("greenTeam/infantry_green_right.png"));
 		redInfantry = new Texture(Gdx.files.internal("redTeam/infantry_red_left.png"));
@@ -582,6 +715,11 @@ public class BoomChess extends ApplicationAdapter {
 		// help texture
 		helpTexture = new Texture(Gdx.files.internal("Misc/rules.png"));
 
+		// attack circles
+
+		threeTOthreeCircle = new Texture(Gdx.files.internal("Misc/threeTothreeCircle.png"));
+		fiveTOfiveCircle = new Texture(Gdx.files.internal("Misc/fiveTofiveCircle.png"));
+
 		// Loading Texture of the map
 
 		medievalMaps = new RandomImage();
@@ -604,6 +742,7 @@ public class BoomChess extends ApplicationAdapter {
 
 		// texture for the action Running logo
 		actionOngoing = new Image(new Texture(Gdx.files.internal("Misc/actionOngoing.png")));
+		actionOngoing.setSize(tileSize*2.5f, tileSize*1.2f);
 
 		// load the Textures of the medieval game mode
 
@@ -738,6 +877,10 @@ public class BoomChess extends ApplicationAdapter {
 		radioChatter.addSound("sounds/radio/speech3.mp3");
 		radioChatter.addSound("sounds/radio/speech7.mp3");
 
+		// credits
+		credits = new Texture("Misc/credits.png");
+		extendedCredits = new Texture("Misc/extendedCredits.png");
+
 
 		// load the sounds for the medieval mode
 
@@ -781,11 +924,6 @@ public class BoomChess extends ApplicationAdapter {
 
 		wrongMoveLogo = new Texture("Misc/WrongMove.png");
 
-		// credits
-
-		credits = new Texture("Misc/credits.png");
-		extendedCredits = new Texture("Misc/extendedCredits.png");
-
 		// load the menu music
 
 		menu_music = Gdx.audio.newMusic(Gdx.files.internal
@@ -793,11 +931,9 @@ public class BoomChess extends ApplicationAdapter {
 
 		// ---------------------------- universal Buttons for adding to stages
 
-		playButton = new TextButton("Play", skin);
-
 		muteButton = new TextButton("Mute", skin);
 
-		skipButton = new TextButton("skip", skin);
+		skipButton = new TextButton("Skip", skin);
 
 		// for the style out of the Commodore64 json file - REFERENCE:
 
@@ -811,63 +947,22 @@ public class BoomChess extends ApplicationAdapter {
 		//	default-vertical: { background: slider, knob: slider-knob },
 		//	default-horizontal: { background: slider, knob: slider-knob }
 
-		playButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				// this is the Button for playing and pausing the music (it switches current State)
-				// if in game state - play background_music
-				if (currentState != GameState.NOT_IN_GAME) {
-					if(background_music.isPlaying()) {
-						if(inTutorial) {
-							tutorialSound.stop();
-						}
-						background_music.stop();
-						background_music.setVolume(0);
-					} else {
-						if(inTutorial) {
-							tutorialSound.play();
-						}
-						background_music.play();
-						background_music.setVolume(volume);
-					}
-				} else {
-					if(menu_music.isPlaying()) {
-						menu_music.stop();
-						menu_music.setVolume(0);
-					} else {
-						menu_music.play();
-						menu_music.setVolume(volume);
-					}
-				}
-			}
-		});
-
 		muteButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// if in game state - play background_music
-				if (volume == 0) {
-					tutorialSound.setVolume(1);
-					volume = 0.1f;
-					soundVolume = 0.1f;
-					volumeSlider.setValue(0.1f);
-					soundVolumeSlider.setValue(1.0f);
-					if (currentState != GameState.NOT_IN_GAME) {
-						background_music.setVolume(volume);
-					} else {
-						menu_music.setVolume(volume);
-					}
+				if(soundVolume == 0){
+
+					soundVolume = 0.25f;
+					volume = 0.25f;
+
+					background_music.setVolume(volume);
+					menu_music.setVolume(volume);
 				} else {
-					tutorialSound.setVolume(0);
-					volume = 0;
+
 					soundVolume = 0;
-					volumeSlider.setValue(0);
-					soundVolumeSlider.setValue(0);
-					if (currentState != GameState.NOT_IN_GAME) {
-						background_music.setVolume(volume);
-					} else {
-						menu_music.setVolume(volume);
-					}
+					volume = 0;
+					background_music.setVolume(volume);
+					menu_music.setVolume(volume);
 				}
 			}
 		});
@@ -881,29 +976,51 @@ public class BoomChess extends ApplicationAdapter {
 			}
 		});
 
-		// universal volume sliders
+		// their labels
 
-		volumeSlider = new Slider(0, 0.4f, 0.01f, false, skin);
-		volumeSlider.setValue(0.2f);
-		volumeSlider.addListener(new ChangeListener() {
+		volumeLabel = new TextButton("Music-Volume: " + volume+"%", skin);
+		volumeLabel.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				volume = volumeSlider.getValue();
+				if(volume == 0){
+					volume = 0.25f;
+				} else if (volume <= 0.25f){
+					volume = 0.5f;
+				} else if (volume  <= 0.5f){
+					volume = 0.75f;
+				} else if (volume <= 0.75f){
+					volume = 1f;
+				} else if (volume <= 1f){
+					volume = 0f;
+				}
+
 				if (currentState != GameState.NOT_IN_GAME) {
 					background_music.setVolume(volume);
 				} else {
 					menu_music.setVolume(volume);
 				}
+
+				volumeLabel.setText("Music-Volume: " + volume+"%");
+
 			}
 		});
 
-		soundVolumeSlider = new Slider(0, 0.4f, 0.01f, false, skin);
-		soundVolumeSlider.setValue(0.2f);
-
-		soundVolumeSlider.addListener(new ChangeListener() {
+		soundVolumeLabel = new TextButton("Sound-Volume:" + soundVolume +"%", skin);
+		soundVolumeLabel.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				soundVolume = soundVolumeSlider.getValue();
+				if(soundVolume == 0){
+					soundVolume = 0.25f;
+				} else if (soundVolume <= 0.25f){
+					soundVolume = 0.5f;
+				} else if (soundVolume  <= 0.5f){
+					soundVolume = 0.75f;
+				} else if (soundVolume <= 0.75f){
+					soundVolume = 1f;
+				} else if (soundVolume <= 1f){
+					soundVolume = 0f;
+				}
+
 				smallArmsSound.setVolume(soundVolume);
 				bigArmsSound.setVolume(soundVolume);
 				dogSound.setVolume(soundVolume);
@@ -919,13 +1036,10 @@ public class BoomChess extends ApplicationAdapter {
 				kingSound.setVolume(soundVolume);
 				speechSounds.setVolume(soundVolume);
 				radioChatter.setVolume(soundVolume);
+
+				soundVolumeLabel.setText("Sound-Volume:" + soundVolume + "%");
 			}
 		});
-
-		// their labels
-
-		volumeLabel = new Label("Music", skin);
-		soundVolumeLabel = new Label("Sound", skin);
 
 
 		// for the dotted Line when damage occurs -----------------------------------------------
@@ -1013,7 +1127,7 @@ public class BoomChess extends ApplicationAdapter {
 				createInGameOptionStages();
 			}
 		});
-		table.add(botDifficultyText).padBottom(10).row();
+		table.add(botDifficultyText).padBottom(tileSize/8).row();
 
 		// Button to change 1.Player Colour to blue
 		TextButton changeColourButton = new TextButton("Switch 1P Skin", skin);
@@ -1023,11 +1137,10 @@ public class BoomChess extends ApplicationAdapter {
 			public void changed(ChangeEvent event, Actor actor) {
 				isColourChanged = !isColourChanged;
 				currentStage = GameStage.createGameStage(isBotMatch);
-				addAudioTable();
 				createInGameOptionStages();
 			}
 		});
-		table.add(changeColourButton).padBottom(10).row();
+		table.add(changeColourButton).padBottom(tileSize/8).row();
 
 		// button for turning the arm on and off
 		TextButton armButton = new TextButton("BotArm: " + showArm, skin);
@@ -1038,7 +1151,69 @@ public class BoomChess extends ApplicationAdapter {
 				createInGameOptionStages();
 			}
 		});
-		table.add(armButton).padBottom(10).row();
+		table.add(armButton).padBottom(tileSize/8).row();
+
+		// bot moving speed
+		// button for changing the botMovingSpeed
+		// 0 is very fast
+		// 1 is fast
+		// 2 is normal
+		String currentSpeed;
+		switch (BoomChess.botMovingSpeed) {
+			case 0:
+				currentSpeed = "Very Fast";
+				break;
+			case 1:
+				currentSpeed = "Fast";
+				break;
+			default:
+				currentSpeed = "Normal";
+				break;
+		}
+		TextButton speedButton = new TextButton("Bot-Speed: " + currentSpeed, skin);
+		speedButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				switch (BoomChess.botMovingSpeed) {
+					case 0:
+						BoomChess.botMovingSpeed = 1;
+						break;
+					case 1:
+						BoomChess.botMovingSpeed = 2;
+						break;
+					case 2:
+						BoomChess.botMovingSpeed = 0;
+						break;
+				}
+				BoomChess.createInGameOptionStages();
+			}
+		});
+		table.add(speedButton).padBottom(tileSize/8).row();
+
+		// attack circle show
+		// button for turning the attack circles on and off
+		TextButton attackCircleButton = new TextButton("Attack Circles: " + showAttackCircle, skin);
+		attackCircleButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				showAttackCircle = !showAttackCircle;
+				createInGameOptionStages();
+			}
+		});
+		table.add(attackCircleButton).padBottom(tileSize/8).row();
+
+		// button for the show damage specials
+		TextButton showDamageButton = new TextButton("Show Special-DMG: "
+				+ showPossibleDamage, skin);
+		showDamageButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				showPossibleDamage = !showPossibleDamage;
+				createInGameOptionStages();
+			}
+		});
+		table.add(showDamageButton).padBottom(tileSize/8).row();
+
 
 		// button to change the beep mode of the speech bubbles isBeepMode true or false
 		String currentBeepMode;
@@ -1056,7 +1231,7 @@ public class BoomChess extends ApplicationAdapter {
 				createInGameOptionStages();
 			}
 		});
-		table.add(beepModeButton).padBottom(10).row();
+		table.add(beepModeButton).padBottom(tileSize/8).row();
 
 		// change Map
 		TextButton changeMapButton = new TextButton("Change Map", skin);
@@ -1068,7 +1243,16 @@ public class BoomChess extends ApplicationAdapter {
 				createInGameOptionStages();
 			}
 		});
-		table.add(changeMapButton).padBottom(10).row();
+		table.row().padBottom(tileSize/8);
+
+		table.add(changeMapButton);
+		table.row().padBottom(tileSize/8);
+
+		table.add(volumeLabel);
+		table.row().padBottom(tileSize/8);
+
+		table.add(soundVolumeLabel);
+		table.row().padBottom(tileSize/8);
 
 		// Exit to Main Menu button to return to the main menu
 		TextButton menuButton = new TextButton("Return to Main Menu", skin);
@@ -1083,6 +1267,8 @@ public class BoomChess extends ApplicationAdapter {
 				speechBubbleStage.clear();
 				crossOfDeathStage.clear();
 
+
+
 				actionSequence = new AttackSequence();
 
 				BoomChess.currentState = BoomChess.GameState.NOT_IN_GAME;
@@ -1095,7 +1281,7 @@ public class BoomChess extends ApplicationAdapter {
 				createMainMenuStage();
 			}
 		});
-		table.add(menuButton).padBottom(10).row();
+		table.add(menuButton).padBottom(tileSize/8).row();
 
 		// button to turn off boolean showInGameOptions and to set the input processor to currentStage
 		TextButton closeButton = new TextButton("Close Options", skin);
@@ -1107,22 +1293,24 @@ public class BoomChess extends ApplicationAdapter {
 				Gdx.input.setInputProcessor(currentStage);
 			}
 		});
-		table.add(closeButton).padBottom(10).row();
+		table.add(closeButton).padBottom(tileSize/8).row();
 
 
 		// add a clipboard Image centralised on the screen
 		Image clipBoardImage = new Image(clipBoard);
-		clipBoardImage.setSize(tileSize*6, tileSize*8);
+		clipBoardImage.setSize(tileSize*10, tileSize*14);
 		// set size
 		clipBoardImage.setZIndex(1);
 		inGamOptStage.addActor(clipBoardImage);
 
-		clipBoardImage.setPosition((float) Gdx.graphics.getWidth() - tileSize*5.5f,
-				(float) Gdx.graphics.getHeight() - tileSize*13);;
+		clipBoardImage.setPosition((float) Gdx.graphics.getWidth() - clipBoardImage.getWidth(),
+				(float) Gdx.graphics.getHeight() - clipBoardImage.getHeight()+tileSize*2);
 
 		// set position to middle of the screen
-		table.setPosition((float) Gdx.graphics.getWidth() - tileSize*4,
-				(float) Gdx.graphics.getHeight() - tileSize*12);
+		table.setPosition((float) Gdx.graphics.getWidth() - clipBoardImage.getWidth()
+						+ clipBoardImage.getWidth()/3,
+				(float) Gdx.graphics.getHeight() - clipBoardImage.getHeight()
+						+ clipBoardImage.getHeight()/2);
 
 		// add the tables to their stages
 		table.setZIndex(2);
@@ -1259,25 +1447,11 @@ public class BoomChess extends ApplicationAdapter {
 		audioTable.setPosition(tileSize*2, tileSize*2);
 
 		// Buttons
-		audioTable.add(playButton);
+		audioTable.row().padBottom(tileSize/4);
 		audioTable.add(muteButton);
-		audioTable.row();
-
-		// Volume Slider
-		// Label colour #4242E7
-		volumeLabel.setColor(Color.valueOf("#4242E7"));
-		audioTable.add(volumeLabel).size(tileSize/2, tileSize/4).padRight(tileSize/2);
-		audioTable.add(volumeSlider);
-		audioTable.row();
-
-		// Sound Volume Slider
-		// Label colour #4242E7
-		soundVolumeLabel.setColor(Color.valueOf("#4242E7"));
-		audioTable.add(soundVolumeLabel).size(tileSize/2, tileSize/4).padRight(tileSize/2);
-		audioTable.add(soundVolumeSlider);
-		audioTable.row();
-
-		audioTable.add(skipButton).padTop(tileSize/8).padLeft(tileSize/2);
+		audioTable.row().padBottom(tileSize/4);
+		audioTable.add(skipButton);
+		audioTable.row().padBottom(tileSize/4);
 
 		currentStage.addActor(audioTable);
 	}
@@ -1302,12 +1476,18 @@ public class BoomChess extends ApplicationAdapter {
 
 
 		boolean addActor = true;
+		boolean goIntoTeamLogos = false;
 		if(sequenceRunning){
-			// if the sequence is running, add an actor that says action is running
-			currentMover.addActor(actionOngoing);
-			currentMover.setPosition(xPosition, yPosition-tileSize/4);
-		}
-		else {
+			if(actionSequence.isListEmpty()){
+				goIntoTeamLogos = true;
+			} else {
+				// if the sequence is running and there is stuff in the sequence,
+				// add an actor that says action is running
+				currentMover.addActor(actionOngoing);
+			}
+		} else { goIntoTeamLogos = true; }
+
+		if(goIntoTeamLogos){
 			if (currentState == GameState.RED_TURN) {
 				currentMover.addActor(redMove);
 			} else if (currentState == GameState.GREEN_TURN) {
@@ -1355,38 +1535,6 @@ public class BoomChess extends ApplicationAdapter {
 		switchToStage(OptionsStage.initalizeUI());
 	}
 
-	public static void createHelpStage() {
-		/*
-		* method for creating the stage for the help display
-		 */
-		Stage funcStage = new Stage();
-
-		Table funcTable = new Table();
-
-		Image helpImage = new Image(helpTexture);
-		helpImage.setSize(tileSize*12.5f, tileSize*8);
-		helpImage.setPosition(tileSize*4.1f, tileSize*1.9f);
-		funcTable.addActor(helpImage);
-
-		funcTable.row();
-
-		// button to go back to the menu
-		TextButton backButton = new TextButton("Back", skin);
-		backButton.setPosition((float) Gdx.graphics.getWidth() /2,
-				(float) Gdx.graphics.getHeight() /8);
-		backButton.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				createMainMenuStage();
-			}
-		});
-		funcTable.addActor(backButton);
-
-		funcStage.addActor(funcTable);
-
-		switchToStage(funcStage);
-	}
-
 	public static void createCreditsStage() {
 		/*
 		* method for creating the stage for the credits display
@@ -1400,7 +1548,7 @@ public class BoomChess extends ApplicationAdapter {
 		* (changing InputProcessor to stop Game Progress)
 		 */
 		gameEndStage = GameEndStage.initializeUI(winnerTeamColour);
-		System.out.println("GameEndStage added \n");
+
 	}
 
 	public static void createChallengeStage() {
@@ -1516,6 +1664,26 @@ public class BoomChess extends ApplicationAdapter {
 		return iconTileCoordinate;
 	}
 
+	public static Coordinates calculateTileByPXNonGDX(int pxCoordinateX, int pxCoordinateY) {
+		/*
+		 * method for calculating the tile coordinates by pixel coordinates,
+		 * literally mirrored tile to the calculateTileByPX method
+		 */
+
+		// method for checking which tile a pxCoordinateX and pxCoordinateY is in, creating the coordinates object
+		// of the respective tile and returning it
+		Coordinates iconTileCoordinate;
+
+		iconTileCoordinate = calculateTileByPX(pxCoordinateX, pxCoordinateY);
+
+		// Invert the tilePositionY for libGDX coordinate System compliance
+		int invertedTilePositionY = 7 - iconTileCoordinate.getY();
+
+		Coordinates returnCoords = new Coordinates();
+		returnCoords.setCoordinates(iconTileCoordinate.getX(), invertedTilePositionY);
+
+		return returnCoords;
+	}
 
 	// --------------------------------------------------------------------------------------------------------------
 	// ------------------------------------------- DAMAGE ANIMATION METHODS -----------------------------------------
@@ -1614,7 +1782,15 @@ public class BoomChess extends ApplicationAdapter {
 		DeathExplosionActor deathActor = new DeathExplosionActor(x, y);
 		deathActor.setZIndex(1);
 		actionSequence.addSequence(deathActor);
-		System.out.println("Exploded someone at position "+ x + "-" + y + "\n");
+	}
+
+	public static void addDamageNumber(int x, int y, int damage) {
+		/*
+		 * adds DamageNumber to actionSequence
+		 */
+		DamageNumber damageNumbActor = new DamageNumber(x, y, damage);
+		damageNumbActor.setZIndex(1);
+		actionSequence.addSequence(damageNumbActor);
 	}
 
 	public static void addHitMarker(int x, int y){
@@ -1624,7 +1800,6 @@ public class BoomChess extends ApplicationAdapter {
 		HitMarkerActor hitActor = new HitMarkerActor(x, y);
 		hitActor.setZIndex(1);
 		actionSequence.addSequence(hitActor);
-		System.out.println("Hit someone at position "+ x + "-" + y + "\n");
 	}
 
 	// ------------------- methods for setting a to be displayed as empty variable
@@ -1647,7 +1822,8 @@ public class BoomChess extends ApplicationAdapter {
 		* method for finding the general of a team and returning its coordinates
 		 */
 
-		Coordinates generalCoordinates = new Coordinates();
+		new Coordinates();
+		Coordinates generalCoordinates;
 		Soldier[][] gameBoard = Board.getGameBoard();
 
 		String teamColor;
@@ -1681,6 +1857,81 @@ public class BoomChess extends ApplicationAdapter {
 				(float) coordinates.getY() - (tileSize / 2));
 		cross.setSize(tileSize, tileSize);
 		BoomChess.crossOfDeathStage.addActor(cross);
-		System.out.println("Added Cross of Death at tile: " + x + ", " + y + "\n");
 	}
+
+	// --------------------------------------------------------------------
+	// ----------------- methods for getting the special relations of a piece
+	// --------------------------------------------------------------------
+
+	public static Soldier getSpecialBoniSoldier(Soldier soldier) {
+		Soldier specialBoy;
+
+		if(soldier instanceof Tank){
+			specialBoy = new Infantry("invalid");
+		} else if(soldier instanceof Helicopter){
+			specialBoy = new Tank("invalid");
+		} else if(soldier instanceof Wardog){
+			specialBoy = new Infantry("invalid");
+		} else if(soldier instanceof Commando){
+			specialBoy = new Tank("invalid");
+		} else if(soldier instanceof Infantry){
+			specialBoy = new Helicopter("invalid");
+		} else if(soldier instanceof Artillery){
+			specialBoy = new Infantry("invalid");
+		} else {
+			specialBoy = null;
+		}
+
+		return specialBoy;
+	}
+
+	public static int getSpecialBoniValue(Soldier soldier) {
+		int specialValue;
+
+		if(soldier instanceof Tank){
+			specialValue = 5;
+		} else if(soldier instanceof Helicopter){
+			specialValue = 5;
+		} else if(soldier instanceof Wardog){
+			specialValue = 5;
+		} else if(soldier instanceof Commando){
+			specialValue = 10;
+		} else if(soldier instanceof Infantry){
+			specialValue = 5;
+		} else if(soldier instanceof Artillery){
+			specialValue = 5;
+		} else {
+			specialValue = 0;
+		}
+
+		return specialValue;
+	}
+
+	public static Soldier getSpecialMalusSoldier(Soldier soldier){
+		Soldier specialBoy = null;
+
+		if(soldier instanceof Tank){
+			specialBoy = new Wardog("invalid");
+		} else if(soldier instanceof Wardog){
+			specialBoy = new Tank("invalid");
+		}
+
+		return specialBoy;
+	}
+
+	public static int getSpecialMalusValue(Soldier soldier){
+		int specialValue;
+
+		if(soldier instanceof Tank){
+			specialValue = 5;
+		} else if(soldier instanceof Wardog){
+			specialValue = 5;
+		} else {
+			specialValue = 0;
+		}
+
+		return specialValue;
+	}
+
+
 }

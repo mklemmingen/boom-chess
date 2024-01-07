@@ -1,7 +1,15 @@
 package com.boomchess.game.backend;
 
 import com.boomchess.game.BoomChess;
-import com.boomchess.game.backend.subsoldier.*;
+import com.boomchess.game.backend.subsoldier.Artillery;
+import com.boomchess.game.backend.subsoldier.Commando;
+import com.boomchess.game.backend.subsoldier.Empty;
+import com.boomchess.game.backend.subsoldier.General;
+import com.boomchess.game.backend.subsoldier.Helicopter;
+import com.boomchess.game.backend.subsoldier.Hill;
+import com.boomchess.game.backend.subsoldier.Infantry;
+import com.boomchess.game.backend.subsoldier.Tank;
+import com.boomchess.game.backend.subsoldier.Wardog;
 
 import java.util.ArrayList;
 
@@ -221,9 +229,6 @@ public class Board {
                                  int newPositionX, int newPositionY) {
 
         // we update a board by switching the two objects of the Soldier 2D-Array
-
-        System.out.println("\n Updating board " + positionX + "_" + positionY + " to " +
-                newPositionX + "_" + newPositionY + "\n");
 
         Soldier temp = board[positionX][positionY];
         board[positionX][positionY] = board[newPositionX][newPositionY];

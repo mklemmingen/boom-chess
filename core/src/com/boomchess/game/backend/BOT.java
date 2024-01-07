@@ -4,7 +4,12 @@ import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.subsoldier.General;
 import com.boomchess.game.frontend.actor.moveBotTile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public class BOT {
     /*
@@ -320,7 +325,6 @@ public class BOT {
         * it utilizes the update function in Board.java
          */
         Soldier[][] gameBoard = Board.getGameBoard();
-        System.out.println("\nBot Moved" + gameBoard[SX][SY].getClass().getName() + " to " + x + " " + y + "\n");
 
         // DottedLine between old coordinates and new coordinates
         BoomChess.addDottedLine(SX, SY, x, y, false);

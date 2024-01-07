@@ -1,20 +1,21 @@
 package com.boomchess.game.frontend.actor;
 
+import static com.boomchess.game.BoomChess.botMovingStage;
+import static com.boomchess.game.BoomChess.currentState;
+import static com.boomchess.game.BoomChess.damageNumberStage;
+import static com.boomchess.game.BoomChess.deathExplosionStage;
+import static com.boomchess.game.BoomChess.dottedLineStage;
+import static com.boomchess.game.BoomChess.reRenderGame;
+import static com.boomchess.game.BoomChess.smallExplosionSound;
+import static com.boomchess.game.BoomChess.soundVolume;
+import static com.boomchess.game.BoomChess.speechBubbleStage;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Array;
 import com.boomchess.game.BoomChess;
-import com.boomchess.game.backend.Coordinates;
-import com.boomchess.game.frontend.picture.SpeechBubbles;
 import com.boomchess.game.frontend.stage.MenuStage;
 
 import java.util.ArrayList;
-
-import static com.boomchess.game.BoomChess.*;
 
 public class AttackSequence {
 
@@ -49,6 +50,12 @@ public class AttackSequence {
             return;
         }
 
+        // clear all stages where actors are added afterwards
+        deathExplosionStage.clear();
+        dottedLineStage.clear();
+        botMovingStage.clear();
+        speechBubbleStage.clear();
+
         currentIndex = 0;
         damageSequenceRunning = true;
         lengthOfAttackList = attackList.size();
@@ -73,7 +80,6 @@ public class AttackSequence {
 
             continueGame();
 
-            System.out.println("Action Sequence has ENDED! All actions have been completed! Cut! \n");
 
             return;
         }
@@ -93,11 +99,11 @@ public class AttackSequence {
         attackList.add(actor);
     }
 
-    private void actActor(){
+    private void actActor() {
         // if statement of instance of either HitMarkerActor or DeathExplosionActor or DottedLineActor
 
         // this ensures that if the player has gone back to the menu, the sequence will not continue
-        if (BoomChess.currentStage instanceof MenuStage){
+        if (BoomChess.currentStage instanceof MenuStage) {
             // clear all the actors in the attackList
             attackList = new ArrayList<Actor>();
             // clear all the stages
@@ -112,7 +118,7 @@ public class AttackSequence {
             return;
         }
 
-        if (currentIndex >= lengthOfAttackList){
+        if (currentIndex >= lengthOfAttackList) {
             // if the current index is greater than the length of the attack list,
             // then we are at the end of the sequence
 
@@ -128,13 +134,17 @@ public class AttackSequence {
             smallExplosionSound.play(soundVolume);
             deathExplosionStage.addActor(actorBuddy);
             timePerBreak = 1f;
+        } else if (actorBuddy instanceof DamageNumber) {
+            // if it is a DamageNumber, add it to the GameStage
+            damageNumberStage.addActor(actorBuddy);
+            timePerBreak = 1f;
         } else if (actorBuddy instanceof DeathExplosionActor) {
             // if it is a DeathExplosionActor, add it to the deathExplosionStage
             BoomChess.bigExplosionSound.play(BoomChess.soundVolume);
             deathExplosionStage.addActor(actorBuddy);
             // calls upon a function that adds a red-cross above the dead piece till gameStage is reloaded
             BoomChess.addCrossOfDeath(((DeathExplosionActor) actorBuddy).X, ((DeathExplosionActor) actorBuddy).Y);
-            timePerBreak = 3f;
+            timePerBreak = 2.5f;
 
             // since we add a speech bubble in damage directly after creating the deathExplosion, we can instantly add
             // the speech bubble to the stage
@@ -149,15 +159,15 @@ public class AttackSequence {
             // if it is a DottedLineActor, add it to the GameStage
             ((DottedLineActor) actorBuddy).makeSound();
             dottedLineStage.addActor(actorBuddy);
-            timePerBreak = 0.6f;
+            timePerBreak = 0.5f;
         } else if (actorBuddy instanceof Bubble) {
             // if it is a Bubble, add it to the speechBubbleStage
             ((Bubble) actorBuddy).makeSound(); // plays radio chatter
             speechBubbleStage.addActor(actorBuddy);
-            timePerBreak = 0.25f;
+            timePerBreak = 1f;
         } else {
-            // simulate throwing an error for the log
-            System.out.println("attackSequence.playNext() has an unknown actor type in the attackList! \n");
+            timePerBreak = 0;
+            Gdx.app.log("AttackSequence", "Error: Actor not recognized");
         }
 
         currentIndex += 1;
@@ -178,5 +188,9 @@ public class AttackSequence {
         BoomChess.switchTurn(currentState);
         // render the gameBoard as a on-screen update
         reRenderGame();
+    }
+
+    public boolean isListEmpty(){
+        return attackList.isEmpty();
     }
 }

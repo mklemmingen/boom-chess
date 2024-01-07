@@ -1,12 +1,15 @@
 package com.boomchess.game.frontend.stage;
 
+import static com.boomchess.game.BoomChess.isColourChanged;
+import static com.boomchess.game.BoomChess.isMedievalMode;
+import static com.boomchess.game.BoomChess.skin;
+import static com.boomchess.game.BoomChess.tileSize;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.boomchess.game.BoomChess;
-
-import static com.boomchess.game.BoomChess.*;
 
 public class GameEndStage extends Stage{
 
@@ -30,7 +33,7 @@ public class GameEndStage extends Stage{
         if(isMedievalMode){
             coolShoutout = "Huzzah! A King has found his final Rest!\n";
         } else {
-            coolShoutout = "Boom Boom! A General has been neutralised!\n";
+            coolShoutout = "Hell yeah! A General has been neutralised!\n";
         }
 
         /*

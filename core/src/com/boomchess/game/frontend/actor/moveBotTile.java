@@ -1,5 +1,11 @@
 package com.boomchess.game.frontend.actor;
 
+import static com.boomchess.game.BoomChess.botMovingStage;
+import static com.boomchess.game.BoomChess.empty;
+import static com.boomchess.game.BoomChess.reRenderGame;
+import static com.boomchess.game.BoomChess.showArm;
+import static com.boomchess.game.BoomChess.tileSize;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -8,8 +14,6 @@ import com.boomchess.game.backend.Board;
 import com.boomchess.game.backend.Coordinates;
 import com.boomchess.game.backend.Soldier;
 import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
-
-import static com.boomchess.game.BoomChess.*;
 
 public class moveBotTile {
     /*
@@ -72,7 +76,22 @@ public class moveBotTile {
 
         float lengthVec = vectorAB.len();
         int timefactor = (int) lengthVec / 50;
-        moveDuration = timefactor * 0.75f;
+
+        // set the move duration based on setting in BoomChess
+        switch(BoomChess.botMovingSpeed){
+            case 0:
+                moveDuration = timefactor * 0.1f;
+                break;
+            case 1:
+                moveDuration = timefactor * 0.25f;
+                break;
+            case 2:
+                moveDuration = timefactor * 0.5f;
+                break;
+            default:
+                moveDuration = timefactor * 0.75f;
+                break;
+        }
 
 
         Soldier[][] gameBoard = Board.getGameBoard();
@@ -81,9 +100,7 @@ public class moveBotTile {
         // load the corresponding image through the Soldier Take Selfie Method
         if (soldier instanceof takeSelfieInterface) {
             soldierImage = new Image(((takeSelfieInterface) soldier).takeSelfie());
-            System.out.println("Image successfully obtained from Soldier Object.\n");
         } else {
-            System.out.println("Error: Soldier is not an instance of takeSelfieInterface!\n");
             soldierImage = new Image(empty);
         }
 
@@ -100,9 +117,11 @@ public class moveBotTile {
         // add SoldierImage to the widget and fill it
         soldierStack.add(soldierImage);
 
+        soldierStack.setVisible(false);
+
         if(showArm) {
             botArm.setScale(0.75f);
-            botArm.setSize(1000, 240);
+            botArm.setSize(tileSize*13, tileSize*4);
             botArm.setVisible(false);
             botMovingStage.addActor(botArm);
         }
@@ -133,7 +152,6 @@ public class moveBotTile {
                 int currentX = startPx.getX() + (int) ((endPx.getX() - startPx.getX()) * progress);
                 int currentY = startPx.getY() + (int) ((endPx.getY() - startPx.getY()) * progress);
 
-                System.out.println("Moving, currently: " + currentX + " " + currentY);
 
                 // call the renderAt method to render the image at the current position
                 renderAt(currentX, currentY);
@@ -154,6 +172,7 @@ public class moveBotTile {
         currentX -= (int) (tileSize/2);
         currentY -= (int) (tileSize/2);
 
+        soldierStack.setVisible(true);
         soldierStack.setPosition(currentX, currentY);
         if(showArm) {
             botArm.setVisible(true);

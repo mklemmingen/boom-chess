@@ -23,7 +23,7 @@ public class RelativeResizer {
          */
         RelativeResizer.width = Gdx.graphics.getWidth();
         RelativeResizer.height = Gdx.graphics.getHeight();
-        BoomChess.tileSize = width / 20;
+        BoomChess.tileSize = (float) width / 20;
     }
 
     // this function should be run each frame

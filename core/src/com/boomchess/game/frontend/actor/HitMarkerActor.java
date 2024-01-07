@@ -1,5 +1,7 @@
 package com.boomchess.game.frontend.actor;
 
+import static com.boomchess.game.BoomChess.tileSize;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -8,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Coordinates;
-
-import static com.boomchess.game.BoomChess.tileSize;
 
 public class HitMarkerActor extends Actor {
 
@@ -67,8 +67,8 @@ public class HitMarkerActor extends Actor {
         float x1 = defender.getX();
         float y1 = defender.getY();
         // to factor in the scaling of the explosion
-        x1 += tileSize/4;
-        y1 += tileSize/4;
+        x1 += tileSize/3;
+        y1 += tileSize/3;
 
         TextureRegion currentFrame = explosionAnimation.getKeyFrame(elapsed, false);
 

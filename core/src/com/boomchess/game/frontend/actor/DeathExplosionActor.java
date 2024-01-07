@@ -1,5 +1,7 @@
 package com.boomchess.game.frontend.actor;
 
+import static com.boomchess.game.BoomChess.tileSize;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -8,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.boomchess.game.BoomChess;
 import com.boomchess.game.backend.Coordinates;
-
-import static com.boomchess.game.BoomChess.tileSize;
 
 /*
  * this class is the object for the dotted line that appears when a piece is selected. It acts as an Actor Object
@@ -69,9 +69,12 @@ public class DeathExplosionActor extends Actor {
         // out of the Coordinate objects, get the PX
         float x1 = corpse.getX();
         float y1 = corpse.getY();
+
+        /*
         // to factor in the scaling of the explosion
-        x1 -= tileSize/4;
-        y1 -= tileSize/4;
+        x1 -= tileSize/3;
+        y1 -= tileSize/3;
+         */
 
         TextureRegion currentFrame = explosionAnimation.getKeyFrame(elapsed, false);
 
@@ -79,7 +82,8 @@ public class DeathExplosionActor extends Actor {
         float scaledWidth = currentFrame.getRegionWidth() * SCALE_FACTOR;
         float scaledHeight = currentFrame.getRegionHeight() * SCALE_FACTOR;
 
-        batch.draw(currentFrame, x1, y1, scaledWidth, scaledHeight); // Draw the current frame at the specified position
+        batch.draw(currentFrame, x1, y1, scaledWidth, scaledHeight);
+        // Draw the current frame at the specified position
 
     }
 }
