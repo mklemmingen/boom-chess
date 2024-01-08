@@ -672,10 +672,10 @@ public class BoomChess extends ApplicationAdapter {
 			font.getData().setScale(2f);
 			sliderSize = 4f;
 		} else if (tileSize > 100) {
-			font.getData().setScale(1.5f);
+			font.getData().setScale(1.75f);
 			sliderSize = 2.5f;
 		} else if (tileSize > 50){
-			font.getData().setScale(1);
+			font.getData().setScale(1.5f);
 			sliderSize = 1.5f;
 		} else {
 			font.getData().setScale(1f);
