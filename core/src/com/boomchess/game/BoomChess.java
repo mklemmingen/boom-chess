@@ -1066,9 +1066,9 @@ public class BoomChess extends ApplicationAdapter {
 		/* TODO not rocking enough
 		background_music.addSong("music/06 Tonal Dissonance.mp3",
 				"Tonal Dissonance", "Garo");
-		 */
 		background_music.addSong("music/36 Tonal Resonance.mp3",
 				"Tonal Resonance", "Garo");
+		 */
 		/*
 		// TODO not vibing
 		background_music.addSong("music/Outside the Colosseum.mp3",
