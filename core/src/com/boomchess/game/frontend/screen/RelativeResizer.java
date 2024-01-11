@@ -62,16 +62,16 @@ public class RelativeResizer {
         // Scaling the font depending on the relativresizer calculated tile size
 
         if (tileSize > 140) {
-            font.getData().setScale(2.8f);
+            font.getData().setScale(3.5f);
             BoomChess.musicLabelScale = 1.3f;
         } else if (tileSize > 100) {
-            font.getData().setScale(2.2f);
+            font.getData().setScale(2.8f);
             BoomChess.musicLabelScale = 1.05f;
         } else if (tileSize > 50){
-            font.getData().setScale(1.5f);
+            font.getData().setScale(2);
             BoomChess.musicLabelScale = 0.9f;
         } else {
-            font.getData().setScale(1.2f);
+            font.getData().setScale(1.5f);
             BoomChess.musicLabelScale = 0.6f;
         }
 

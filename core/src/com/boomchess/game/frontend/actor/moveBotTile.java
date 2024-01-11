@@ -38,6 +38,8 @@ public class moveBotTile {
     private static Image botArm;
     private static Stack soldierStack;
 
+    private static tileWidget currentTileWidget;
+
     public moveBotTile() {
         elapsedTime = 0;
         isMoving = false;
@@ -45,7 +47,7 @@ public class moveBotTile {
     }
 
     // method for starting the move
-    public void startMove(int startX, int startY, int endX, int endY) {
+    public void startMove(int startX, int startY, int endX, int endY, tileWidget tileWidget) {
         /*
          * Method to simulate a move (start of the Move)
          */
@@ -56,15 +58,18 @@ public class moveBotTile {
         this.endX = endX;
         this.endY = endY;
 
+        /* old way
         // manipulate variables for GameStage that select an empty texture for a certain coordinate
         BoomChess.setEmptyCoordinate(startX, startY);
 
         // rerender GameStage with new Empty Variables
         reRenderGame();
+        */
 
         // set the maximum duration fitting the length of the way that the soldier moves
         // per 50 pixel, add 0.5f to max duration
         // Begin: calculate Vector:
+
         startPx = BoomChess.calculatePXbyTile(startX, startY);
         endPx = BoomChess.calculatePXbyTile(endX, endY);
 
@@ -94,6 +99,7 @@ public class moveBotTile {
 
         Soldier[][] gameBoard = Board.getGameBoard();
 
+        /*
         Soldier soldier = gameBoard[startX][startY];
         // load the corresponding image through the Soldier Take Selfie Method
         Image soldierImage;
@@ -102,21 +108,20 @@ public class moveBotTile {
         } else {
             soldierImage = new Image(empty);
         }
+        */
 
         botArm = new Image(BoomChess.botArm);
 
+        // soldierStack holds the arm
         soldierStack = new Stack();
 
         soldierStack.setSize(BoomChess.tileSize, BoomChess.tileSize);
         soldierStack.setVisible(true);
 
-        soldierImage.setSize(BoomChess.tileSize, BoomChess.tileSize);
-        soldierImage.setVisible(true);
-
-        // add SoldierImage to the widget and fill it
-        soldierStack.add(soldierImage);
+        currentTileWidget = tileWidget;
 
         soldierStack.setVisible(false);
+        currentTileWidget.setVisibility(false);
 
         if(showArm) {
             botArm.setScale(0.75f);
@@ -158,7 +163,9 @@ public class moveBotTile {
                 // Move completed
                 movingFinished = true;
                 isMoving = false;
+                /*
                 BoomChess.resetEmptyCoordinate();
+                */
             }
         }
     }
@@ -173,6 +180,10 @@ public class moveBotTile {
 
         soldierStack.setVisible(true);
         soldierStack.setPosition(currentX, currentY);
+
+        currentTileWidget.setVisible(true);
+        currentTileWidget.setPosition(currentX, currentY);
+
         if(showArm) {
             botArm.setVisible(true);
             botArm.setPosition(currentX + (0.75f * tileSize), currentY - tileSize);
