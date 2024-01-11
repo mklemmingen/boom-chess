@@ -1059,7 +1059,7 @@ public class BoomChess extends ApplicationAdapter {
 		background_music.addSong("music/Breakdown.mp3",
 				"Breakdown", "Wambutz");
 		background_music.addSong("music/A Little R & R.mp3",
-				"A Little R & R", "Bert Cole\nbitbybitsound.com");
+				"A Little R & R", "Bert Cole");
 		background_music.addSong("music/24 Stray cat.mp3",
 				"Stray cat", "Garo");
 		background_music.addSong("music/05 Thought Soup.mp3",
@@ -1071,7 +1071,7 @@ public class BoomChess extends ApplicationAdapter {
 		background_music.addSong("music/36 Tonal Resonance.mp3",
 				"Tonal Resonance", "Garo");
 		background_music.addSong("music/epic-battle.mp3",
-				"Epic Battle", "Bert Cole\nbitbybitsound.com");
+				"Epic Battle", "Bert Cole");
 		/*
 		// TODO not vibing
 		background_music.addSong("music/Outside the Colosseum.mp3",
@@ -1862,7 +1862,11 @@ public class BoomChess extends ApplicationAdapter {
 		if(currentState == GameState.NOT_IN_GAME || !(inGame)) {
 			return;
 		}
-		// dispose all soldierAnimations from the currentStage stage
+
+		// remove all active soldierAnimations
+		GameStage.clearAllActiveSoldierAnimations();
+
+		// disposing all inhabitants of the currentStage
 		currentStage.clear();
 
 		switchToStage(createGameStage(isBotMatch));

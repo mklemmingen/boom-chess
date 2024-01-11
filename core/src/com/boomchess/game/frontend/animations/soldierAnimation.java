@@ -12,7 +12,7 @@ import com.boomchess.game.frontend.interfaces.givePieceType;
 
 import java.util.Objects;
 
-public class soldierAnimation extends Actor {
+public class soldierAnimation extends Actor implements Cloneable{
     /*
     A soldier animation is a libGDX animation that loads a specific spriteSheet from the asset folder
     depending on the "teamColour" and "pieceType" of the soldier that is given in the constructor.
@@ -27,7 +27,7 @@ public class soldierAnimation extends Actor {
     private float timeWithoutAnim = 0f;
 
     // time between animations is random between 3 and 6 seconds
-    private final float randomNoAnimationTime = (float) (Math.random() * 6 + 3);
+    private float randomNoAnimationTime = (float) (Math.random() * 6 + 3);
     private final int frameCount = 8;
     private final float frameDuration = 0.143f; // equals 7 fps
 
@@ -143,9 +143,41 @@ public class soldierAnimation extends Actor {
         } else {
             timeWithoutAnim += Gdx.graphics.getDeltaTime();
             if(timeWithoutAnim >= randomNoAnimationTime){
+                // new randomNoAnimationTime
+                // random number between 5 and 12
+                randomNoAnimationTime = (float) (Math.random() * 7 + 5);
+
                 animationPlaying = true;
                 timeWithoutAnim = 0f;
             }
+        }
+    }
+
+
+    @Override
+    public soldierAnimation clone() {
+        try {
+            soldierAnimation cloned = (soldierAnimation) super.clone();
+
+            // randomize either elapsedTimeAnim with animationplaying = true or timeWithoutAnim with false
+            // randomize the time variables to the full extent till their maximal value
+
+            // random number between 1 and 6
+            // if 1, start with an animation
+
+            int random = (int) (Math.random() * 6 + 1);
+            if(random == 1 ){
+                cloned.animationPlaying = true;
+            } else {
+
+                cloned.animationPlaying = false;
+                //randomizing the timeWithoutAnim between 6 and 14
+                cloned.randomNoAnimationTime = (float) (Math.random() * 8 + 6);
+            }
+
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Can't happen
         }
     }
 }

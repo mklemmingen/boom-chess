@@ -1,10 +1,8 @@
 package com.boomchess.game.frontend.stage;
 
-import static com.boomchess.game.BoomChess.GameState;
 import static com.boomchess.game.BoomChess.actionSequence;
 import static com.boomchess.game.BoomChess.batch;
 import static com.boomchess.game.BoomChess.botMovingStage;
-import static com.boomchess.game.BoomChess.calculatePXbyTile;
 import static com.boomchess.game.BoomChess.calculateTileByPX;
 import static com.boomchess.game.BoomChess.calculateTileByPXNonGDX;
 import static com.boomchess.game.BoomChess.clearAllowedTiles;
@@ -16,8 +14,6 @@ import static com.boomchess.game.BoomChess.damageNumberStage;
 import static com.boomchess.game.BoomChess.deathExplosionStage;
 import static com.boomchess.game.BoomChess.dottedLineStage;
 import static com.boomchess.game.BoomChess.empty;
-import static com.boomchess.game.BoomChess.emptyX;
-import static com.boomchess.game.BoomChess.emptyY;
 import static com.boomchess.game.BoomChess.gameEndStage;
 import static com.boomchess.game.BoomChess.inGame;
 import static com.boomchess.game.BoomChess.inTutorial;
@@ -30,7 +26,6 @@ import static com.boomchess.game.BoomChess.showInGameOptions;
 import static com.boomchess.game.BoomChess.skin;
 import static com.boomchess.game.BoomChess.speechBubbleStage;
 import static com.boomchess.game.BoomChess.tileSize;
-import static com.boomchess.game.BoomChess.useEmpty;
 import static com.boomchess.game.BoomChess.wrongMoveStage;
 
 import com.badlogic.gdx.Gdx;
@@ -60,7 +55,6 @@ import com.boomchess.game.frontend.actor.AttackSequence;
 import com.boomchess.game.frontend.actor.HealthNumber;
 import com.boomchess.game.frontend.actor.SpecialDamageIndicator;
 import com.boomchess.game.frontend.actor.WrongMoveIndicator;
-import com.boomchess.game.frontend.actor.tileWidget;
 import com.boomchess.game.frontend.animations.soldierAnimation;
 import com.boomchess.game.frontend.interfaces.takeIntervalSelfie;
 import com.boomchess.game.frontend.interfaces.takeSelfieInterface;
@@ -74,12 +68,11 @@ public class GameStage {
 
     private final Stage gameStage;
 
-    // linkedlist of all tileWidgets created in the gameStage
-    public static LinkedList<tileWidget> currentTileWidgets;
-
     public GameStage(boolean isBotMatch) {
         this.gameStage = createGameStage(isBotMatch);
     }
+
+    public static LinkedList<soldierAnimation> allActiveSoldierAnimations = new LinkedList<>();
 
     public static Stage createGameStage(final boolean isBotMatch) {
 
@@ -101,24 +94,501 @@ public class GameStage {
 
         batch.begin();
 
-        tileWidget thisTile = null;
+        Table root = new Table();
+
+        // root of size 9 to 8 and center of screen
+        root.setSize(numColumns * tileSize, numRows * tileSize);
+        root.setPosition((float) Gdx.graphics.getWidth() / 2 - root.getWidth() / 2,
+                (float) Gdx.graphics.getHeight() / 2 - root.getHeight() / 2);
 
         Soldier[][] gameBoard = Board.getGameBoard();
 
         for (int j = 0; j < numRows; j++) {
+            root.row();
             for (int i = 0; i < numColumns; i++) {
 
-                if(gameBoard[i][j] instanceof Empty){
-                    continue;
+                final Stack tileWidget = new Stack();
+
+                final Soldier soldier = gameBoard[i][j];
+
+                // if the current coordinate is the empty Variable coordinates and its
+                // useEmpty = true, the solPiece has an Image of Empty, if not continue to rest
+
+                Stack solPiece = new Stack();
+
+                // if BoomChess.isAnimated, make solPiece a soldierAnimation Object and if not, an Image Object
+                if (BoomChess.isAnimated) {
+                    if (soldier instanceof Empty) {
+                        Image emptyImage = new Image(empty);
+                        emptyImage.setSize(tileSize, tileSize);
+                        solPiece.add(emptyImage);
+                    } else if (soldier instanceof Hill){
+                        Image soldierImage = new Image(((takeSelfieInterface) soldier).takeSelfie());
+                        soldierImage.setSize(tileSize, tileSize);
+                        solPiece.add(soldierImage);
+                    }else {
+                        if(BoomChess.isMedievalMode){
+                            // standard image load
+                            Image soldierImage = new Image(((takeSelfieInterface) soldier).takeSelfie());
+                            soldierImage.setSize(tileSize, tileSize);
+                            solPiece.add(soldierImage);
+                        }
+                        else {
+                            // switch statement for deciding which
+                            // soldier animation to take, each case has a green or red and a
+                            // iscolourreversed if statement between green and blue
+                            switch (soldier.getPieceType()) {
+
+                                case "general":
+                                    if (soldier.getTeamColor().equals("green")) {
+                                        if (isColourChanged) {
+                                            soldierAnimation blueGeneralAnimation =
+                                                    BoomChess.blueGeneralAnimation.clone();
+                                            solPiece.add(blueGeneralAnimation);
+                                            allActiveSoldierAnimations.add(blueGeneralAnimation);
+                                        } else {
+                                            soldierAnimation greenGeneralAnimation =
+                                                    BoomChess.greenGeneralAnimation.clone();
+                                            solPiece.add(greenGeneralAnimation);
+                                            allActiveSoldierAnimations.add(greenGeneralAnimation);
+                                        }
+                                    } else {
+                                        soldierAnimation redGeneralAnimation =
+                                                BoomChess.redGeneralAnimation.clone();
+                                        solPiece.add(redGeneralAnimation);
+                                        allActiveSoldierAnimations.add(redGeneralAnimation);
+                                    }
+                                    break;
+
+                                case "tank":
+                                    if (soldier.getTeamColor().equals("green")) {
+                                        if (isColourChanged) {
+                                            soldierAnimation blueTankAnimation =
+                                                    BoomChess.blueTankAnimation.clone();
+                                            solPiece.add(blueTankAnimation);
+                                            allActiveSoldierAnimations.add(blueTankAnimation);
+                                        } else {
+                                            soldierAnimation greenTankAnimation =
+                                                    BoomChess.greenTankAnimation.clone();
+                                            solPiece.add(greenTankAnimation);
+                                            allActiveSoldierAnimations.add(greenTankAnimation);
+                                        }
+                                    } else {
+                                        soldierAnimation redTankAnimation =
+                                                BoomChess.redTankAnimation.clone();
+                                        solPiece.add(redTankAnimation);
+                                        allActiveSoldierAnimations.add(redTankAnimation);
+                                    }
+                                    break;
+
+                                case "artillery":
+                                    if (soldier.getTeamColor().equals("green")) {
+                                        if (isColourChanged) {
+                                            soldierAnimation blueArtilleryAnimation =
+                                                    BoomChess.blueArtilleryAnimation.clone();
+                                            solPiece.add(blueArtilleryAnimation);
+                                            allActiveSoldierAnimations.add(blueArtilleryAnimation);
+                                        } else {
+                                            soldierAnimation greenArtilleryAnimation =
+                                                    BoomChess.greenArtilleryAnimation.clone();
+                                            solPiece.add(greenArtilleryAnimation);
+                                            allActiveSoldierAnimations.add(greenArtilleryAnimation);
+                                        }
+                                    } else {
+                                        soldierAnimation redArtilleryAnimation =
+                                                BoomChess.redArtilleryAnimation.clone();
+                                        solPiece.add(redArtilleryAnimation);
+                                        allActiveSoldierAnimations.add(redArtilleryAnimation);
+                                    }
+                                    break;
+
+                                case "infantry":
+                                    if (soldier.getTeamColor().equals("green")) {
+                                        if (isColourChanged) {
+                                            soldierAnimation blueInfantryAnimation =
+                                                    BoomChess.blueInfantryAnimation.clone();
+                                            solPiece.add(blueInfantryAnimation);
+                                            allActiveSoldierAnimations.add(blueInfantryAnimation);
+                                        } else {
+                                            soldierAnimation greenInfantryAnimation =
+                                                    BoomChess.greenInfantryAnimation.clone();
+                                            solPiece.add(greenInfantryAnimation);
+                                            allActiveSoldierAnimations.add(greenInfantryAnimation);
+                                        }
+                                    } else {
+                                        soldierAnimation redInfantryAnimation =
+                                                BoomChess.redInfantryAnimation.clone();
+                                        solPiece.add(redInfantryAnimation);
+                                        allActiveSoldierAnimations.add(redInfantryAnimation);
+                                    }
+                                    break;
+
+                                case "helicopter":
+                                    if (soldier.getTeamColor().equals("green")) {
+                                        if (isColourChanged) {
+                                            soldierAnimation blueHelicopterAnimation =
+                                                    BoomChess.blueHelicopterAnimation.clone();
+                                            solPiece.add(blueHelicopterAnimation);
+                                            allActiveSoldierAnimations.add(blueHelicopterAnimation);
+                                        } else {
+                                            soldierAnimation greenHelicopterAnimation =
+                                                    BoomChess.greenHelicopterAnimation.clone();
+                                            solPiece.add(greenHelicopterAnimation);
+                                            allActiveSoldierAnimations.add(greenHelicopterAnimation);
+                                        }
+                                    } else {
+                                        soldierAnimation redHelicopterAnimation =
+                                                BoomChess.redHelicopterAnimation.clone();
+                                        solPiece.add(redHelicopterAnimation);
+                                        allActiveSoldierAnimations.add(redHelicopterAnimation);
+                                    }
+                                    break;
+
+                                case "wardog":
+                                    if (soldier.getTeamColor().equals("green")) {
+                                        if (isColourChanged) {
+                                            soldierAnimation blueWardogAnimation =
+                                                    BoomChess.blueWardogAnimation.clone();
+                                            solPiece.add(blueWardogAnimation);
+                                            allActiveSoldierAnimations.add(blueWardogAnimation);
+                                        } else {
+                                            soldierAnimation greenWardogAnimation =
+                                                    BoomChess.greenWardogAnimation.clone();
+                                            solPiece.add(greenWardogAnimation);
+                                            allActiveSoldierAnimations.add(greenWardogAnimation);
+                                        }
+                                    } else {
+                                        soldierAnimation redWardogAnimation =
+                                                BoomChess.redWardogAnimation.clone();
+                                        solPiece.add(redWardogAnimation);
+                                        allActiveSoldierAnimations.add(redWardogAnimation);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                } else {
+                    // load the corresponding image through the Soldier Take Selfie Method
+                    if (soldier instanceof takeSelfieInterface) {
+                        Image soldierImage = new Image(((takeSelfieInterface) soldier).takeSelfie());
+                        soldierImage.setSize(tileSize, tileSize);
+                        solPiece.add(soldierImage);
+                    }
                 }
 
-                thisTile = new tileWidget(i, j);
-                currentTileWidgets.add(thisTile);
-                Coordinates coords = calculatePXbyTile(i, j);
-                thisTile.setPosition(coords.getX(), coords.getY());
-                gameStage.addActor(thisTile);
+                tileWidget.add(solPiece);
+
+                // draw the image at the correct position
+                solPiece.setSize(tileSize, tileSize);
+
+                // try getHealth, is null, make health to -1
+                int health;
+                if (!(soldier == null)) {
+                    health = soldier.getHealth();
+                    // use the 'soldier' object since it's the same as gameBoard[X][Y]
+                } else {
+                    health = -1;
+                }
+
+                if (health < 15 && health > 0) {
+                    // Apply a light red hue effect to the tileWidget's image
+                    Color lightRed = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+                    solPiece.setColor(lightRed);
+                }
+
+                if (!(health == -1)) {
+                    // tileWidget is only move able if a Piece is on it, meaning it has health
+                    tileWidget.setTouchable(Touchable.enabled);
+                    // draw the health number if showHealth is true
+                    if(showHealth) {
+                        Image blackCircle = new Image(BoomChess.blackCircle);
+                        blackCircle.setSize(tileSize, tileSize);
+                        tileWidget.add(blackCircle);
+                        Container<Table> healthContainer =
+                                HealthNumber.giveContainer(soldier.getStandardHealth(), health);
+                        tileWidget.add(healthContainer);
+                    }
+                }
+
+                // if the current soldier is instance of artillery, add the attack radius
+                // of 5to5, if not, 3to3. safe it in a container and place its middle on
+                // on the middle of the tileWidget
+
+                // load both attack radius (3to3 and 5to5) images
+                Image attackRadius3to3 = new Image(BoomChess.threeTOthreeCircle);
+                attackRadius3to3.setSize(tileSize*3, tileSize*3);
+                Image attackRadius5to5 = new Image(BoomChess.fiveTOfiveCircle);
+                attackRadius5to5.setSize(tileSize*5, tileSize*5);
+
+                // create container for the attack radius
+                final Stack attackRadiusContainer = new Stack();
+
+                // set the middle of the attack radius container to the middle of the tileWidget
+                Coordinates coord = BoomChess.calculatePXbyTile(i, j);
+
+                if(soldier instanceof Artillery){
+                    attackRadiusContainer.add(attackRadius5to5);
+                    attackRadiusContainer.setSize(tileSize*5, tileSize*5);
+                } else {
+                    attackRadiusContainer.add(attackRadius3to3);
+                    attackRadiusContainer.setSize(tileSize*3, tileSize*3);
+                }
+
+                attackRadiusContainer.setPosition(
+                        coord.getX()-attackRadiusContainer.getWidth()/2,
+                        coord.getY()-attackRadiusContainer.getHeight()/2);
+
+                attackRadiusContainer.setVisible(false);
+
+                attackRadiusContainer.toFront();
+
+                // add a damageInterval if showPossibleDamage is true
+                if(BoomChess.showIntervals){
+                    // takeSelfieInterface with showInterval method
+                    if(soldier instanceof takeIntervalSelfie){
+                        // Create an intermediary container (Table or Stack) for layout purposes
+                        Table intervalContainer = new Table();
+
+                        // Create the damageInterval image
+                        Image damageInterval = new Image(((takeIntervalSelfie) soldier).showInterval());
+                        damageInterval.setFillParent(false);
+
+                        // Set the size of the damageInterval relative to the tileSize
+                        damageInterval.setSize(tileSize/4, tileSize/8);
+
+                        intervalContainer.add(damageInterval);
+
+                        // Add the intervalContainer to the tileWidget Stack
+                        // This ensures that damageInterval maintains its size and position
+                        // within intervalContainer
+                        tileWidget.add(intervalContainer);
+
+                        intervalContainer.setSize(tileWidget.getWidth(), tileWidget.getHeight());
+                    }
+                }
+
+                // add a Listener only if (!isBotMatch) || (isBotMatch && (state == GameState.GREEN_TURN))
+                // since we do not want Red to have Drag if it's a bot-match, since that's the bot team
+                if ((!isBotMatch) || (isBotMatch && (currentState == BoomChess.GameState.GREEN_TURN))) {
+                    final int finalI = i;
+                    final int finalJ = j;
+
+                    tileWidget.addListener(new DragListener() {
+                        @Override
+                        public void dragStart(InputEvent event, float x, float y, int pointer) {
+                            // Code runs when dragging starts:
+
+                            // Get the team color of the current tile
+                            Soldier[][] gameBoard = Board.getGameBoard();
+                            String tileTeamColor = gameBoard[finalI][finalJ].getTeamColor();
+
+                            // If it's not the current team's turn, cancel the drag and return
+                            if ((currentState == BoomChess.GameState.RED_TURN && !tileTeamColor.equals("red")) ||
+                                    (currentState == BoomChess.GameState.GREEN_TURN && !tileTeamColor.equals("green"))) {
+                                event.cancel();
+
+                                // adds a logo on screen that says that the movement was not allowed yet
+                                WrongMoveIndicator indi = new WrongMoveIndicator();
+                                wrongMoveStage.addActor(indi);
+                                //plays a brick sound
+                                indi.makeSound();
+
+                                BoomChess.reRenderGame();
+                                return;
+                            }
+
+                            if(BoomChess.showAttackCircle){
+                                // attack radius
+                                attackRadiusContainer.setVisible(true);
+                            }
+
+                            tileWidget.toFront(); // Bring the actor to the front, so it appears above other actors
+                            // as long as the mouse is pressed down, the actor is moved to the mouse position
+                            // we calculate the tiles it can move to and highlight these tiles with a slightly red hue
+                            // the calculated tiles are part of a ArrayList variable that is created at create
+                            // of the whole programm
+                            // and gets cleared once we touchDragged the actor to a new position
+
+                            // switch statement for deciding which
+                            // Chess Pieces Class mathMove is used to assign the ArrayList validMoveTiles
+
+                            assert soldier != null;
+                            setAllowedTiles(soldier.mathMove(finalI, finalJ));
+                        }
+
+                        @Override
+                        public void drag(InputEvent event, final float x, final float y, int pointer) {
+
+                            // Code here will run during the dragging
+                            tileWidget.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
+                            attackRadiusContainer.moveBy(x - tileWidget.getWidth() / 2, y - tileWidget.getHeight() / 2);
+
+                            // if the user has showPossibleDamage activated, show the possible damage
+                            // of all attackable enemies
+                            // from the current tile the drag is hovering over
+                            Gdx.app.log("DragMethod", "About to post runnable");
+                            Gdx.app.postRunnable(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    Gdx.app.log("Runnable", "Inside the runnable");
+
+                                    // for thread safety in OpenGL, which libGDX used, we
+                                    // add a runnable for stage manipulation in the ereignis-thread
+                                    // to main thread
+
+                                    // Modify your UI components here
+                                    damageNumberStage.clear();
+
+                                    if(BoomChess.showPossibleDamage) {
+
+                                        // we determine if the current tileWidget is of the soldier
+                                        // artillery or not
+
+                                        int distance = 1;
+                                        if(soldier instanceof Artillery){
+                                            distance = 2;
+                                        }
+
+                                        // go through the gameboard starting at the current tile and
+                                        // check each tile nearby if there is an enemy soldier
+
+                                        Soldier[][] gameBoard = Board.getGameBoard();
+
+                                        // current calculation position from local
+                                        // to screen coordinates
+
+                                        Vector2 screenCoords =
+                                                tileWidget.localToScreenCoordinates(new Vector2(x, y));
+                                        Coordinates currentCords =
+                                                calculateTileByPXNonGDX((int) screenCoords.x, (int) screenCoords.y);
+
+                                        int currentX = currentCords.getX();
+                                        int currentY = currentCords.getY();
+
+                                        int startX = Math.max(0, currentX - distance);
+                                        int endX = Math.min(8, currentX + distance);
+
+                                        int startY = Math.max(0, currentY - distance);
+                                        int endY = Math.min(7, currentY + distance);
+
+                                        // get the color of the soldier that is currently being dragged
+                                        String attackColor = gameBoard[finalI][finalJ].getTeamColor();
+
+                                        // get the soldier type that the currently dragged soldier
+                                        // can inflict special damage to
+
+                                        int boniValue = 0;
+                                        int malusValue = 0;
+                                        Class<? extends Soldier> boniGI = null;
+                                        Class<? extends Soldier> malusGI = null;
+
+                                        Soldier boniSoldier = BoomChess.getSpecialBoniSoldier(soldier);
+                                        if(boniSoldier != null){
+                                            boniGI = boniSoldier.getClass();
+                                            boniValue = BoomChess.getSpecialBoniValue(soldier);
+                                        }
+
+                                        Soldier malusSoldier = BoomChess.getSpecialMalusSoldier(soldier);
+                                        if(malusSoldier != null){
+                                            malusGI = malusSoldier.getClass();
+                                            malusValue = BoomChess.getSpecialMalusValue(soldier);
+                                        }
+
+
+
+                                        for (int i = startX; i <= endX; i++) {
+                                            for (int j = startY; j <= endY; j++) {
+                                                if (i == finalI && j == finalJ) continue;
+
+                                                Soldier currentSoldier = gameBoard[i][j];
+
+                                                if (currentSoldier != null &&
+                                                        !(currentSoldier instanceof Empty) &&
+                                                        !(currentSoldier instanceof Hill)) {
+
+                                                    String hurtColor = currentSoldier.getTeamColor();
+                                                    if (!hurtColor.equals(attackColor)) {
+
+                                                        Gdx.app.log("Debug", "Checking tile [" + i + "," + j + "], " +
+                                                                "Enemy Color: " + hurtColor + ", Attacker Color: " + attackColor +
+                                                                ", BoniGI: " + boniGI + ", MalusGI: " + malusGI);
+
+                                                        if (boniSoldier != null &&
+                                                                boniGI.isInstance(currentSoldier)) {
+                                                            damageNumberStage.addActor(
+                                                                    new SpecialDamageIndicator(boniValue, i, j, true));
+                                                            Gdx.app.log("Runnable", "Added Boni");
+                                                        }
+
+                                                        if (malusSoldier != null &&
+                                                                malusGI.isInstance(currentSoldier)) {
+                                                            damageNumberStage.addActor(
+                                                                    new SpecialDamageIndicator(malusValue, i, j, false));
+                                                            Gdx.app.log("Runnable", "Added Malus");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void dragStop(InputEvent event, float x, float y, int pointer) {
+
+                            damageNumberStage.dispose();
+                            damageNumberStage = new Stage();
+
+                            // Code here will run when the player lets go of the actor
+
+                            // Get the position of the tileWidget relative to the parent actor (the gameBoard)
+                            Vector2 localCoords = new Vector2(x, y);
+                            // Convert the position to stage (screen) coordinates
+                            Vector2 screenCoords = tileWidget.localToStageCoordinates(localCoords);
+
+
+                            Coordinates currentCoord = calculateTileByPX((int) screenCoords.x, (int) screenCoords.y);
+
+                            // for loop through validMoveTiles, at each tile we check for equality of currentCoord
+                            // with the Coordinate
+                            // in the ArrayList by using currentCoord.checkEqual(validMoveTiles[i]) and if true,
+                            // we set the
+                            // validMove Variable to true, call on the update method of the Board class and break
+                            // the for loop
+                            // then clear the Board.
+
+
+                            ArrayList<Coordinates> validMoveTiles = Board.getValidMoveTiles();
+                            for (Coordinates validMoveTile : validMoveTiles) {
+                                if (currentCoord.checkEqual(validMoveTile)) {
+                                    // Board.update with oldX, oldY, newX, newY
+                                    Board.update(finalI, finalJ, currentCoord.getX(), currentCoord.getY());
+                                    legitTurn = true;
+                                    break;
+                                }
+                            }
+
+                            // and the validMoveTiles are cleared
+                            clearAllowedTiles(); // for turning off the Overlay
+                            Board.emptyValidMoveTiles();
+
+                            attackRadiusContainer.setVisible(false);
+
+                            BoomChess.reRenderGame();
+
+                        }
+                    });
+                }
+                gameStage.addActor(attackRadiusContainer);
+                root.add(tileWidget).size(tileSize);
             }
         }
+
+        gameStage.addActor(root);
+        batch.end();
 
         if(inTutorial){
             // add tutorialtexture to the upper right corner
@@ -228,23 +698,14 @@ public class GameStage {
         return gameStage;
     }
 
-    public LinkedList<tileWidget> getCurrentTileWidgets(){
-        return currentTileWidgets;
-    }
-
-    public void setCurrentTileWidgets(LinkedList<tileWidget> tileWidgetList){
-        currentTileWidgets = tileWidgetList;
-    }
-
-    public tileWidget giveTileWidgetOf(Coordinates coordsSearch){
-        for (tileWidget tile: currentTileWidgets){
-            if(tile.equalLocationTo(coordsSearch))
-            {
-                return tile;
-            }
+    public static void clearAllActiveSoldierAnimations(){
+        if(allActiveSoldierAnimations == null){
+            return;
         }
-        return null;
+        for(soldierAnimation soldierAnimation : allActiveSoldierAnimations){
+            soldierAnimation.remove();
+        }
+        allActiveSoldierAnimations.clear();
     }
-
 }
 
