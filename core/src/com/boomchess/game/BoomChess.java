@@ -458,7 +458,7 @@ public class BoomChess extends ApplicationAdapter {
 	// ------------------------------------------------------
 
 	// if on desktop, false, android if true, sets the resizing by tileSize and UI size
-	public static boolean publisher = false;
+	public static boolean publisher = true;
 
 	// ------------------------------------------------------
 
