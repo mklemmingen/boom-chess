@@ -1582,6 +1582,7 @@ public class BoomChess extends ApplicationAdapter {
 				createInGameOptionStages();
 			}
 		});
+		table.add(dogIsCarButton).padBottom(tileSize/8).row();
 
 		// change Map
 		TextButton changeMapButton = new TextButton("Change Map", skin);
