@@ -862,6 +862,8 @@ public class BoomChess extends ApplicationAdapter {
 
 		// Loading Texture of the map
 
+		Gdx.app.log("BoomChess", "Loading Assets: Maps");
+
 		medievalMaps = new RandomImage();
 		modernMaps = new RandomImage();
 
@@ -889,6 +891,10 @@ public class BoomChess extends ApplicationAdapter {
 		actionOngoing = new Image(new Texture(Gdx.files.internal("Misc/actionOngoing.png")));
 		actionOngoing.setSize(tileSize*2.5f, tileSize*1.2f);
 
+		Gdx.app.log("BoomChess", "Loading Assets: Maps done");
+
+		Gdx.app.log("BoomChess", "Loading Assets: Medieval Assets");
+
 		// load the Textures of the medieval game mode
 
 		redArcher = new Texture(Gdx.files.internal("medieval/red_archer.png"));
@@ -905,6 +911,10 @@ public class BoomChess extends ApplicationAdapter {
 		greenKing = new Texture(Gdx.files.internal("medieval/green_king.png"));
 		redFea = new Texture(Gdx.files.internal("medieval/red_fea.png"));
 		greenFea = new Texture(Gdx.files.internal("medieval/green_fea.png"));
+
+		Gdx.app.log("BoomChess", "Loading Assets: Medieval Assets done");
+
+		Gdx.app.log("BoomChess", "Loading Assets: Speech Bubbles & Obstacles");
 
 		// textures of the obstacles
 
@@ -933,7 +943,11 @@ public class BoomChess extends ApplicationAdapter {
 		// Texture of the red cross of death
 		crossOfDeathTexture = new Texture(Gdx.files.internal("Misc/crossOfDeath.png"));
 
+		Gdx.app.log("BoomChess", "Loading Assets: Speech Bubbles & Obstacles done");
+
 		// load the sound effects into respective Objects --------------------------------------
+
+		Gdx.app.log("BoomChess", "Loading Assets: Sound Effects");
 
 		smallArmsSound = new RandomSound();
 		smallArmsSound.addSound("sounds/desert-eagle-gunshot.mp3");
@@ -1059,34 +1073,6 @@ public class BoomChess extends ApplicationAdapter {
 		background_music = new MusicPlaylist();
 		background_music.addSong("music/A Little R & R.mp3",
 				"A Little R & R", "Bert Cole");
-		/* TODO not vibing with it anywhere
-		background_music.addSong("music/24 Stray cat.mp3",
-				"Stray cat", "Garo");
-		 */
-		/* TODO not rocking enough
-		background_music.addSong("music/06 Tonal Dissonance.mp3",
-				"Tonal Dissonance", "Garo");
-		background_music.addSong("music/36 Tonal Resonance.mp3",
-				"Tonal Resonance", "Garo");
-		 */
-		/*
-		// TODO not vibing
-		background_music.addSong("music/Outside the Colosseum.mp3",
-				"Outside the\n Colosseum", "Bert Cole\nbitbybitsound.com");
-		background_music.addSong("music/Song Idee Chess.mp3",
-				"Song Idee Chess", "Wambutz");
-		background_music.addSong("music/Song 2.mp3", "Song 2",
-				"Wambutz");
-		/*
-		// TODO too loud
-		background_music.addSong("music/Boss Battle.mp3", "Boss Battle",
-				"nostalgiac");
-
-		 */
-		/* TODO eh
-		background_music.addSong("music/TypeCastTheme.wav", "TYPE:CAST",
-				"Not Jam");
-		 */
 		background_music.addSong("music/SeeingDouble.wav", "Seeing Double",
 				"Not Jam");
 		background_music.addSong("music/First.wav", "First",
@@ -1097,6 +1083,30 @@ public class BoomChess extends ApplicationAdapter {
 				"Beginnings", "Oak Thielbar");
 		background_music.addSong("music/KleptoLindaCavernsB.wav",
 				"CavernsB", "not jam");
+
+		/*
+	       TODO not vibing with it anywhere
+		background_music.addSong("music/24 Stray cat.mp3",
+				"Stray cat", "Garo");
+		   TODO not rocking enough
+		background_music.addSong("music/06 Tonal Dissonance.mp3",
+				"Tonal Dissonance", "Garo");
+		background_music.addSong("music/36 Tonal Resonance.mp3",
+				"Tonal Resonance", "Garo");
+		   TODO not vibing
+		background_music.addSong("music/Outside the Colosseum.mp3",
+				"Outside the\n Colosseum", "Bert Cole\nbitbybitsound.com");
+		background_music.addSong("music/Song Idee Chess.mp3",
+				"Song Idee Chess", "Wambutz");
+		background_music.addSong("music/Song 2.mp3", "Song 2",
+				"Wambutz");
+		   TODO too loud
+		background_music.addSong("music/Boss Battle.mp3", "Boss Battle",
+				"nostalgiac");
+		   TODO eh
+		background_music.addSong("music/TypeCastTheme.wav", "TYPE:CAST",
+				"Not Jam");
+		 */
 
 		// load the menu music
 
@@ -1116,22 +1126,26 @@ public class BoomChess extends ApplicationAdapter {
 				"Epic Battle", "Bert Cole");
 
 		creditsMusic = new MusicPlaylist();
-		/* TODO vibes
-		creditsMusic.addSong("music/credits/Hadokowa - Loading.. - 03 囡囡 (NanNan).mp3",
-				"NanNan", "Hadokowa");
-		 */
 		creditsMusic.addSong("music/TouhouEuropeanQuartet.wav",
 				"TouhouEuropeanQuartet", "Steek Stook");
 
-		// TODO elaborate on this Song cause wow
-		// creditsMusic.addSong("music/credits/Hadokowa - Loading.. - 04 買狗養狗 (Get a Dog,\n Pet a Dog).mp3",
-		//		"Get a Dog, Pet a Dog", "Hadokowa");
+
+		/*
+			TODO vibes
+		creditsMusic.addSong("music/credits/Hadokowa - Loading.. - 03 囡囡 (NanNan).mp3",
+				"NanNan", "Hadokowa");
+		   TODO elaborate on this Song cause wow
+		creditsMusic.addSong("music/credits/Hadokowa - Loading.. - 04 買狗養狗 (Get a Dog,\n Pet a Dog).mp3",
+		     	"Get a Dog, Pet a Dog", "Hadokowa");
+		 */
 
 		wrongMoveLogo = new Texture("Misc/WrongMove.png");
 
 		Gdx.app.log("BoomChess", "Loading Assets: Music finished");
 
 		// ---------------------------- universal Buttons for adding to stages
+
+		Gdx.app.log("BoomChess", "Loading Assets: Audio Table and Buttons");
 
 		muteButton = new TextButton("Mute", skin);
 
@@ -1247,6 +1261,7 @@ public class BoomChess extends ApplicationAdapter {
 			}
 		});
 
+		Gdx.app.log("BoomChess", "Loading Assets: Audio Table and Buttons finished");
 
 		// for the dotted Line when damage occurs -----------------------------------------------
 
@@ -1308,6 +1323,8 @@ public class BoomChess extends ApplicationAdapter {
 
 	private void loadAllAnimation() {
 
+		Gdx.app.log("BoomChess", "Loading Assets: Animations");
+
 		Soldier[] allSoldiers = new Soldier[14];
 
 		// load all possible soldiers into the array
@@ -1346,7 +1363,6 @@ public class BoomChess extends ApplicationAdapter {
 		redArtilleryAnimation = new soldierAnimation(allSoldiers[6]);
 		redArtilleryAnimation.setSize(tileSize, tileSize);
 
-		/* // TODO comment out when green spritesheets are done
 		isColourChanged = false;
 		greenInfantryAnimation = new soldierAnimation(allSoldiers[7]);
 		greenInfantryAnimation.setSize(tileSize, tileSize);
@@ -1362,7 +1378,6 @@ public class BoomChess extends ApplicationAdapter {
 		greenTankAnimation.setSize(tileSize, tileSize);
 		greenArtilleryAnimation = new soldierAnimation(allSoldiers[13]);
 		greenArtilleryAnimation.setSize(tileSize, tileSize);
-		 */
 
 		isColourChanged = true;
 		blueInfantryAnimation = new soldierAnimation(allSoldiers[7]);
@@ -1383,6 +1398,8 @@ public class BoomChess extends ApplicationAdapter {
 		blueArtilleryAnimation.setSize(tileSize, tileSize);
 
 		isColourChanged = tmp;
+
+		Gdx.app.log("BoomChess", "Loading Assets: Animations finished");
 	}
 
 	public static void createInGameOptionStages() {
@@ -1424,6 +1441,7 @@ public class BoomChess extends ApplicationAdapter {
 			public void changed(ChangeEvent event, Actor actor) {
 				isColourChanged = !isColourChanged;
 				currentStage = GameStage.createGameStage(isBotMatch);
+				addAudioTable();
 				createInGameOptionStages();
 			}
 		});
