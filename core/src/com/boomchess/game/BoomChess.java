@@ -463,6 +463,7 @@ public class BoomChess extends ApplicationAdapter {
 	// ------------------------------------------------------
 
 	public static boolean dogIsJeep = true;
+	public static boolean nonInvasiveReRender = false;
 
 	@Override
 	public void create() {
@@ -1478,6 +1479,7 @@ public class BoomChess extends ApplicationAdapter {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				isColourChanged = !isColourChanged;
+				nonInvasiveReRender = true;
 				currentStage = GameStage.createGameStage(isBotMatch);
 				addAudioTable();
 				createInGameOptionStages();
@@ -1539,6 +1541,7 @@ public class BoomChess extends ApplicationAdapter {
 		attackCircleButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				nonInvasiveReRender = true;
 				showAttackCircle = !showAttackCircle;
 				createInGameOptionStages();
 			}
@@ -1581,6 +1584,7 @@ public class BoomChess extends ApplicationAdapter {
 		dogIsCarButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				nonInvasiveReRender = true;
 				dogIsJeep = !dogIsJeep;
 				createInGameOptionStages();
 			}
@@ -1604,6 +1608,7 @@ public class BoomChess extends ApplicationAdapter {
 		animationButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				nonInvasiveReRender = true;
 				isAnimated = !isAnimated;
 				createInGameOptionStages();
 			}
