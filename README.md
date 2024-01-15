@@ -12,6 +12,8 @@ Lauterbach, Yateem, Cam, Ruckgaber
 
 ![Gif of BoomChess Gameplay](https://github.com/mklemmingen/mklemmingen/blob/4c1408ae2b9eb0528e7c2e30db01d1a6a5f7bd51/BoomChessGIF.gif?raw=true)
 
+( speed up version )
+
 Projektplan auf BoomChess first layer level 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
