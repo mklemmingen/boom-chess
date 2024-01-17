@@ -903,7 +903,6 @@ public class BoomChess extends ApplicationAdapter {
 		modernMaps.addTexture("map/map2/game_map6.png"); // desert City map
 		modernMaps.addTexture("map/map2/game_map3.png"); // city map
 		modernMaps.addTexture("map/map2/game_map2.png"); // city map
-		modernMaps.addTexture("map/map2/game_map7.png"); // desert City map
 		modernMaps.addTexture("map/map2/game_map3.png"); // city map
 		modernMaps.addTexture("map/map3/map1.png"); // cool black and white map
 		modernMaps.addTexture("map/map3/map2.png"); // cool black and white map
