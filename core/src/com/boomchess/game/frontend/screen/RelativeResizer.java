@@ -66,17 +66,17 @@ public class RelativeResizer {
 
         if(!publisher) {
             if (tileSize > 140) {
-                font.getData().setScale(2f);
-                BoomChess.musicLabelScale = 1.2f;
+                font.getData().setScale(2.5f);
+                BoomChess.musicLabelScale = 1f;
             } else if (tileSize > 100) {
-                font.getData().setScale(1.5f);
-                BoomChess.musicLabelScale = 1f;
+                font.getData().setScale(1.9f);
+                BoomChess.musicLabelScale = 0.8f;
             } else if (tileSize > 50) {
-                font.getData().setScale(1.25f);
-                BoomChess.musicLabelScale = 0.9f;
+                font.getData().setScale(1.6f);
+                BoomChess.musicLabelScale = 0.6f;
             } else {
-                font.getData().setScale(1f);
-                BoomChess.musicLabelScale = 1f;
+                font.getData().setScale(1.5f);
+                BoomChess.musicLabelScale = 0.4f;
             }
         } else {
             if (tileSize > 140) {
